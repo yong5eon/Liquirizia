@@ -43,6 +43,5 @@
 
 ## 할일
 * [ ] EventScheduler 분리
-* [ ] EventWorker 분리
 * [ ] WebApplication 분리
 * [ ] WebApplication 에서 Validator 제거 후 기본 Validator 를 사용하도록 변경
