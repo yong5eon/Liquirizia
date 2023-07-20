@@ -7,7 +7,7 @@ from sys import stderr
 
 class SampleObject(Singleton):
 
-	def onInit(self, const=None):
+	def __init__(self, const=None):
 		self.const = const if const else 0
 		self.x = 0
 		return
