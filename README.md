@@ -42,7 +42,6 @@
 * [AWS 지원 확장 도구](https://github.com/yong5eon/Liquirizia.AWS)
 
 ## 할일
-* [ ] EventRunner 분리
 * [ ] EventScheduler 분리
 * [ ] EventWorker 분리
 * [ ] WebApplication 분리
