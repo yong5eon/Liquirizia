@@ -25,7 +25,6 @@
 * 개발 지원 도구
   * 유닛 테스트
 * [병렬 처리기](docs/Parallelizer.md)
-* [웹 어플리케이션](docs/WebApplication.md)
 
 ## 확장 컴포넌트
 
@@ -35,12 +34,11 @@
 * [이벤트 워커](https://github.com/yong5eon/Liquirizia.EventWorker)
 * [이벤트 스케줄러](https://github.com/yong5eon/Liquirizia.EventScheduler)
 
+### 웹 어플리케이션
+* [웹 어플리케이션](https://github.com/yong5eon/Liquirizia.WebApplication)
+
 ### 네트워크 확장 도구
 * [이메일 송신 어플리케이션](https://github.com/yong5eon/Liquirizia.Mailer)
 
 ### 클라우드 서비스 확장 도구
 * [AWS 지원 확장 도구](https://github.com/yong5eon/Liquirizia.AWS)
-
-## 할일
-* [ ] WebApplication 분리
-* [ ] WebApplication 에서 Validator 제거 후 기본 Validator 를 사용하도록 변경
