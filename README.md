@@ -42,6 +42,5 @@
 * [AWS 지원 확장 도구](https://github.com/yong5eon/Liquirizia.AWS)
 
 ## 할일
-* [ ] EventScheduler 분리
 * [ ] WebApplication 분리
 * [ ] WebApplication 에서 Validator 제거 후 기본 Validator 를 사용하도록 변경

@@ -32,7 +32,6 @@ setup(
 		'Application Framework :: Liquirizia',
 	],
 	install_requires=[
-		'apscheduler>=3.9.1'
 	],
 	python_requires='>=3.8'
 )
