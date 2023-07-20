@@ -37,7 +37,7 @@ LOG_FILE_CREATE = 'w'
 
 class Logger(Singleton):
 
-	def onInit(self):
+	def __init__(self):
 		self.logger = None
 		self.name = GetHostName()
 		self.format = '%(asctime)s - %(process)6d - %(thread)6d - %(levelname)-8s - %(message)s'
