@@ -38,7 +38,8 @@
   * [이벤트 스케줄러](docs/EventScheduler.md)
 
 ## 확장 컴포넌트
-* [이메일 송신 어플리케이션](https://github.com/team-of-mine-labs/Liquirizia.Mailer)
+* [이메일 송신 어플리케이션](https://github.com/yong5eon/Liquirizia.Mailer)
+* [AWS 지원 확장 도구](https://github.com/yong5eon/Liquirizia.AWS)
 
 ## 할일
 * [ ] EventBroker 분리
