@@ -20,25 +20,25 @@
 * [템플릿 및 디자인 패턴](docs/DesignPatterns.md)
 * 파일 시스템 접근 및 파일 접근
 * 로거
-* 도구
-  * 일반 도구
-  * 시스템 도구
-  * 데이터 타입 도구
 * [값 검증기](docs/Validation.md)
 * [데이터 접근 및 모델링](docs/DataAccessModel.md)
 * 개발 지원 도구
   * 유닛 테스트
-  * 수행 시간 평가
 * [병렬 처리기](docs/Parallelizer.md)
 * [웹 어플리케이션](docs/WebApplication.md)
-* 이벤트 처리
-  * [이벤트 처리 어플리케이션](docs/EventRunner.md)
-  * [이벤트 브로커](docs/EventBroker.md)
-  * [이벤트 워커](docs/EventWorker.md)
-  * [이벤트 스케줄러](docs/EventScheduler.md)
 
 ## 확장 컴포넌트
+
+### 이벤트 처리
+* [이벤트 브로커](https://github.com/yong5eon/Liquirizia.EventBroker)
+* [이벤트 처리 어플리케이션](https://github.com/yong5eon/Liquirizia.EventRunner)
+* [이벤트 워커](https://github.com/yong5eon/Liquirizia.EventWorker)
+* [이벤트 스케줄러](https://github.com/yong5eon/Liquirizia.EventScheduler)
+
+### 네트워크 확장 도구
 * [이메일 송신 어플리케이션](https://github.com/yong5eon/Liquirizia.Mailer)
+
+### 클라우드 서비스 확장 도구
 * [AWS 지원 확장 도구](https://github.com/yong5eon/Liquirizia.AWS)
 
 ## 할일
