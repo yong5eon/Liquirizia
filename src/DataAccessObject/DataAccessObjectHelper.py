@@ -14,7 +14,7 @@ class DataAccessObjectHelper(Singleton):
 	"""
 	Data Access Object Helper Class
 	"""
-	def onInit(self):
+	def __init__(self):
 		self.objects = {}
 		return
 

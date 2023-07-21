@@ -8,21 +8,21 @@ from sys import stderr
 if __name__ == '__main__':
 
 	# Validate True
-	validator = Validator(IsNotNull(), IsNumeric(), IsEqualTo(1))
+	validator = Validator(IsNotToNone(), IsEqualTo(1))
 	parameter = 1
 	try:
 		parameter = validator(parameter)  # expect true
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is not empty, numeric and equaled to 1'.format(parameter))
 
 	# Validate False
-	validator = Validator(IsNotNull(), IsNumeric(), IsEqualTo(0))
+	validator = Validator(IsNotToNone(), IsEqualTo(0))
 	parameter = 1
 	try:
 		parameter = validator(parameter)  # expect false with raise exception
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is not empty, numeric and equaled to 0'.format(parameter))
@@ -36,75 +36,75 @@ if __name__ == '__main__':
 
 		def __call__(self, parameter):
 			if not parameter > self.base:
-				raise RuntimeError('{} is not over {}'.format(parameter, self.base))
+				raise ValueError('{} is not over {}'.format(parameter, self.base))
 			return parameter
 
-	validator = Validator(IsNotNull(), IsNumeric(), IsOver(0))
+	validator = Validator(IsNotToNone(), IsOver(0))
 	parameter = 1
 	try:
 		parameter = validator(parameter)  # expect false with raise runtime error
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is not empty, number and over 0'.format(parameter))
 
-	validator = Validator(IsNotNull(), IsNumeric(), IsOver(1))
+	validator = Validator(IsNotToNone(), IsOver(1))
 	parameter = 1
 	try:
 		parameter = validator(parameter)  # expect true
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is not empty, number and over 1'.format(parameter))
 
 	# Validate Integer
 	validator = Validator(
-		IsNotNull(),
+		IsNotToNone(),
 		IsInteger(IsOver(0))
 	)
 
 	try:
 		print('parameter is {}'.format(validator(1)))  # expect print 1
-		print('parameter is {}'.format(validator(0)))  # expect raise RuntimeError
-	except RuntimeError as e:
+		print('parameter is {}'.format(validator(0)))  # expect raise (TypeError, ValueError)
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 
 	# Validate Float
 	validator = Validator(
-		IsNotNull(),
+		IsNotToNone(),
 		IsFloat(IsOver(0))
 	)
 
 	try:
 		print('parameter is {}'.format(validator(1.0)))  # expect print 1.0
-		print('parameter is {}'.format(validator(3)))  # expect raise RuntimeError
-	except RuntimeError as e:
+		print('parameter is {}'.format(validator(3)))  # expect raise (TypeError, ValueError)
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 
 	# Validate String
 	validator = Validator(
-		IsNotNull(),
-		IsNotEmptyString(),
+		IsNotToNone(),
+		IsNotEmpty(),
 		IsString(IsIn('허용선', '최준호', '홍승걸', '김진영', '방태식'))
 	)
 
 	try:
 		print('parameter is {}'.format(validator('허용선')))  # expect print '허용선'
-		print('parameter is {}'.format(validator('이기현')))  # expect raise RuntimeError
-	except RuntimeError as e:
+		print('parameter is {}'.format(validator('이기현')))  # expect raise (TypeError, ValueError)
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 
 	# Validate List or Tuple
 	validator = Validator(
-		IsNotNull(),
-		IsNotEmptyListable(),
+		IsNotToNone(),
+		IsNotEmpty(),
 		IsListable(IsOver(0))
 	)
 
 	parameter = []
 	try:
 		parameter = validator(parameter)  # expect false
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is listable, not empty and all elements are over 0'.format(parameter))
@@ -112,7 +112,7 @@ if __name__ == '__main__':
 	parameter = [0, 1, 2, 3]
 	try:
 		parameter = validator(parameter)  # expect false
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is listable, not empty and all elements are over 0'.format(parameter))
@@ -120,7 +120,7 @@ if __name__ == '__main__':
 	parameter = [1, 2, 3]
 	try:
 		parameter = validator(parameter)  # expect true
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is listable, not empty and all elements are over 0'.format(parameter))
@@ -139,45 +139,49 @@ if __name__ == '__main__':
 		},
 	}
 	validator = Validator(
-		IsNotNull(),
-		IsNotEmptyDictionary(),
-		IsRequiredInDictionary(('a', 'b', 'c', 'd')),
-		IsDictionary({
-			'a': Validator(IsNotNull(), IsNumeric(),),
-			'b': Validator(IsNotNull(), IsNumeric(), IsEqualTo(2)),
-			'c': Validator(IsNotNull(), IsNumeric(), IsIn(3, 4, 5, 6, 7, 8)),
-			'd': Validator(SetDefault(4)),
-			'e': Validator(IsListable(IsOver(3)), IsNotNull()),
-			'f': Validator(
-				IsNotEmptyDictionary(),
-				IsRequiredInDictionary('a', 'b'),
-				IsDictionary({
-					'a': (IsNotNull(), IsNumeric()),
-					'b': (IsNotNull(), IsNumeric(), IsOver(9)),
-				})
-			),
-		})
+		IsNotToNone(),
+		IsDictionary(
+			IsNotEmpty(),
+			IsRequiredIn(('a', 'b', 'c', 'd')),
+			IsMappingOf({
+				'a': Validator(IsNotToNone()),
+				'b': Validator(IsNotToNone(), IsEqualTo(2)),
+				'c': Validator(IsNotToNone(), IsIn(3, 4, 5, 6, 7, 8)),
+				'd': Validator(SetDefault(4)),
+				'e': Validator(IsListable(IsOver(3)), IsNotToNone()),
+				'f': Validator(IsDictionary(
+					IsNotEmpty(),
+					IsRequiredIn('a', 'b'),
+					IsMappingOf({
+						'a': (IsNotToNone()),
+						'b': (IsNotToNone(), IsOver(9)),
+					})
+				)),
+			})
+		)
 	)
 	try:
 		parameter = validator(parameter)
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('{} is objectable, not empty and all validates of elements are ok'.format(parameter))
 
 	# Test Decorator with Function
 	@Validate({
-		'a': IsNotNull(),
-		'b': (IsNotNull(), IsNumeric(), IsGreaterEqualTo(0)),
-		'c': IsNotNull(),
-		'd': (IsNotNull(), IsNumeric(), IsLessEqualTo(10)),
-		'e': (IsNotEmptyListable(), IsListable(IsLessThan(5))),
+		'a': IsNotToNone(),
+		'b': (IsNotToNone(), IsNumeric(), IsGreaterEqualTo(0)),
+		'c': IsNotToNone(),
+		'd': (IsNotToNone(), IsNumeric(), IsLessEqualTo(10)),
+		'e': (IsList(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
 		'f': (
-			IsNotEmptyDictionary(),
-			IsRequiredInDictionary('a', 'b'),
-			IsDictionary({
-				'a': (IsNotNull(), IsNumeric(), IsGreaterThan(0), IsLessThan(5)),
-			})
+			IsDictionary(
+				IsNotEmpty(),
+				IsRequiredIn('a', 'b'),
+				IsMappingOf({
+					'a': (IsNotToNone(), IsNumeric(), IsGreaterThan(0), IsLessThan(5)),
+				})
+			)
 		),
 		'const': SetDefault(3),
 	})
@@ -186,7 +190,7 @@ if __name__ == '__main__':
 
 	try:
 		ret = foo(1, 2, 3, d=4, e=(1, 2, 3), f={'a': 2, 'b': 1})
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('foo returned {}'.format(ret))
@@ -194,17 +198,18 @@ if __name__ == '__main__':
 	# Test Decorator with Method of Class
 	class A:
 		@Validate({
-			'a': IsNotNull(),
-			'b': (IsNotNull(), IsNumeric(), IsGreaterEqualTo(0)),
-			'c': IsNotNull(),
-			'd': (IsNotNull(), IsNumeric(), IsLessEqualTo(10)),
-			'e': (IsNotEmptyListable(), IsListable(IsLessThan(5))),
+			'a': IsNotToNone(),
+			'b': (IsNotToNone(), IsNumeric(), IsGreaterEqualTo(0)),
+			'c': IsNotToNone(),
+			'd': (IsNotToNone(), IsNumeric(), IsLessEqualTo(10)),
+			'e': (IsList(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
 			'f': (
-				IsNotEmptyDictionary(),
-				IsRequiredInDictionary('a'),
-				IsDictionary({
-					'a': (IsNotNull(), IsNumeric(), IsGreaterThan(0), IsLessThan(5)),
-				})
+				IsDictionary(
+					IsNotEmpty(),
+					IsMappingOf({
+						'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
+					})
+				)
 			),
 			'const': SetDefault(3),
 		})
@@ -214,7 +219,7 @@ if __name__ == '__main__':
 	try:
 		a = A()
 		ret = a.foo(1, 2, 3, d=4, e=(1, 2, 3), f={'a': 2, 'b': 1})
-	except RuntimeError as e:
+	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 	else:
 		print('A.foo returned {}'.format(ret))

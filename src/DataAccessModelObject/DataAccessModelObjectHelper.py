@@ -29,7 +29,7 @@ class DataAccessModelObjectHelper(Singleton):
 	Data Model Helper Class
 	"""
 
-	def onInit(self):
+	def __init__(self):
 		return
 
 	@classmethod
