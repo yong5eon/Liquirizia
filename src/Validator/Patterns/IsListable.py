@@ -11,7 +11,8 @@ __all__ = (
 
 
 class IsListable(Pattern):
-	def __init__(self, error : Error = None):
+	def __init__(self, *args, error : Error = None):
+		self.patterns = args
 		self.error = error
 		return
 
@@ -20,4 +21,8 @@ class IsListable(Pattern):
 			if self.error:
 				raise self.error(parameter)
 			raise TypeError('{} must be listable'.format(parameter))
+		if parameter is None:
+			for pattern in self.patterns:
+				parameter = pattern(parameter)
+			return parameter
 		return parameter

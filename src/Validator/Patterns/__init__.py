@@ -21,6 +21,7 @@ from .IsIn import IsIn
 # type
 from .ToList import ToList
 from .ToTuple import ToTuple
+from .IsListable import IsListable
 from .IsTypeOf import (
 	IsTypeOf,
 	IsBool,
