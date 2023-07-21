@@ -11,7 +11,7 @@ __all__ = (
 
 
 class Context(Singleton):
-	def onInit(self):
+	def __init__(self):
 		self.context = get_context()
 		return
 

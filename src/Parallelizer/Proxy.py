@@ -12,7 +12,7 @@ __all__ = (
 class Proxy(Singleton):
 	# TODO : it is possible to use in multi-processing or multi-threading
 
-	def onInit(self):
+	def __init__(self):
 		self.manager = Context.GetManager()
 		return
 
