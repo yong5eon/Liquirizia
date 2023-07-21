@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from imp import ImportModule
-
-ImportModule('Liquirizia', 'Liquirizia/src')
-
 from Liquirizia.DataModelObject import (
 	DataObject, 
 	DataModelObject,
