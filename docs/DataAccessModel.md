@@ -3,6 +3,6 @@
 
 ![Data Access Model Class Diagram](../res/DataAccessModel.svg)
 
-* [데이터 접근](docs/DataAccessObject.md)
-* [데이터 접근 모델링](docs/DataAccessModelObject.md)
-* [데이터 모델링](docs/DataModelObject.md)
+* [데이터 접근](DataAccessObject.md)
+* [데이터 접근 모델링](DataAccessModelObject.md)
+* [데이터 모델링](DataModelObject.md)
