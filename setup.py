@@ -3,7 +3,7 @@
 from setuptools import setup, find_packages
 
 PKG = 'Liquirizia'
-SRC = 'Liquirizia'
+SRC = 'src'
 EXCLUDES = []
 DESC = 'Python Modernized Application Framework'
 WHO = 'Heo Yongseon'
