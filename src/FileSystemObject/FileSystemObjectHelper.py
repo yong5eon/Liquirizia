@@ -23,7 +23,7 @@ class FileSystemObjectHelper(Singleton):
 			print(f.read())
 			f.close()
 	"""
-	def onInit(self):
+	def __init__(self):
 		self.objects = {}
 		return
 
