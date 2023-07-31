@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 from collections.abc import Mapping
 
@@ -11,7 +10,7 @@ __all__ = (
 
 
 class IsRequiredIn(Pattern):
-	def __init__(self, *args, error: Error = None):
+	def __init__(self, *args, error=None):
 		self.args = args
 		self.error = error
 		return
@@ -19,13 +18,13 @@ class IsRequiredIn(Pattern):
 	def __call__(self, parameter):
 		if not isinstance(parameter, Mapping):
 			if self.error:
-				raise self.error(parameter)
+				raise self.error
 			raise TypeError('{} must be dict'.format(parameter))
 		keys = parameter.keys()
 		for arg in self.args:
 			if arg not in keys:
 				if self.error:
-					raise self.error(parameter, arg)
+					raise self.error
 				raise ValueError('{} is required in {}'.format(arg, parameter))
 		return parameter
 

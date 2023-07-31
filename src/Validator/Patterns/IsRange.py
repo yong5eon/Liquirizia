@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 __all__ = (
 	'IsRange'
@@ -9,7 +8,7 @@ __all__ = (
 
 
 class IsRange(Pattern):
-	def __init__(self, start, stop=None, step=None, error: Error = None):
+	def __init__(self, start, stop=None, step=None, error=None):
 		self.range = [start]
 		if stop:
 			self.range.append(stop)
@@ -24,7 +23,7 @@ class IsRange(Pattern):
 	def __call__(self, parameter):
 		if parameter not in [v for v in range(*self.range)]:
 			if self.error:
-				raise self.error(parameter, self.start, self.stop, self.range)
+				raise self.error
 			raise ValueError('{} must be in the range {}'.format(
 				parameter,
 				'between {} to {}{}'.format(

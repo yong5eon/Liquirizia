@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 from ..Validator import Validator
 
 from collections.abc import Mapping, Iterable
@@ -15,7 +14,7 @@ class IsMappingOf(Pattern):
 	def __init__(
 		self, 
 		mappings : dict = {}, 
-		error    : Error = None
+		error           = None
 	):
 		self.mappings = self.__mapper__(mappings)
 		self.error = error
@@ -24,7 +23,7 @@ class IsMappingOf(Pattern):
 	def __call__(self, parameter):
 		if not isinstance(parameter, Mapping):
 			if self.error:
-				raise self.error(parameter)
+				raise self.error
 			raise TypeError('{} must be dict'.format(parameter))
 		if self.mappings:
 			for key, validator in self.mappings.items():

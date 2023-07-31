@@ -1,5 +1,9 @@
 # -*- coding: utf-8 -*-
 
+from impm import ImportModule
+
+ImportModule('Liquirizia', 'Liquirizia/src')
+
 from Liquirizia.Validator import Validate, Validator, Pattern
 from Liquirizia.Validator.Patterns import *
 
@@ -85,12 +89,12 @@ if __name__ == '__main__':
 	validator = Validator(
 		IsNotToNone(),
 		IsNotEmpty(),
-		IsString(IsIn('허용선', '최준호', '홍승걸', '김진영', '방태식'))
+		IsString(IsIn('HEO', 'CHOI', 'HONG', 'KIM', 'BANG'))
 	)
 
 	try:
-		print('parameter is {}'.format(validator('허용선')))  # expect print '허용선'
-		print('parameter is {}'.format(validator('이기현')))  # expect raise (TypeError, ValueError)
+		print('parameter is {}'.format(validator('HEO')))  # expect print '허용선'
+		print('parameter is {}'.format(validator('LEE')))  # expect raise (TypeError, ValueError)
 	except (TypeError, ValueError) as e:
 		print(str(e), file=stderr)
 
@@ -170,18 +174,17 @@ if __name__ == '__main__':
 	# Test Decorator with Function
 	@Validate({
 		'a': IsNotToNone(),
-		'b': (IsNotToNone(), IsNumeric(), IsGreaterEqualTo(0)),
+		'b': (IsNotToNone(), IsGreaterEqualTo(0)),
 		'c': IsNotToNone(),
-		'd': (IsNotToNone(), IsNumeric(), IsLessEqualTo(10)),
-		'e': (IsList(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
-		'f': (
-			IsDictionary(
-				IsNotEmpty(),
-				IsRequiredIn('a', 'b'),
-				IsMappingOf({
-					'a': (IsNotToNone(), IsNumeric(), IsGreaterThan(0), IsLessThan(5)),
-				})
-			)
+		'd': (IsNotToNone(), IsLessEqualTo(10)),
+		'e': (IsListable(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
+		'f': 
+		IsDictionary(
+			IsNotEmpty(),
+			IsRequiredIn('a', 'b'),
+			IsMappingOf({
+				'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
+			})
 		),
 		'const': SetDefault(3),
 	})
@@ -199,18 +202,18 @@ if __name__ == '__main__':
 	class A:
 		@Validate({
 			'a': IsNotToNone(),
-			'b': (IsNotToNone(), IsNumeric(), IsGreaterEqualTo(0)),
+			'b': (IsNotToNone(), IsGreaterEqualTo(0)),
 			'c': IsNotToNone(),
-			'd': (IsNotToNone(), IsNumeric(), IsLessEqualTo(10)),
-			'e': (IsList(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
-			'f': (
-				IsDictionary(
-					IsNotEmpty(),
-					IsMappingOf({
-						'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
-					})
-				)
-			),
+			'd': (IsNotToNone(), IsLessEqualTo(10)),
+			'e': (IsListable(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
+			'f': 
+			IsDictionary(
+				IsNotEmpty(),
+				IsMappingOf({
+					'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
+				})
+			)
+			,
 			'const': SetDefault(3),
 		})
 		def foo(self, a, b, c, d, e, f, const=None):

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 from operator import ne
 
@@ -11,7 +10,7 @@ __all__ = (
 
 
 class IsSizeOf(Pattern):
-	def __init__(self, size : int, error: Error = None):
+	def __init__(self, size : int, error=None):
 		self.size = size
 		self.error = error
 		return
@@ -19,7 +18,7 @@ class IsSizeOf(Pattern):
 	def __call__(self, parameter):
 		if ne(len(parameter), self.size):
 			if self.error:
-				raise self.error(parameter, self.size)
+				raise self.error
 			raise ValueError(
 				'{} must be size of {}'.format(
 					parameter, 

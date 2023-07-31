@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 from operator import gt
 
@@ -11,7 +10,7 @@ __all__ = (
 
 
 class IsMaxSizeOf(Pattern):
-	def __init__(self, size : int, error: Error = None):
+	def __init__(self, size : int, error=None):
 		self.size = size
 		self.error = error
 		return
@@ -19,7 +18,7 @@ class IsMaxSizeOf(Pattern):
 	def __call__(self, parameter):
 		if gt(len(parameter), self.size):
 			if self.error:
-				raise self.error(parameter, self.size)
+				raise self.error
 			raise ValueError('{} must be maxium size of {}'.format(
 				parameter,
 				self.size

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 __all__ = (
 	'IsElementOf'
@@ -9,9 +8,8 @@ __all__ = (
 
 
 class IsElementOf(Pattern):
-	def __init__(self, *args, error: Error = None):
+	def __init__(self, *args):
 		self.patterns = args
-		self.error = error
 		return
 
 	def __call__(self, parameter):

@@ -1,7 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
+
+from operator import le
 
 __all__ = (
 	'IsLessEqualTo'
@@ -9,15 +10,15 @@ __all__ = (
 
 
 class IsLessEqualTo(Pattern):
-	def __init__(self, compare, error: Error = None):
+	def __init__(self, compare, error=None):
 		self.compare = compare
 		self.error = error
 		return
 
 	def __call__(self, parameter):
-		if not parameter <= self.compare:
+		if not le(parameter, self.compare):
 			if self.error:
-				raise self.error(parameter, self.compare)
+				raise self.error
 			raise ValueError('{} must be less equal to {}'.format(parameter, self.compare))
 		return parameter
 

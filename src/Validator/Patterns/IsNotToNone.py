@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 __all__ = (
 	'IsNotToNone'
@@ -9,13 +8,13 @@ __all__ = (
 
 
 class IsNotToNone(Pattern):
-	def __init__(self, error: Error = None):
+	def __init__(self, error=None):
 		self.error = error
 		return
 
 	def __call__(self, parameter):
 		if parameter is None:
 			if self.error:
-				raise self.error(parameter)
+				raise self.error
 			raise ValueError('{} is None'.format(parameter))
 		return parameter

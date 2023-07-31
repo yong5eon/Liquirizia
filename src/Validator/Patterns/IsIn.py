@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 __all__ = (
 	'IsIn'
@@ -9,7 +8,7 @@ __all__ = (
 
 
 class IsIn(Pattern):
-	def __init__(self, *args, error: Error = None):
+	def __init__(self, *args, error=None):
 		self.compares = args
 		self.error = error
 		return
@@ -17,7 +16,7 @@ class IsIn(Pattern):
 	def __call__(self, parameter):
 		if parameter not in self.compares:
 			if self.error:
-				raise self.error(parameter, self.compares)
+				raise self.error
 			raise ValueError('{} must be in {}'.format(parameter, self.compares))
 		return parameter
 

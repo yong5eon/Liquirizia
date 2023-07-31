@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .Error import Error
-
 from abc import (
 	ABC,
 	abstractmethod,
