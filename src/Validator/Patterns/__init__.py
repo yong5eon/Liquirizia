@@ -19,8 +19,6 @@ from .IsLessThan import IsLessThan
 from .IsIn import IsIn
 
 # type
-from .ToList import ToList
-from .ToTuple import ToTuple
 from .IsListable import IsListable
 from .IsTypeOf import (
 	IsTypeOf,
@@ -31,6 +29,16 @@ from .IsTypeOf import (
 	IsList,
 	IsTuple,
 	IsDictionary,
+)
+from .ToTypeOf import (
+	ToTypeOf,
+	ToBool,
+	ToInteger,
+	ToFloat,
+	ToString,
+	ToList,
+	ToTuple,
+	ToDictionary,
 )
 
 # numeric
@@ -68,8 +76,6 @@ __all__ = (
 	'IsLessThan',
 	'IsIn',
 	# type casting
-	'ToList',
-	'ToTuple',
 	'IsTypeOf',
 	'IsBool',
 	'IsInteger',
@@ -78,6 +84,14 @@ __all__ = (
 	'IsList',
 	'IsTuple',
 	'IsDictionary',
+	'ToTypeOf',
+	'ToBool',
+	'ToInteger',
+	'ToFloat',
+	'ToString',
+	'ToList',
+	'ToTuple',
+	'ToDictionary',
 	# numeric 
 	'IsRange',
 	# string
