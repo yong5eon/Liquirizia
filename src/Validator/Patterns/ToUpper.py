@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from ..Error import Error
 
 __all__ = (
 	'ToUpper'
@@ -9,10 +8,6 @@ __all__ = (
 
 
 class ToUpper(Pattern):
-	def __init__(self, error : Error = None):
-		self.error = error
-		return
-
 	def __call__(self, parameter):
 		return parameter.upper()
 
