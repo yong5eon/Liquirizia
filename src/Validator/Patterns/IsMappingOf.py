@@ -27,8 +27,7 @@ class IsMappingOf(Pattern):
 			raise TypeError('{} must be dict'.format(parameter))
 		if self.mappings:
 			for key, validator in self.mappings.items():
-				if key in parameter.keys():
-					parameter[key] = validator(parameter[key])
+				parameter[key] = validator(parameter[key] if key in parameter.keys() else None)
 		return parameter
 
 	def __mapper__(self, mappings: dict):
