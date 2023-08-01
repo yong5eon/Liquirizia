@@ -28,6 +28,10 @@
 
 ## 확장 컴포넌트
 
+### 파일 시스템 접근 및 파일 접근
+* [파일 시스템](https://github.com/yong5eon/Liquirizia.FileSystemObject.Implements.FileSystem)
+* [AWS S3](https://github.com/yong5eon/Liquirizia.FileSystemObject.Implements.AWS.S3)
+
 ### 이벤트 처리
 * [이벤트 브로커](https://github.com/yong5eon/Liquirizia.EventBroker)
 * [이벤트 처리 어플리케이션](https://github.com/yong5eon/Liquirizia.EventRunner)
