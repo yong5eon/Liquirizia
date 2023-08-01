@@ -40,6 +40,7 @@
 
 ### 직렬화 및 비 직렬화
 * [텍스트 형식 직렬화 및 비 직렬화](https://github.com/yong5eon/Liquirizia.Serializer.Implements.Text)
+* [JSON 형식 직렬화 및 비 직렬화](https://github.com/yong5eon/Liquirizia.Serializer.Implements.JavaScriptObjectNotation)
 
 ### 파일 시스템 접근 및 파일 접근
 * [파일 시스템](https://github.com/yong5eon/Liquirizia.FileSystemObject.Implements.FileSystem)
