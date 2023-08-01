@@ -5,7 +5,7 @@ from ..Template import Singleton
 from .FileSystemObject import FileSystemObject
 from .FileSystemObjectConfiguration import FileSystemObjectConfiguration
 
-from .Error import *
+from .Errors import *
 
 __all__ = (
 	'FileSystemObjectHelper'
