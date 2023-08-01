@@ -18,15 +18,28 @@
 ## 구성
 * [OOP(Object Oriented Programming) 지원](docs/OOP.md)
 * [템플릿 및 디자인 패턴](docs/DesignPatterns.md)
-* 로거
-* [값 검증기](docs/Validation.md)
 * [데이터 접근 및 모델링](docs/DataAccessModel.md)
+  * [데이터 접근](docs/DataAccessObject.md)
+  * [데이터 접근 모델링](docs/DataAccessModelObject.md)
+  * [데이터 모델링](docs/DataModelObject.md)
+* [값 검증기](docs/Validation.md)
+* 직렬화, 비직렬화 도구
 * 파일 시스템 접근 및 파일 접근
-* 개발 지원 도구
-  * 유닛 테스트
+* 시스템 도구
+  * 파일락
+  * 신호처리
+* 도구
+  * 날자 및 시간 도구
+  * 딕셔너리 도구
+  * 리스트 도구
+* 로거
+* 유닛 테스트
 * [병렬 처리기](docs/Parallelizer.md)
 
 ## 확장 컴포넌트
+
+### 직렬화 및 비 직렬화
+* [텍스트 형식 직렬화 및 비 직렬화](https://github.com/yong5eon/Liquirizia.Serializer.Implements.Text)
 
 ### 파일 시스템 접근 및 파일 접근
 * [파일 시스템](https://github.com/yong5eon/Liquirizia.FileSystemObject.Implements.FileSystem)
