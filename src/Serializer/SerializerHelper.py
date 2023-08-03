@@ -4,18 +4,44 @@ from Liquirizia.Template import Singleton
 
 from .Errors import *
 
+from pkgutil import walk_packages
+from importlib import import_module
+from importlib.util import find_spec, module_from_spec
+from sys import modules, meta_path
+
 __all__ = (
 	'SerializerHelper'
 )
 
 
 class SerializerHelper(Singleton):
-	"""
-	Serializer Helper Class
-	"""
+	"""Serializer Helper Class"""
+
 	def __init__(self):
 		self.serializers = {}
+		try:
+			package = import_module('Liquirizia.Serializer.Implements')
+			mos = []
+			for loader, name, isPackage in walk_packages(package.__path__):
+				fullname = package.__name__ + '.'	+ name
+				try:
+					mo = import_module(fullname)
+					for format in mo.FORMATS:
+						self.set(format, mo.Encoder, mo.Decoder)
+					mos.append(fullname)
+				except ModuleNotFoundError as e:
+					continue
+		except ModuleNotFoundError as e:
+			pass
 		return
+	
+	@classmethod
+	def GetSupportFormats(cls):
+		helper = cls()
+		return helper.getSupportFormats()
+	
+	def getSupportFormats(self):
+		return list(self.serializers.keys())
 
 	@classmethod
 	def Set(cls, format, encoder, decoder):
