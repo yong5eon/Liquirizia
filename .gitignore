@@ -72,3 +72,6 @@ tmp
 
 # Symlinks
 src/EventBroker
+src/Serializer/Implements/JavaScriptObjectNotation
+src/Serializer/Implements/Text
+src/Serializer/Implements/FormUrlEncoded
