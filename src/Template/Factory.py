@@ -27,7 +27,7 @@ class Factory(object):
 
 		pass
 
-	a=YOurObject(...)  # fail
+	a=YourObject(...)  # fail
 	b=YourObject.CreateInstance(...)  # success
 	"""
 	@classmethod
