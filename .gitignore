@@ -69,3 +69,6 @@ tmp
 *.txt.*
 *.txt
 *.TXT.*
+
+# Symlinks
+src/EventBroker
