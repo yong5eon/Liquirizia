@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 PKG = 'Liquirizia'
 SRC = 'src'
 EXCLUDES = []
-DESC = 'Python Modernized Application Framework'
+DESC = 'Python Modernized Application Framework Library'
 WHO = 'Heo Yongseon'
 
 PKGS = [PKG]
@@ -29,7 +29,7 @@ setup(
 		'Programming Language :: Python :: 3.9',
 		'Programming Language :: Python :: 3.10',
 		'Programming Language :: Python :: 3.11',
-		'Application Framework :: Liquirizia',
+		'Liquirizia',
 	],
 	install_requires=[
 	],
