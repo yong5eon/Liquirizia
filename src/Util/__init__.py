@@ -2,8 +2,12 @@
 
 from pprint import PrettyPrinter
 
+from .DurationTimer import DurationTimer, Duration
+
 __all__ = (
 	'PrettyPrint',
+	'DurationTimer',
+	'Duration',
 )
 
 
