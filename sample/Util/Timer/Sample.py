@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.Util.Timer import Duration, DurationTimer
+from Liquirizia.Util.Timer import Duration, DurationTimer, Timer
 
 from time import sleep
 from random import randrange
@@ -44,6 +44,8 @@ class Sample(object):
 
 if __name__ == '__main__':
 
+	timer = DurationTimer()
+
 	for __ in range(0, randrange(1, 5)):
 		fn(randrange(1, 5))
 		_ = Sample(randrange(1, 5))
@@ -51,8 +53,12 @@ if __name__ == '__main__':
 		_.fnc(randrange(1, 5))
 		_.fns(randrange(1, 5))
 		_.fnp
+		t = Timer()
+		t.start()
+		sleep(randrange(1, 5))
+		t.end()
+		timer.add('__main__.for', t)
 
-	timer = DurationTimer()
 	for k in timer.keys():
 		print('{} : count({}), min({}), max({}), sum({}), avg({})'.format(
 			k,
