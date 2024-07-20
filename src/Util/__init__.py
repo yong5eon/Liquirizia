@@ -4,6 +4,8 @@ from pprint import PrettyPrinter
 
 __all__ = (
 	'PrettyPrint',
+	'DurationTimer',
+	'Duration',
 )
 
 
