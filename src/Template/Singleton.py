@@ -16,14 +16,14 @@ class Meta(ABCMeta):
 	Singleton Meta Class
 	"""
 
-	__object__ = None
+	__object__ = {}
 
 	def __call__(cls, *args, **kwargs):
 		if cls.__object__ and (len(args) or len(kwargs.items())):
 			raise RuntimeError('{} is singleton, it is already initialized'.format(cls.__name__))
-		if not cls.__object__:
-			cls.__object__ = super(Meta, cls).__call__(*args, **kwargs)
-		return cls.__object__
+		if cls not in cls.__object__:
+			cls.__object__[cls] = super(Meta, cls).__call__(*args, **kwargs)
+		return cls.__object__[cls]
 
 
 class Singleton(ABC, metaclass=Meta):
