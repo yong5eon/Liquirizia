@@ -26,18 +26,18 @@ class Sample(object):
 	def fnm(self, seconds):
 		sleep(seconds)
 		return
-	@Duration(callback=cb)
 	@classmethod
+	@Duration(callback=cb)
 	def fnc(cls, seconds):
 		sleep(seconds)
 		return
-	@Duration(callback=cb)
 	@staticmethod
+	@Duration(callback=cb)
 	def fns(seconds):
 		sleep(seconds)
 		return
-	@Duration(callback=cb)
 	@property
+	@Duration(callback=cb)
 	def fnp(self):
 		sleep(self.seconds)
 		return self.seconds
