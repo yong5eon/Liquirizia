@@ -2,7 +2,7 @@
 
 from .Timer import Timer
 from .DurationTimer import DurationTimer
-from .Decorator import Duration
+from .Duration import Duration
 
 __all__ = (
 	'DurationTimer',
