@@ -3,6 +3,7 @@
 from Liquirizia.Template import Singleton
 
 from sys import stderr
+from copy import copy, deepcopy
 
 
 class SampleObject(Singleton):
@@ -35,3 +36,13 @@ if __name__ == '__main__':
 	y.set(3)
 	print('{}.x is {}'.format('x', x.get()))
 	print('{}.x is {}'.format('y', y.get()))
+
+	print(hex(id(a)))
+	print(hex(id(x)))
+	print(hex(id(y)))
+
+	ca = copy(a)
+	cb = deepcopy(a)
+
+	print(hex(id(ca)))
+	print(hex(id(cb)))

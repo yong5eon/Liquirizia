@@ -12,9 +12,7 @@ __all__ = (
 
 
 class Meta(ABCMeta):
-	"""
-	Singleton Meta Class
-	"""
+	"""Singleton Meta Class"""
 
 	__object__ = {}
 
@@ -27,7 +25,6 @@ class Meta(ABCMeta):
 
 
 class Singleton(ABC, metaclass=Meta):
-	"""
-	Singleton Base Class
-	"""
-	pass
+	"""Singleton Base Class"""
+	def __copy__(self): return self
+	def __deepcopy__(self, memodict={}): return self
