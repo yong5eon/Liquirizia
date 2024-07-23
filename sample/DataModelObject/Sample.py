@@ -20,13 +20,15 @@ from Liquirizia.Test.Patterns import (
 	IsExceptionWith as AssertExceptionWith,
 )
 
+from Liquirizia.Util import PrettyPrint, PrettyDump
+
 from random import random, randrange
 from sys import stderr
 
 
 class DataModelPropertiesHandler(DataObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any):
-		print('DataModelProperties changed {} to {} in {}'.format(n, v, repr(o)))
+		print('DataModelProperties changed {} to {} in {}'.format(n, v, PrettyDump(o)))
 		return
 
 
@@ -37,7 +39,7 @@ class DataModelProperties(DataModelObject):
 
 class DataModelHandler(DataObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any):
-		print('DataModel changed {} to {} in {}'.format(n, v, repr(o)))
+		print('DataModel changed {} to {} in {}'.format(n, v, PrettyDump(o)))
 		return
 
 
@@ -96,7 +98,7 @@ _ = DataModel(
 	]
 )
 
-print(repr(_))
+PrettyPrint(_)
 
 _.typeBool = True
 
@@ -159,8 +161,7 @@ _.typeDataModel = DataModelProperties(
 	typeFloat=1.0,
 )
 
-print(_)
 _.typeDataModel.typeInteger = 6
-print(_)
 _.typeListOfDataModel[0].typeFloat = 4.0
 
+PrettyPrint(_)
