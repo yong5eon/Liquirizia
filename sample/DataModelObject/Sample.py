@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.DataModelObject import (
-	DataObject, 
 	DataModelObject,
-	DataModelInterfaceObject,
+	DataObject, 
+	DataObjectHandler,
 )
-from Liquirizia.Validator import Validator, Pattern, Error
+from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
 
 from Liquirizia.Test import (
@@ -24,18 +24,18 @@ from random import random, randrange
 from sys import stderr
 
 
-class DataModelPropertiesInterface(DataModelInterfaceObject):
+class DataModelPropertiesHandler(DataObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any):
 		print('DataModelProperties changed {} to {} in {}'.format(n, v, repr(o)))
 		return
 
 
 class DataModelProperties(DataModelObject):
-	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesInterface())
-	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesInterface())
+	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesHandler())
+	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
 
 
-class DataModelInterface(DataModelInterfaceObject):
+class DataModelHandler(DataObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any):
 		print('DataModel changed {} to {} in {}'.format(n, v, repr(o)))
 		return
@@ -49,12 +49,12 @@ class IsDataModelProperties(Pattern):
 
 
 class DataModel(DataModelObject):
-	typeBool = DataObject(Validator(IsBool(IsEqualTo(True))), fn=DataModelInterface())
-	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelInterface())
-	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelInterface())
-	typeString = DataObject(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelInterface())
-	typeList = DataObject(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelInterface())
-	typeListOfList = DataObject(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelInterface())
+	typeBool = DataObject(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
+	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
+	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
+	typeString = DataObject(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
+	typeList = DataObject(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
+	typeListOfList = DataObject(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
 	typeListOfDict = DataObject(
 		Validator(IsAbleToNone(IsList(IsElementOf(IsDictionary(
 			IsRequiredIn('typeInteger', 'typeFloat'),
@@ -64,15 +64,15 @@ class DataModel(DataModelObject):
 				'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'LEE', 'PARK', 'CHOI', 'HEO'))))
 			})
 		))))),
-		fn=DataModelInterface()
+		fn=DataModelHandler()
 	)
 	typeDict = DataObject(Validator(IsDictionary(
 		IsMappingOf({
 			'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'BANG', 'JEONG', 'HEO'))))
 		})
-	)), fn=DataModelInterface())
-	typeDataModel = DataObject(Validator(IsDataModelProperties()), fn=DataModelInterface())
-	typeListOfDataModel = DataObject(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelInterface())
+	)), fn=DataModelHandler())
+	typeDataModel = DataObject(Validator(IsDataModelProperties()), fn=DataModelHandler())
+	typeListOfDataModel = DataObject(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
 
 _ = DataModel(
 	typeBool=True,
@@ -83,6 +83,7 @@ _ = DataModel(
 	typeDict={
 		'typeList': ['KIM',]
 	},
+	typeListOfDict=[],
 	typeDataModel=DataModelProperties(
 		typeInteger=3,
 		typeFloat=4.0
@@ -141,6 +142,7 @@ _.typeListOfDict = []
 _.typeListOfDict.append({
 	'typeInteger': 1,
 	'typeFloat': 2.0,
+	'typeList': ['KIM', 'LEE', 'PARK']
 })
 _.typeListOfDict[0]['typeBool'] = True
 _.typeListOfDict[0]['typeInteger'] = 2

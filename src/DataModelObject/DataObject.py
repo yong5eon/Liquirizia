@@ -3,7 +3,7 @@
 from Liquirizia.Validator import Validator
 
 from .DataTypeObject import DataTypeObject
-from .DataModelInterfaceObject import DataModelInterfaceObject
+from .DataObjectHandler import DataObjectHandler
 
 from copy import deepcopy
 
@@ -18,7 +18,7 @@ class DataObject(object):
 	def __init__(
 		self, 
 		va : Validator = Validator(),
-		fn : DataModelInterfaceObject = None
+		fn : DataObjectHandler = None
 	):
 		self.validator = va
 		self.callback = fn

@@ -3,11 +3,11 @@
 from abc import ABC, abstractmethod
 
 __all__ = (
-	'DataModelInterfaceObject'
+	'DataObjectHandler'
 )
 
 
-class DataModelInterfaceObject(ABC):
+class DataObjectHandler(ABC):
 	@abstractmethod
 	def __call__(
 		self, 
