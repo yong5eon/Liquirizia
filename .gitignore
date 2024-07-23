@@ -71,6 +71,7 @@ tmp
 *.TXT.*
 
 # Symlinks
+src/FileSystemObject/Implements/FileSystem
 src/DataAccessObject/Implements/Sqlite
 src/Serializer/Implements/JavaScriptObjectNotation
 src/Serializer/Implements/Text
