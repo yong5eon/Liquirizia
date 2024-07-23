@@ -71,7 +71,10 @@ tmp
 *.TXT.*
 
 # Symlinks
-src/EventBroker
+src/DataAccessObject/Implements/Sqlite
 src/Serializer/Implements/JavaScriptObjectNotation
 src/Serializer/Implements/Text
+src/Serializer/Implements/FormUrlEncodedsrc/Serializer/Implements/JavaScriptObjectNotation
+src/Serializer/Implements/Text
 src/Serializer/Implements/FormUrlEncoded
+src/EventBroker
