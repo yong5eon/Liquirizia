@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .DataObject import DataObject
+from .DataAttributeObject import DataAttributeObject
 
 from collections.abc import Iterable, Mapping
 from copy import copy, deepcopy
@@ -17,7 +17,7 @@ class DataModelObject(Mapping, Iterable):
 		o = object.__new__(cls)
 		o.__object__ = dict()
 		for k, v in cls.__dict__.items():
-			if isinstance(v, DataObject):
+			if isinstance(v, DataAttributeObject):
 				v.__init_object__(o, kwargs[k] if k in kwargs.keys() else None)
 		return o
 

@@ -2,17 +2,15 @@
 
 from Liquirizia.Validator import Validator
 
-from .DataTypeObject import DataTypeObject
 from .DataObjectHandler import DataObjectHandler
-
-from copy import deepcopy
+from .DataTypeObjectFactory import DataTypeObjectFactory
 
 __all__ = (
-	'DataObject'
+	'DataAttributeObject'
 )
 
 
-class DataObject(object):
+class DataAttributeObject(object):
 	"""Data Object Class of Data Model Object"""
 
 	def __init__(
@@ -23,7 +21,6 @@ class DataObject(object):
 		self.validator = va
 		self.callback = fn
 		self.name = None 
-		self.value = None 
 		return
 
 	def __set_name__(self, obj, name):
@@ -37,12 +34,12 @@ class DataObject(object):
 			self.name, 
 			self.validator(value)
 		)
-		self.value = deepcopy(value)
 		return self
 
 	def __set__(self, obj, value):
 		if obj is None:
 			return
+		prev = obj.__object__.__getitem__(self.name)
 		obj.__object__.__setitem__(
 			self.name, 
 			self.validator(value)
@@ -52,8 +49,8 @@ class DataObject(object):
 				obj,
 				self.name,
 				obj.__object__.__getitem__(self.name),
+				prev,
 			)
-		self.value = deepcopy(value)
 		return self
 
 	def __get__(self, obj, type=None):
@@ -65,14 +62,8 @@ class DataObject(object):
 				self.name
 			))
 		v = obj.__object__.__getitem__(self.name)
-		o = DataTypeObject(
-			v,
-			self,
-			obj,
-		)	
-		self.value = deepcopy(v)
-		return o
-
+		return DataTypeObjectFactory(v, self, obj)
+	
 	def __delete__(self, obj):
 		raise ValueError('{} is not able to delete in {}'.format(
 			self.name,

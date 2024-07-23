@@ -14,5 +14,6 @@ class DataObjectHandler(ABC):
 		o : any,  # Model
 		n : str,  # Name
 		v : any,  # Value
+		p : any,  # Previous Value
 	):
 		pass
