@@ -18,10 +18,9 @@
 ## 구성
 * [OOP(Object Oriented Programming) 지원](docs/OOP.md)
 * [템플릿 및 디자인 패턴](docs/DesignPatterns.md)
-* [데이터 접근 및 모델링](docs/DataAccessModel.md)
+* 데이터 접근 및 모델링
   * [데이터 접근](docs/DataAccessObject.md)
-  * [데이터 접근 모델링](docs/DataAccessModelObject.md)
-  * [데이터 모델링](docs/DataModelObject.md)
+  * [데이터 모델링](docs/DataModel.md)
 * [값 검증기](docs/Validation.md)
 * 직렬화, 비직렬화 도구
 * 파일 시스템 접근 및 파일 접근
