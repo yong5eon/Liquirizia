@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ..DataTypeObject import DataTypeObject
-from ..DataTypeObjectFactory import DataTypeObjectFactory
+from ..Type import Type
+from ..TypeFactory import TypeFactory
 
 from copy import deepcopy
 
@@ -10,13 +10,13 @@ __all__ = (
 )
 
 
-class Object(DataTypeObject):
+class Object(Type):
 	"""Object Data Type Object Class of Data Model Object"""
 
 	def __getattr__(self, key):
 		if key in ('__value__', '__attr__', '__model__'):
 			return super(Object, self).__getattr__(key)
-		return DataTypeObjectFactory(
+		return TypeFactory(
 			self.__value__.__getattr__(key),
 			self.__attr__,
 			self.__model__,

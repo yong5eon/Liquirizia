@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from .DataTypeObject import DataTypeObject
+from .Type import Type
 
 __all__ = (
-	'DataTypeObjectFactory'
+	'TypeFactory'
 )
 
 
-class DataTypeObjectFactory(DataTypeObject):
-	"""Data Type Object Factory"""
+class TypeFactory(Type):
+	"""Type Factory"""
 	@classmethod
 	def __new__(cls, *args, **kwargs):
 		value = args[1]

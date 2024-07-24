@@ -1,23 +1,23 @@
 # -*- coding: utf-8 -*-
 
-from .DataAttributeObject import DataAttributeObject
+from .Attribute import Attribute
 
 from collections.abc import Iterable, Mapping
 from copy import copy, deepcopy
 
 __all__ = (
-	'DataModelObject'
+	'Model'
 )
 
 
-class DataModelObject(Mapping, Iterable):
-	"""Abstract Data Model Class of Data Model Object"""
+class Model(Mapping, Iterable):
+	"""Abstract Model Class of Data Model"""
 
 	def __new__(cls, *args, **kwargs):
 		o = object.__new__(cls)
 		o.__object__ = dict()
 		for k, v in cls.__dict__.items():
-			if isinstance(v, DataAttributeObject):
+			if isinstance(v, Attribute):
 				v.__init_object__(o, kwargs[k] if k in kwargs.keys() else None)
 		return o
 
