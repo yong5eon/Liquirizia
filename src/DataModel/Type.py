@@ -4,12 +4,12 @@ from abc import ABC
 from operator import *
 
 __all__ = (
-	'DataTypeObject'
+	'Type'
 )
 
 
-class DataTypeObject(ABC):
-	"""Abstract Data Type Object Class of Data Model Object"""
+class Type(ABC):
+	"""Abstract Type Class of Data Model"""
 	def __new__(
 		cls,
 		value,

@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from ..DataTypeObject import DataTypeObject
-from ..DataTypeObjectFactory import DataTypeObjectFactory
+from ..Type import Type
+from ..TypeFactory import TypeFactory
 
 from copy import deepcopy
 
@@ -10,7 +10,7 @@ __all__ = (
 )
 
 
-class Dictionary(DataTypeObject):
+class Dictionary(Type):
 	"""Dictionary Data Type Object Class of Data Model Object"""
 
 	def __getattr__(self, name):
@@ -20,7 +20,7 @@ class Dictionary(DataTypeObject):
 		return self.__value__.__iter__()
 
 	def __getitem__(self, key):
-		return DataTypeObjectFactory(
+		return TypeFactory(
 			self.__value__.__getitem__(key) if key in self.__value__.keys() else None,
 			self.__attr__,
 			self.__model__,
