@@ -10,7 +10,7 @@ __all__ = (
 
 
 class ModelExecutor(ABC):
-	"""Abstract Data Model Object Executor Class"""
+	"""Abstract Model Executor Class"""
 
 	def __init__(self, o: type[Model]):
 		super().__init__()
