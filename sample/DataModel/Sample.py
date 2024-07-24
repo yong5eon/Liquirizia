@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.DataModelObject import (
-	DataModelObject,
-	DataAttributeObject, 
-	DataModelObjectHandler,
+from Liquirizia.DataModel import (
+	Model,
+	Attribute, 
+	ModelHandler,
 )
 from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
@@ -26,19 +26,19 @@ from random import random, randrange
 from sys import stderr
 
 
-class DataModelPropertiesHandler(DataModelObjectHandler):
-	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
+class DataModelPropertiesHandler(ModelHandler):
+	def __call__(self, o : Model, n : str, v : any, p : any):
 		print('DataModelProperties changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
 
 
-class DataModelProperties(DataModelObject):
-	typeInteger = DataAttributeObject(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesHandler())
-	typeFloat = DataAttributeObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
+class DataModelProperties(Model):
+	typeInteger = Attribute(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesHandler())
+	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
 
 
-class DataModelHandler(DataModelObjectHandler):
-	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
+class DataModelHandler(ModelHandler):
+	def __call__(self, o : Model, n : str, v : any, p : any):
 		print('DataModel changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
 
@@ -46,18 +46,18 @@ class DataModelHandler(DataModelObjectHandler):
 class IsDataModelProperties(Pattern):
 	def __call__(self, parameter):
 		if not isinstance(parameter, DataModelProperties):
-			raise TypeError('{} is not DataModelObject'.format(parameter.__class__.__name__))
+			raise TypeError('{} is not Model'.format(parameter.__class__.__name__))
 		return parameter
 
 
-class DataModel(DataModelObject):
-	typeBool = DataAttributeObject(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
-	typeInteger = DataAttributeObject(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
-	typeFloat = DataAttributeObject(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
-	typeString = DataAttributeObject(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
-	typeList = DataAttributeObject(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
-	typeListOfList = DataAttributeObject(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
-	typeListOfDict = DataAttributeObject(
+class DataModel(Model):
+	typeBool = Attribute(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
+	typeInteger = Attribute(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
+	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
+	typeString = Attribute(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
+	typeList = Attribute(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
+	typeListOfList = Attribute(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
+	typeListOfDict = Attribute(
 		Validator(IsAbleToNone(IsList(IsElementOf(IsDictionary(
 			IsRequiredIn('typeInteger', 'typeFloat'),
 			IsMappingOf({
@@ -68,13 +68,13 @@ class DataModel(DataModelObject):
 		))))),
 		fn=DataModelHandler()
 	)
-	typeDict = DataAttributeObject(Validator(IsDictionary(
+	typeDict = Attribute(Validator(IsDictionary(
 		IsMappingOf({
 			'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'BANG', 'JEONG', 'HEO'))))
 		})
 	)), fn=DataModelHandler())
-	typeDataModel = DataAttributeObject(Validator(IsDataModelProperties()), fn=DataModelHandler())
-	typeListOfDataModel = DataAttributeObject(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
+	typeDataModel = Attribute(Validator(IsDataModelProperties()), fn=DataModelHandler())
+	typeListOfDataModel = Attribute(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
 
 _ = DataModel(
 	typeBool=True,

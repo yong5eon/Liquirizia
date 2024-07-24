@@ -2,21 +2,21 @@
 
 from Liquirizia.Validator import Validator
 
-from .DataModelObjectHandler import DataModelObjectHandler
-from .DataTypeObjectFactory import DataTypeObjectFactory
+from .ModelHandler import ModelHandler
+from .TypeFactory import TypeFactory
 
 __all__ = (
-	'DataAttributeObject'
+	'Attribute'
 )
 
 
-class DataAttributeObject(object):
-	"""Data Object Class of Data Model Object"""
+class Attribute(object):
+	"""Attribute Class of Model"""
 
 	def __init__(
 		self, 
 		va : Validator = Validator(),
-		fn : DataModelObjectHandler = None
+		fn : ModelHandler = None
 	):
 		self.validator = va
 		self.callback = fn
@@ -62,7 +62,7 @@ class DataAttributeObject(object):
 				self.name
 			))
 		v = obj.__object__.__getitem__(self.name)
-		return DataTypeObjectFactory(v, self, obj)
+		return TypeFactory(v, self, obj)
 	
 	def __delete__(self, obj):
 		raise ValueError('{} is not able to delete in {}'.format(

@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from .DataModelObject import DataModelObject
+from .Model import Model
 
 from abc import ABC, ABCMeta, abstractmethod
 
 __all__ = (
-	'DataModelObjectExecutor'
+	'ModelExecutor'
 )
 
 
-class DataModelObjectExecutor(ABC):
+class ModelExecutor(ABC):
 	"""Abstract Data Model Object Executor Class"""
 
-	def __init__(self, o: type[DataModelObject]):
+	def __init__(self, o: type[Model]):
 		super().__init__()
 		self.model = o
 		return
