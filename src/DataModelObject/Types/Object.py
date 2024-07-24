@@ -1,6 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from ..DataTypeObject import DataTypeObject
+from ..DataTypeObjectFactory import DataTypeObjectFactory
+
+from copy import deepcopy
 
 __all__ = (
 	'Object'
@@ -11,49 +14,38 @@ class Object(DataTypeObject):
 	"""Object Data Type Object Class of Data Model Object"""
 
 	def __getattr__(self, key):
-		def observe(o: DataTypeObject, fn: callable):
-			def wrapper(*args, **kwargs):
-				try:
-					prev = self.__model__.__object__.__getitem__(self.__object__.name)
-					res = fn(*args, **kwargs)
-					self.__model__.__object__.__setitem__(
-						self.__object__.name,
-						self.__object__.validator(self.__model__.__object__.__getitem__(self.__object__.name))
-					)
-					if self.__object__.callback:
-						self.__object__.callback(
-							self.__model__, 
-							self.__object__.name, 
-							self.__model__.__object__.__getitem__(self.__object__.name),
-							prev
-						)
-					return res
-				except Exception as e:
-					self.__model__.__object__.__setitem__(
-						self.__object__.name,
-						prev
-					)
-					raise e
-			return wrapper
-		attr = getattr(self.__value__, key)
-		if key in (
-			'append', 'extend', 'insert', 'remove', 'pop', 'sort', 'reverse',  # list
-			'clear', 'pop', 'update',  # dict
-		):
-			return observe(self, attr)
-		return attr
+		if key in ('__value__', '__attr__', '__model__'):
+			return super(Object, self).__getattr__(key)
+		return DataTypeObjectFactory(
+			self.__value__.__getattr__(key),
+			self.__attr__,
+			self.__model__,
+		)
 
 	def __setattr__(self, key, value):
-		if key in ('__value__', '__object__', '__model__'):
+		if key in ('__value__', '__attr__', '__model__'):
 			return super(Object, self).__setattr__(key, value)
-		prev = self.__model__.__object__.__getitem__(self.__object__.name)
-		setattr(self.__value__, key, value)
-		if self.__object__.callback:
-			self.__object__.callback(
-				self.__model__, 
-				self.__object__.name, 
-				self.__model__.__object__.__getitem__(self.__object__.name),
-				prev,
+		pv = deepcopy(self.__value__)
+		po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
+		try:
+			setattr(self.__value__, key, value)
+			self.__model__.__object__.__setitem__(
+				self.__attr__.name,
+				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
 			)
+			if self.__attr__.callback:
+				self.__attr__.callback(
+					self.__model__, 
+					self.__attr__.name, 
+					self.__model__.__object__.__getitem__(self.__attr__.name),
+					po
+				)
+		except Exception as e:
+			setattr(self.__value__, key, pv)
+			self.__model__.__object__.__setitem__(
+				self.__attr__.name,
+				po
+			)
+			raise e
 		return 
 

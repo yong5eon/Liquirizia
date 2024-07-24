@@ -11,27 +11,27 @@ class DataTypeObjectFactory(DataTypeObject):
 	"""Data Type Object Factory"""
 	@classmethod
 	def __new__(cls, *args, **kwargs):
-		v = args[1]
-		o = args[2]
-		m = args[3]
-		if isinstance(v, int):
+		value = args[1]
+		attr = args[2]
+		model = args[3]
+		if isinstance(value, int):
 			from .Types import Integer
-			return Integer(v, o, m)
-		if isinstance(v, float):
+			return Integer(value, attr, model)
+		if isinstance(value, float):
 			from .Types import Float
-			return Float(v, o, m)
-		if isinstance(v, str):
+			return Float(value, attr, model)
+		if isinstance(value, str):
 			from .Types import String
-			return String(v, o, m)
-		if isinstance(v, tuple):
+			return String(value, attr, model)
+		if isinstance(value, tuple):
 			from .Types import Tuple
-			return Tuple(v, o, m)
-		if isinstance(v, list):
+			return Tuple(value, attr, model)
+		if isinstance(value, list):
 			from .Types import List
-			return List(v, o, m)
-		if isinstance(v, dict):
+			return List(value, attr, model)
+		if isinstance(value, dict):
 			from .Types import Dictionary
-			return Dictionary(v, o, m)
+			return Dictionary(value, attr, model)
 		from .Types import Object
-		return Object(v, o, m)
+		return Object(value, attr, model)
 

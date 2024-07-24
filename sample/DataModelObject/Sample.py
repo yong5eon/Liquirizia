@@ -3,7 +3,7 @@
 from Liquirizia.DataModelObject import (
 	DataModelObject,
 	DataAttributeObject, 
-	DataObjectHandler,
+	DataModelObjectHandler,
 )
 from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
@@ -26,7 +26,7 @@ from random import random, randrange
 from sys import stderr
 
 
-class DataModelPropertiesHandler(DataObjectHandler):
+class DataModelPropertiesHandler(DataModelObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
 		print('DataModelProperties changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
@@ -37,7 +37,7 @@ class DataModelProperties(DataModelObject):
 	typeFloat = DataAttributeObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
 
 
-class DataModelHandler(DataObjectHandler):
+class DataModelHandler(DataModelObjectHandler):
 	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
 		print('DataModel changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
@@ -125,7 +125,6 @@ for i, v in enumerate(_.typeList):
 		_.typeList[i] = randrange(0, 20)
 	except Exception as e:
 		print('{}: {}'.format(e.__class__.__name__, str(e)), file=stderr)
-		pass
 
 _.typeListOfList = []
 _.typeListOfList.append([])
@@ -133,11 +132,6 @@ _.typeListOfList[0].append(1.0)
 _.typeListOfList[0].append(9.0)
 _.typeListOfList[0][0] = 3
 _.typeListOfList[0][1] = 2
-
-_.typeList2 = []
-_.typeList2.append(1)
-_.typeList2.append(2)
-_.typeList2.append(4)
 
 _.typeListOfDict = []
 _.typeListOfDict.append({

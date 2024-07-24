@@ -2,10 +2,10 @@
 
 from .DataModelObject import DataModelObject
 from .DataAttributeObject import DataAttributeObject
-from .DataObjectHandler import DataObjectHandler
+from .DataModelObjectHandler import DataModelObjectHandler
 
 __all__ = (
+	'DataModelObjectHandler',
 	'DataModelObject',
 	'DataAttributeObject',
-	'DataObjectHandler',
 )

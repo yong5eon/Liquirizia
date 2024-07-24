@@ -2,7 +2,7 @@
 
 from Liquirizia.Validator import Validator
 
-from .DataObjectHandler import DataObjectHandler
+from .DataModelObjectHandler import DataModelObjectHandler
 from .DataTypeObjectFactory import DataTypeObjectFactory
 
 __all__ = (
@@ -16,7 +16,7 @@ class DataAttributeObject(object):
 	def __init__(
 		self, 
 		va : Validator = Validator(),
-		fn : DataObjectHandler = None
+		fn : DataModelObjectHandler = None
 	):
 		self.validator = va
 		self.callback = fn

@@ -8,19 +8,18 @@ __all__ = (
 )
 
 
-
 class DataTypeObject(ABC):
 	"""Abstract Data Type Object Class of Data Model Object"""
 	def __new__(
 		cls,
-		v,
-		o,
-		m,
+		value,
+		attr,
+		model,
 	):
 		n = object.__new__(cls)
-		n.__value__= v
-		n.__object__ = o
-		n.__model__ = m
+		n.__value__= value
+		n.__attr__ = attr
+		n.__model__ = model
 		return n
 
 	def __repr__(self):
