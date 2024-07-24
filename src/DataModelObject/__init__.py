@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from .DataObject import DataObject
 from .DataModelObject import DataModelObject
-from .DataObjectHandler import DataObjectHandler
+from .DataAttributeObject import DataAttributeObject
+from .DataModelObjectHandler import DataModelObjectHandler
 
 __all__ = (
+	'DataModelObjectHandler',
 	'DataModelObject',
-	'DataObject',
-	'DataObjectHandler',
+	'DataAttributeObject',
 )
