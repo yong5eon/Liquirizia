@@ -3,16 +3,17 @@
 from abc import ABC, abstractmethod
 
 __all__ = (
-	'DataObjectHandler'
+	'DataModelObjectHandler'
 )
 
 
-class DataObjectHandler(ABC):
+class DataModelObjectHandler(ABC):
 	@abstractmethod
 	def __call__(
 		self, 
 		o : any,  # Model
 		n : str,  # Name
 		v : any,  # Value
+		p : any,  # Previous Value
 	):
 		pass

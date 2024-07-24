@@ -2,8 +2,8 @@
 
 from Liquirizia.DataModelObject import (
 	DataModelObject,
-	DataObject, 
-	DataObjectHandler,
+	DataAttributeObject, 
+	DataModelObjectHandler,
 )
 from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
@@ -20,24 +20,26 @@ from Liquirizia.Test.Patterns import (
 	IsExceptionWith as AssertExceptionWith,
 )
 
+from Liquirizia.Util import PrettyPrint, PrettyDump
+
 from random import random, randrange
 from sys import stderr
 
 
-class DataModelPropertiesHandler(DataObjectHandler):
-	def __call__(self, o : DataModelObject, n : str, v : any):
-		print('DataModelProperties changed {} to {} in {}'.format(n, v, repr(o)))
+class DataModelPropertiesHandler(DataModelObjectHandler):
+	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
+		print('DataModelProperties changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
 
 
 class DataModelProperties(DataModelObject):
-	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesHandler())
-	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
+	typeInteger = DataAttributeObject(Validator(IsInteger(IsRange(0, 10, 3))), fn=DataModelPropertiesHandler())
+	typeFloat = DataAttributeObject(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
 
 
-class DataModelHandler(DataObjectHandler):
-	def __call__(self, o : DataModelObject, n : str, v : any):
-		print('DataModel changed {} to {} in {}'.format(n, v, repr(o)))
+class DataModelHandler(DataModelObjectHandler):
+	def __call__(self, o : DataModelObject, n : str, v : any, p : any):
+		print('DataModel changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
 
 
@@ -49,13 +51,13 @@ class IsDataModelProperties(Pattern):
 
 
 class DataModel(DataModelObject):
-	typeBool = DataObject(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
-	typeInteger = DataObject(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
-	typeFloat = DataObject(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
-	typeString = DataObject(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
-	typeList = DataObject(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
-	typeListOfList = DataObject(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
-	typeListOfDict = DataObject(
+	typeBool = DataAttributeObject(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
+	typeInteger = DataAttributeObject(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
+	typeFloat = DataAttributeObject(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
+	typeString = DataAttributeObject(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
+	typeList = DataAttributeObject(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
+	typeListOfList = DataAttributeObject(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
+	typeListOfDict = DataAttributeObject(
 		Validator(IsAbleToNone(IsList(IsElementOf(IsDictionary(
 			IsRequiredIn('typeInteger', 'typeFloat'),
 			IsMappingOf({
@@ -66,13 +68,13 @@ class DataModel(DataModelObject):
 		))))),
 		fn=DataModelHandler()
 	)
-	typeDict = DataObject(Validator(IsDictionary(
+	typeDict = DataAttributeObject(Validator(IsDictionary(
 		IsMappingOf({
 			'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'BANG', 'JEONG', 'HEO'))))
 		})
 	)), fn=DataModelHandler())
-	typeDataModel = DataObject(Validator(IsDataModelProperties()), fn=DataModelHandler())
-	typeListOfDataModel = DataObject(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
+	typeDataModel = DataAttributeObject(Validator(IsDataModelProperties()), fn=DataModelHandler())
+	typeListOfDataModel = DataAttributeObject(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
 
 _ = DataModel(
 	typeBool=True,
@@ -96,7 +98,7 @@ _ = DataModel(
 	]
 )
 
-print(repr(_))
+PrettyPrint(_)
 
 _.typeBool = True
 
@@ -117,14 +119,12 @@ for v in range(0, 10):
 		_.typeList.append(randrange(0, 20))
 	except Exception as e:
 		print('{}: {}'.format(e.__class__.__name__, str(e)), file=stderr)
-		pass
 
 for i, v in enumerate(_.typeList):
 	try:
 		_.typeList[i] = randrange(0, 20)
 	except Exception as e:
 		print('{}: {}'.format(e.__class__.__name__, str(e)), file=stderr)
-		pass
 
 _.typeListOfList = []
 _.typeListOfList.append([])
@@ -132,11 +132,6 @@ _.typeListOfList[0].append(1.0)
 _.typeListOfList[0].append(9.0)
 _.typeListOfList[0][0] = 3
 _.typeListOfList[0][1] = 2
-
-_.typeList2 = []
-_.typeList2.append(1)
-_.typeList2.append(2)
-_.typeList2.append(4)
 
 _.typeListOfDict = []
 _.typeListOfDict.append({
@@ -159,8 +154,7 @@ _.typeDataModel = DataModelProperties(
 	typeFloat=1.0,
 )
 
-print(_)
 _.typeDataModel.typeInteger = 6
-print(_)
 _.typeListOfDataModel[0].typeFloat = 4.0
 
+PrettyPrint(_)
