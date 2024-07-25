@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from .Model import Model
+from abc import ABC, abstractmethod
+from collections.abc import Iterable
 
-from abc import ABC, ABCMeta, abstractmethod
+from .Model import Model
 
 __all__ = (
 	'ModelExecutor'
@@ -12,7 +13,10 @@ __all__ = (
 class ModelExecutor(ABC):
 	"""Abstract Model Executor Class"""
 
+	@abstractmethod
 	def __init__(self, o: type[Model]):
-		super().__init__()
-		self.model = o
-		return
+		pass
+	
+	@abstractmethod
+	def __iter__(self):
+		pass
