@@ -3,7 +3,7 @@
 from abc import ABC, abstractmethod
 
 __all__ = (
-	'ModelFactory'
+	'ModelFactory',
 )
 
 
@@ -13,6 +13,3 @@ class ModelFactory(ABC):
 	def __call__(self, obj):
 		pass
 
-	@abstractmethod
-	def toString(self):
-		pass
