@@ -5,7 +5,6 @@ from .Attribute import Attribute
 from .ModelHandler import ModelHandler
 from .ModelExecutor import ModelExecutor
 from .ModelFactory import ModelFactory
-from .ModelToString import ModelToString
 
 __all__ = (
 	'ModelHandler',
@@ -13,5 +12,4 @@ __all__ = (
 	'Attribute',
 	'ModelExecutor',
 	'ModelFactory',
-	'ModelToString',
 )
