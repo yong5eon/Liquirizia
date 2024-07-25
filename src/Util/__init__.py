@@ -19,7 +19,7 @@ def PrettyPrint(obj, indent=2, fd=stdout):
 	step = 0
 	blank = False
 	lf = False
-	for _ in repr(obj):
+	for _ in obj if isinstance(obj, str) else repr(obj):
 		if _ in BEBFORE_LF_PATTERNS:
 			step -= 1
 			if not lf:
@@ -55,7 +55,7 @@ def PrettyDump(obj, indent=2):
 	blank = False
 	lf = False
 	__ = ''
-	for _ in repr(obj):
+	for _ in obj if isinstance(obj, str) else repr(obj):
 		if _ in BEBFORE_LF_PATTERNS:
 			step -= 1
 			if not lf:
