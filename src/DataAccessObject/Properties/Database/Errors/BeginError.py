@@ -8,11 +8,8 @@ __all__ = (
 
 
 class BeginError(Error):
-	"""
-	Begin Error Class for Database Access Object
-	"""
-	def __init__(self, reason=None, error=None):
-		if not reason:
-			reason = 'Transaction is not began'
-		super(Error, self).__init__(reason, error)
+	"""Begin Error Class"""
+
+	def __init__(self, reason='Tansaction is not began', error=None):
+		super(BeginError, self).__init__(reason, error)
 		return

@@ -10,12 +10,9 @@ __all__ = (
 
 
 class ExecuteError(Error):
-	"""
-	Execute Error Class for Database Access Object
-	"""
-	def __init__(self, reason=None, sql=None, code=None, error=None):
-		if not reason:
-			reason = 'Execution is error'
+	"""Execute Error Class"""
+
+	def __init__(self, reason='Execution is error', sql=None, code=None, error=None):
 		super(ExecuteError, self).__init__(reason, error)
 		self.sql = sql
 		self.code = code

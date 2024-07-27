@@ -10,8 +10,6 @@ __all__ = (
 class ConnectionTimeoutError(Error):
 	"""Connection Timeout Error Class"""
 
-	def __init__(self, reason=None, error=None):
-		if not reason:
-			reason = 'Connection is timeout'
-		super(Error, self).__init__(reason, error)
+	def __init__(self, reason='Connection is timeout', error=None):
+		super(ConnectionTimeoutError, self).__init__(reason, error)
 		return

@@ -10,8 +10,6 @@ __all__ = (
 class ConnectionError(Error):
 	"""Connection Error Class"""
 
-	def __init__(self, reason=None, error=None):
-		if not reason:
-			reason = 'Connection is error'
-		super(Error, self).__init__(reason, error)
+	def __init__(self, reason='Connection has error', error=None):
+		super(ConnectionError, self).__init__(reason, error)
 		return

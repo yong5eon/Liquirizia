@@ -8,11 +8,7 @@ __all__ = (
 
 
 class CommitError(Error):
-	"""
-	Commit Error Class for Database Access Object
-	"""
-	def __init__(self, reason=None, error=None):
-		if not reason:
-			reason = 'Transaction is not committed'
-		super(Error, self).__init__(reason, error)
+	"""Commit Error Class"""
+	def __init__(self, reason='Transaction is not committed', error=None):
+		super(CommitError, self).__init__(reason, error)
 		return
