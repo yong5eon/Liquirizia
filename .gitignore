@@ -73,6 +73,10 @@ tmp
 # Symlinks
 src/FileSystemObject/Implements/FileSystem
 src/DataAccessObject/Implements/Sqlite
+src/DataAccessObject/Implements/PostgreSQL
+src/DataAccessObject/Implements/Redis
+src/DataAccessObject/Implements/RedisCluster
+src/DataAccessObject/Implements/AWS
 src/Serializer/Implements/JavaScriptObjectNotation
 src/Serializer/Implements/Text
 src/Serializer/Implements/FormUrlEncodedsrc/Serializer/Implements/JavaScriptObjectNotation
