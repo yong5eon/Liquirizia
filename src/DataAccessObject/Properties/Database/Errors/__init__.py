@@ -1,16 +1,16 @@
 # -*- coding: utf-8 -*-
 
-from .DataAccessObjectExecuteError import DataAccessObjectExecuteError
-from .DataAccessObjectCursorError import DataAccessObjectCursorError
-from .DataAccessObjectBeginError import DataAccessObjectBeginError
-from .DataAccessObjectRollBackError import DataAccessObjectRollBackError
-from .DataAccessObjectNotSupportedError import DataAccessObjectNotSupportedError
+from .ExecuteError import ExecuteError
+from .CursorError import CursorError
+from .BeginError import BeginError
+from .RollBackError import RollBackError
+from .NotSupportedError import NotSupportedError
 
 __all__ = (
-	'DataAccessObjectExecuteError',
-	'DataAccessObjectCursorError',
-	'DataAccessObjectBeginError',
-	'DataAccessObjectCommitError',
-	'DataAccessObjectRollBackError',
-	'DataAccessObjectNotSupportedError',
+	'ExecuteError',
+	'CursorError',
+	'BeginError',
+	'CommitError',
+	'RollBackError',
+	'NotSupportedError',
 )

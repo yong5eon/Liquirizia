@@ -1,18 +1,18 @@
 # -*- coding: utf-8 -*-
 
-from ....DataAccessObjectError import DataAccessObjectError
+from ....Error import Error
 
 __all__ = (
-	'DataAccessObjectCommitError'
+	'CommitError'
 )
 
 
-class DataAccessObjectCommitError(DataAccessObjectError):
+class CommitError(Error):
 	"""
 	Commit Error Class for Database Access Object
 	"""
 	def __init__(self, reason=None, error=None):
 		if not reason:
 			reason = 'Transaction is not committed'
-		super(DataAccessObjectError, self).__init__(reason, error)
+		super(Error, self).__init__(reason, error)
 		return

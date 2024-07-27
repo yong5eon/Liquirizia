@@ -1,28 +1,28 @@
 # -*- coding: utf-8 -*-
 
-from ....DataAccessObjectError import DataAccessObjectError
+from ....Error import Error
 
 import traceback
 
 __all__ = (
-	'DataAccessObjectExecuteError'
+	'ExecuteError'
 )
 
 
-class DataAccessObjectExecuteError(DataAccessObjectError):
+class ExecuteError(Error):
 	"""
 	Execute Error Class for Database Access Object
 	"""
 	def __init__(self, reason=None, sql=None, code=None, error=None):
 		if not reason:
 			reason = 'Execution is error'
-		super(DataAccessObjectExecuteError, self).__init__(reason, error)
+		super(ExecuteError, self).__init__(reason, error)
 		self.sql = sql
 		self.code = code
 		return
 
 	def __str__(self):
-		reason = super(DataAccessObjectExecuteError, self).__str__()
+		reason = super(ExecuteError, self).__str__()
 		if self.code:
 			reason += self.code + '\n'
 		if self.sql:
