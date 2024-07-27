@@ -55,12 +55,9 @@ target/
 __pypackages__/
 
 # Liquirizia
-.github
-.vscode
 .idea
 .old
 *.old
-tmp
 *.log
 *.LOG
 *.log.*
@@ -69,6 +66,7 @@ tmp
 *.txt.*
 *.txt
 *.TXT.*
+tmp
 
 # Symlinks
 src/FileSystemObject/Implements/FileSystem
@@ -77,9 +75,7 @@ src/DataAccessObject/Implements/PostgreSQL
 src/DataAccessObject/Implements/Redis
 src/DataAccessObject/Implements/RedisCluster
 src/DataAccessObject/Implements/AWS
+src/Serializer/Implements/Text
 src/Serializer/Implements/JavaScriptObjectNotation
-src/Serializer/Implements/Text
-src/Serializer/Implements/FormUrlEncodedsrc/Serializer/Implements/JavaScriptObjectNotation
-src/Serializer/Implements/Text
 src/Serializer/Implements/FormUrlEncoded
 src/EventBroker
