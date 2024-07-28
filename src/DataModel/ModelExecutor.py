@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, abstractmethod
-from collections.abc import Iterable
+from abc import ABCMeta, abstractmethod
 
 from .Model import Model
 
@@ -10,7 +9,7 @@ __all__ = (
 )
 
 
-class ModelExecutor(ABC):
+class ModelExecutor(metaclass=ABCMeta):
 	"""Abstract Model Executor Class"""
 
 	@abstractmethod
@@ -18,5 +17,5 @@ class ModelExecutor(ABC):
 		pass
 	
 	@abstractmethod
-	def __iter__(self):
+	def __str__(self):
 		pass
