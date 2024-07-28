@@ -59,3 +59,4 @@ class DataAccessModelObject(object):
 		for k, v in self.__dict__.items():
 			setattr(o, k, deepcopy(v, memo))
 		return o
+

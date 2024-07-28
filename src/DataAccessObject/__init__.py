@@ -1,15 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from .DataAccessObject import DataAccessObject
-from .DataAccessObjectConfiguration import DataAccessObjectConfiguration
-from .DataAccessObjectHelper import DataAccessObjectHelper
-from .DataAccessObjectError import DataAccessObjectError
-from .DataTypeObject import DataTypeObject
+from .Connection import Connection
+from .Configuration import Configuration
+from .Helper import Helper
+from .Error import Error
+from .Type import Type
 
 __all__ = (
-	'DataAccessObject',
-	'DataAccessObjectConfiguration',
-	'DataAccessObjectError',
-	'DataAccessObjectHelper',
-	'DataTypeObject',
+	'Connection',
+	'Configuration',
+	'Error',
+	'Helper',
+	'Type',
 )

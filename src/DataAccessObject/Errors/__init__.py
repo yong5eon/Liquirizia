@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from .DataAccessObjectConnectionError import DataAccessObjectConnectionError
-from .DataAccessObjectConnectionClosedError import DataAccessObjectConnectionClosedError
-from .DataAccessObjectConnectionTimeoutError import DataAccessObjectConnectionTimeoutError
+from .ConnectionError import ConnectionError
+from .ConnectionClosedError import ConnectionClosedError
+from .ConnectionTimeoutError import ConnectionTimeoutError
 
 __all__ = (
-	'DataAccessObjectConnectionError',
-	'DataAccessObjectConnectionClosedError',
-	'DataAccessObjectConnectionTimeoutError',
+	'ConnectionError',
+	'ConnectionClosedError',
+	'ConnectionTimeoutError',
 )
