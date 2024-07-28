@@ -21,10 +21,14 @@ class Attribute(object):
 		self.validator = va
 		self.callback = fn
 		self.name = None 
+		self.model = None
 		return
 
 	def __set_name__(self, obj, name):
+		if obj is None:
+			return
 		self.name = name
+		self.model = obj
 		return
 
 	def __init_object__(self, obj, value):
