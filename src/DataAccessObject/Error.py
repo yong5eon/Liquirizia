@@ -3,16 +3,15 @@
 import traceback
 
 __all__ = (
-	'DataAccessObjectError'
+	'Error'
 )
 
 
-class DataAccessObjectError(BaseException):
-	"""
-	Data Access Object Error Class
-	"""
+class Error(BaseException):
+	"""Error Class"""
+
 	def __init__(self, reason, error=None):
-		super(DataAccessObjectError, self).__init__(reason)
+		super(Error, self).__init__(reason)
 		self.reason = reason
 		self.error = error
 		return
