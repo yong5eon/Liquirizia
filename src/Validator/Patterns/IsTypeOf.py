@@ -13,6 +13,8 @@ __all__ = (
 	'IsList',
 	'IsTuple',
 	'IsDictionary',
+	'IsBytes',
+	'IsByteStream',
 )
 
 
@@ -82,4 +84,14 @@ class IsTuple(IsTypeOf):
 class IsDictionary(IsTypeOf):
 	def __init__(self, *args, error=None):
 		super(IsDictionary, self).__init__(dict, patterns=args, error=error)
+		return
+
+class IsBytes(IsTypeOf):
+	def __init__(self, *args, error=None):
+		super(IsBytes, self).__init__(bytes, patterns=args, error=error)
+		return
+
+class IsByteStream(IsTypeOf):
+	def __init__(self, *args, error=None):
+		super(IsByteStream, self).__init__(bytearray, patterns=args, error=error)
 		return

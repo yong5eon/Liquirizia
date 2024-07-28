@@ -29,7 +29,10 @@ from .IsTypeOf import (
 	IsList,
 	IsTuple,
 	IsDictionary,
+	IsBytes,
+	IsByteStream,
 )
+from .IsDateTime import IsDateTime
 from .ToTypeOf import (
 	ToTypeOf,
 	ToBool,
@@ -92,6 +95,9 @@ __all__ = (
 	'ToList',
 	'ToTuple',
 	'ToDictionary',
+	'IsBytes',
+	'IsByteStream',
+	'IsDateTime',
 	# numeric 
 	'IsRange',
 	# string
