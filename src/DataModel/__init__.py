@@ -2,16 +2,10 @@
 
 from .Model import Model
 from .Attribute import Attribute
-from .ModelHandler import ModelHandler
-from .ModelExecutor import ModelExecutor
-from .ModelExecutors import ModelExecutors
-from .ModelFactory import ModelFactory
+from .Handler import Handler
 
 __all__ = (
 	'Model',
 	'Attribute',
-	'ModelHandler',
-	'ModelExecutor',
-	'ModelExecutors',
-	'ModelFactory',
+	'Handler',
 )
