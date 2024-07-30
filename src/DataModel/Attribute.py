@@ -2,7 +2,7 @@
 
 from Liquirizia.Validator import Validator
 
-from .ModelHandler import ModelHandler
+from .Handler import Handler
 from .TypeFactory import TypeFactory
 
 __all__ = (
@@ -16,7 +16,7 @@ class Attribute(object):
 	def __init__(
 		self, 
 		va : Validator = Validator(),
-		fn : ModelHandler = None
+		fn : Handler = None
 	):
 		self.validator = va
 		self.callback = fn

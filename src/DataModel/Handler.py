@@ -1,13 +1,15 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 __all__ = (
-	'ModelHandler'
+	'Handler'
 )
 
 
-class ModelHandler(ABC):
+class Handler(metaclass=ABCMeta):
+	"""Handler Interface for Data Model"""
+
 	@abstractmethod
 	def __call__(
 		self, 
