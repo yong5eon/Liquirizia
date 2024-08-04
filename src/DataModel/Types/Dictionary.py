@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Type import Type
-from ..TypeFactory import TypeFactory
 
 from copy import deepcopy
 
@@ -20,7 +19,7 @@ class Dictionary(Type):
 		return self.__value__.__iter__()
 
 	def __getitem__(self, key):
-		return TypeFactory(
+		return Type.Create(
 			self.__value__.__getitem__(key) if key in self.__value__.keys() else None,
 			self.__attr__,
 			self.__model__,
