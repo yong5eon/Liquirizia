@@ -18,11 +18,6 @@ class Executor(metaclass=ABCMeta):
 
 	@property
 	@abstractmethod
-	def model(self):
-		pass
-
-	@property
-	@abstractmethod
 	def query(self):
 		pass
 
