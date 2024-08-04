@@ -3,7 +3,7 @@
 from Liquirizia.Validator import Validator
 
 from .Handler import Handler
-from .TypeFactory import TypeFactory
+from .Type import Type
 
 __all__ = (
 	'Attribute'
@@ -57,7 +57,7 @@ class Attribute(object):
 			)
 		return self
 
-	def __get__(self, obj, type=None):
+	def __get__(self, obj, owner=None):
 		if obj is None:
 			return self
 		if self.name not in obj.__object__.keys():
@@ -66,7 +66,7 @@ class Attribute(object):
 				self.name
 			))
 		v = obj.__object__.__getitem__(self.name)
-		return TypeFactory(v, self, obj)
+		return Type.Create(v, self, obj)
 	
 	def __delete__(self, obj):
 		raise ValueError('{} is not able to delete in {}'.format(
