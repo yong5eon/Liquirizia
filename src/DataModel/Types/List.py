@@ -37,7 +37,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -62,7 +62,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -87,7 +87,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -112,7 +112,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -137,7 +137,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -162,7 +162,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -187,7 +187,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -212,7 +212,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
@@ -237,7 +237,7 @@ class List(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
 				)
