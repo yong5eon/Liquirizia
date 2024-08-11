@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Type import Type
-from ..TypeFactory import TypeFactory
 
 __all__ = (
 	'Tuple'
@@ -18,7 +17,7 @@ class Tuple(Type):
 		return self.__value__.__iter__()
 
 	def __getitem__(self, key):
-		return TypeFactory(
+		return Type.Create(
 			self.__value__.__getitem__(key) if key < len(self.__value__) else None,
 			self.__attr__,
 			self.__model__,

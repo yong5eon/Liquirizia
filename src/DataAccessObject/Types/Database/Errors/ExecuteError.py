@@ -12,10 +12,11 @@ __all__ = (
 class ExecuteError(Error):
 	"""Execute Error Class"""
 
-	def __init__(self, reason='Execution is error', sql=None, code=None, error=None):
+	def __init__(self, reason='Execution is error', error=None, code=None, sql=None, args=None):
 		super(ExecuteError, self).__init__(reason, error)
-		self.sql = sql
 		self.code = code
+		self.sql = sql
+		self.args = args
 		return
 
 	def __str__(self):
@@ -24,4 +25,6 @@ class ExecuteError(Error):
 			reason += self.code + '\n'
 		if self.sql:
 			reason += self.sql + '\n'
+		if self.args:
+			reason += str(self.args)+ '\n'
 		return reason

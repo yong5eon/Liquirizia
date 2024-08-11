@@ -2,10 +2,10 @@
 
 from .Model import Model
 from .Attribute import Attribute
-from .ModelHandler import ModelHandler
+from .Handler import Handler
 
 __all__ = (
-	'ModelHandler',
 	'Model',
 	'Attribute',
+	'Handler',
 )

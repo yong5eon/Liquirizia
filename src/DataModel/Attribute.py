@@ -2,8 +2,8 @@
 
 from Liquirizia.Validator import Validator
 
-from .ModelHandler import ModelHandler
-from .TypeFactory import TypeFactory
+from .Handler import Handler
+from .Type import Type
 
 __all__ = (
 	'Attribute'
@@ -16,15 +16,19 @@ class Attribute(object):
 	def __init__(
 		self, 
 		va : Validator = Validator(),
-		fn : ModelHandler = None
+		fn : Handler = None
 	):
 		self.validator = va
 		self.callback = fn
 		self.name = None 
+		self.model = None
 		return
 
 	def __set_name__(self, obj, name):
+		if obj is None:
+			return
 		self.name = name
+		self.model = obj
 		return
 
 	def __init_object__(self, obj, value):
@@ -47,13 +51,13 @@ class Attribute(object):
 		if self.callback:
 			self.callback(
 				obj,
-				self.name,
+				self,
 				obj.__object__.__getitem__(self.name),
 				prev,
 			)
 		return self
 
-	def __get__(self, obj, type=None):
+	def __get__(self, obj, owner=None):
 		if obj is None:
 			return self
 		if self.name not in obj.__object__.keys():
@@ -62,7 +66,7 @@ class Attribute(object):
 				self.name
 			))
 		v = obj.__object__.__getitem__(self.name)
-		return TypeFactory(v, self, obj)
+		return Type.Create(v, self, obj)
 	
 	def __delete__(self, obj):
 		raise ValueError('{} is not able to delete in {}'.format(

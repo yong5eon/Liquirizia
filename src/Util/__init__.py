@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from pprint import PrettyPrinter
 from sys import stdout
 
 __all__ = (
@@ -9,7 +8,7 @@ __all__ = (
 )
 
 
-def PrettyPrint(obj, indent=2, fd=stdout):
+def PrettyPrint(obj, indent=2, file=stdout):
 	AFTER_LF_PATTERNS	  = ['[', '{', '(', ',']
 	BEBFORE_LF_PATTERNS = [']', '}', ')']
 	EXCEPTIONAL_AFTER_LF_PATTERNNS = [',']
@@ -23,14 +22,14 @@ def PrettyPrint(obj, indent=2, fd=stdout):
 		if _ in BEBFORE_LF_PATTERNS:
 			step -= 1
 			if not lf:
-				fd.write(LF)
+				file.write(LF)
 				lf = True
 		if blank and _ == BLANK:
 			blank = False
 			continue	
 		if lf:
-			fd.write(BLANK * (step * indent))
-		fd.write(_)
+			file.write(BLANK * (step * indent))
+		file.write(_)
 		lf = False
 		if _ in AFTER_LF_PATTERNS:
 			if _ not in EXCEPTIONAL_AFTER_LF_PATTERNNS:
@@ -38,9 +37,9 @@ def PrettyPrint(obj, indent=2, fd=stdout):
 			else:
 				blank = True
 			if not lf:
-				fd.write(LF)
+				file.write(LF)
 				lf = True
-	fd.write(LF)
+	file.write(LF)
 	return
 
 

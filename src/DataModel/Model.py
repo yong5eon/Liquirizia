@@ -13,7 +13,7 @@ __all__ = (
 class Model(Mapping, Iterable):
 	"""Abstract Model Class of Data Model"""
 
-	def __new__(cls, *args, **kwargs):
+	def __new__(cls, **kwargs):
 		o = object.__new__(cls)
 		o.__object__ = dict()
 		for k, v in cls.__dict__.items():

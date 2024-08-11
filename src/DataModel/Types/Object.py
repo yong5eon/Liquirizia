@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Type import Type
-from ..TypeFactory import TypeFactory
 
 from copy import deepcopy
 
@@ -16,7 +15,7 @@ class Object(Type):
 	def __getattr__(self, key):
 		if key in ('__value__', '__attr__', '__model__'):
 			return super(Object, self).__getattr__(key)
-		return TypeFactory(
+		return Type.Create(
 			self.__value__.__getattr__(key),
 			self.__attr__,
 			self.__model__,
@@ -36,7 +35,7 @@ class Object(Type):
 			if self.__attr__.callback:
 				self.__attr__.callback(
 					self.__model__, 
-					self.__attr__.name, 
+					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po
 				)

@@ -27,3 +27,4 @@ class Validator(object):
 		return 'Validator({})'.format(
 			', '.join([repr(p) for p in self.patterns])
 		)
+	

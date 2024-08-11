@@ -3,7 +3,7 @@
 from Liquirizia.DataModel import (
 	Model,
 	Attribute, 
-	ModelHandler,
+	Handler,
 )
 from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
@@ -26,7 +26,7 @@ from random import random, randrange
 from sys import stderr
 
 
-class DataModelPropertiesHandler(ModelHandler):
+class DataModelPropertiesHandler(Handler):
 	def __call__(self, o : Model, n : str, v : any, p : any):
 		print('DataModelProperties changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
@@ -37,7 +37,7 @@ class DataModelProperties(Model):
 	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 3))), fn=DataModelPropertiesHandler())
 
 
-class DataModelHandler(ModelHandler):
+class DataHandler(Handler):
 	def __call__(self, o : Model, n : str, v : any, p : any):
 		print('DataModel changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
 		return
@@ -51,12 +51,12 @@ class IsDataModelProperties(Pattern):
 
 
 class DataModel(Model):
-	typeBool = Attribute(Validator(IsBool(IsEqualTo(True))), fn=DataModelHandler())
-	typeInteger = Attribute(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataModelHandler())
-	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataModelHandler())
-	typeString = Attribute(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataModelHandler())
-	typeList = Attribute(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataModelHandler())
-	typeListOfList = Attribute(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataModelHandler())
+	typeBool = Attribute(Validator(IsBool(IsEqualTo(True))), fn=DataHandler())
+	typeInteger = Attribute(Validator(IsInteger(IsRange(0, 10, 2))), fn=DataHandler())
+	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataHandler())
+	typeString = Attribute(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataHandler())
+	typeList = Attribute(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataHandler())
+	typeListOfList = Attribute(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataHandler())
 	typeListOfDict = Attribute(
 		Validator(IsAbleToNone(IsList(IsElementOf(IsDictionary(
 			IsRequiredIn('typeInteger', 'typeFloat'),
@@ -66,15 +66,15 @@ class DataModel(Model):
 				'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'LEE', 'PARK', 'CHOI', 'HEO'))))
 			})
 		))))),
-		fn=DataModelHandler()
+		fn=DataHandler()
 	)
 	typeDict = Attribute(Validator(IsDictionary(
 		IsMappingOf({
 			'typeList': Validator(IsList(IsElementOf(IsIn('KIM', 'BANG', 'JEONG', 'HEO'))))
 		})
-	)), fn=DataModelHandler())
-	typeDataModel = Attribute(Validator(IsDataModelProperties()), fn=DataModelHandler())
-	typeListOfDataModel = Attribute(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataModelHandler())
+	)), fn=DataHandler())
+	typeDataModel = Attribute(Validator(IsDataModelProperties()), fn=DataHandler())
+	typeListOfDataModel = Attribute(Validator(IsList(IsElementOf(IsDataModelProperties()))), fn=DataHandler())
 
 _ = DataModel(
 	typeBool=True,
@@ -101,10 +101,12 @@ _ = DataModel(
 PrettyPrint(_)
 
 _.typeBool = True
+isinstance(_.typeBool, bool)
 
 _.typeInteger = 0
 _.typeInteger += 2
 _.typeInteger = 8
+isinstance(_.typeInteger, int)
 
 _.typeFloat = 1.0
 _.typeFloat = 3.0
