@@ -17,9 +17,5 @@ __all__ = (
 class Executable(metaclass=ABCMeta):
 	"""Executable Interface for Model"""
 	@abstractmethod
-	def runs(self, executors: Executors) -> None:
-		raise NotImplementedError('{} must be implemented runs'.format(self.__class__.__name__))
-	
-	@abstractmethod
 	def run(self, executor: Executor, cb: callable = None) -> Union[Model, list[Model], list]:
 		raise NotImplementedError('{} must be implemented run'.format(self.__class__.__name__))
