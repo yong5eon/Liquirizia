@@ -23,5 +23,10 @@ loader = TestLoader()
 tests =  loader.discover(args.path, top_level_dir=args.start, pattern=args.pattern)
 
 # run tests
-_ = Runner(verbosity=args.verbosity, failfast=args.failfast)
-_.run(tests)
+runner = Runner(verbosity=args.verbosity, failfast=args.failfast)
+result = runner.run(tests)
+
+if len(result.failures): exit(1)
+if len(result.errors): exit(-1)
+
+exit(0)
