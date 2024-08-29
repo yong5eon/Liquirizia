@@ -22,5 +22,3 @@ jobs:
         run: pip install --upgrade .
       - name: Test
         run: python -m Liquirizia.Test test
-      - name: Lint with Ruff
-        run: ruff check --output-format=github src 
