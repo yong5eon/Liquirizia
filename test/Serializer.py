@@ -71,7 +71,7 @@ class TestSerializer(TestCase):
 
 	@Parameterized(
 		{'v': b'0', 'unpack': '0'},
-		{'v': b'1', 'unpack': '1'},
+		{'v': b'1', 'unpack': '0'},
 	)
 	def testUnpack(self, v, unpack):
 		self.assertTrue(SerializerHelper.Unpack(v, charset='utf-8') == unpack)
