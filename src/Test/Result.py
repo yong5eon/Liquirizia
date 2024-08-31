@@ -72,7 +72,7 @@ class Result(BaseTestResult):
 			self.stream.write(BRIGHT_RED)
 			self.stream.write('-' * 80)
 			self.stream.write(LF)
-			self.stream.write('FAIL   - ')
+			self.stream.write('ERROR  - ')
 			self.stream.write('{}.{}'.format(e[0].__properties__['class'], e[0].__properties__['method']))
 			self.stream.write(LF)
 			self.stream.write('-' * 80)
