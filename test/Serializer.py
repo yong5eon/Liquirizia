@@ -2,7 +2,7 @@
 
 from unittest import TestCase
 
-from Liquirizia.Test import Parameterized
+from Liquirizia.Test import *
 from Liquirizia.Serializer import SerializerHelper, Serializer
 
 __all__ = (
@@ -17,7 +17,7 @@ class SampleEncoder(Serializer):
 class SampleDecoder(Serializer):
 	def __call__(self, obj):
 		return int(obj)
-	
+
 
 class TestSerializer(TestCase):
 	@classmethod
@@ -30,48 +30,47 @@ class TestSerializer(TestCase):
 		return super().tearDownClass()
 
 	def testGetSupportFormats(self):
-		self.assertTrue('int' in SerializerHelper.GetSupportFormats())
+		ASSERT_TRUE('int' in SerializerHelper.GetSupportFormats())
+		return
 
 	@Parameterized(
 		{'v': 0, 'encoded': b'0'},
 		{'v': 1, 'encoded': b'1'},
 	)
 	def testEncode(self, v, encoded):
-		self.assertEqual(SerializerHelper.Encode(v, format='int', charset='utf-8'), encoded, msg='{}:{}'.format(v, encoded))
+		ASSERT_IS_EQUAL(SerializerHelper.Encode(v, format='int', charset='utf-8'), encoded)
 
 	@Parameterized(
 		{'v': b'0', 'decoded': 0},
 		{'v': b'1', 'decoded': 1},
 	)
 	def testDecode(self, v, decoded):
-		self.assertTrue(SerializerHelper.Decode(v, format='int', charset='utf-8') == decoded) 
+		ASSERT_TRUE(SerializerHelper.Decode(v, format='int', charset='utf-8') == decoded) 
 
 	@Parameterized(
 		{'v': 0, 'serialized': '0'},
 		{'v': 1, 'serialized': '1'},
 	)
 	def testSerialize(self, v, serialized):
-		self.assertTrue(SerializerHelper.Serialize(v, format='int') == serialized)
+		ASSERT_TRUE(SerializerHelper.Serialize(v, format='int') == serialized)
 
 	@Parameterized(
 		{'v': '0', 'deserialized': 0},
 		{'v': '1', 'deserialized': 1},
 	)
 	def testDesrialize(self, v, deserialized):
-		self.assertTrue(
-			SerializerHelper.Deserialize(v, format='int') == deserialized
-		) 
+		ASSERT_TRUE(SerializerHelper.Deserialize(v, format='int') == deserialized) 
 
 	@Parameterized(
 		{'v': '0', 'pack': b'0'},
 		{'v': '1', 'pack': b'1'},
 	)
 	def testPack(self, v, pack):
-		self.assertTrue(SerializerHelper.Pack(v, charset='utf-8') == pack)
+		ASSERT_TRUE(SerializerHelper.Pack(v, charset='utf-8') == pack)
 
 	@Parameterized(
 		{'v': b'0', 'unpack': '0'},
 		{'v': b'1', 'unpack': '1'},
 	)
 	def testUnpack(self, v, unpack):
-		self.assertTrue(SerializerHelper.Unpack(v, charset='utf-8') == unpack)
+		ASSERT_TRUE(SerializerHelper.Unpack(v, charset='utf-8') == unpack)
