@@ -8,18 +8,6 @@ from Liquirizia.DataModel import (
 from Liquirizia.Validator import Validator, Pattern
 from Liquirizia.Validator.Patterns import *
 
-from Liquirizia.Test import (
-	Case,
-	ASSERT,
-)
-from Liquirizia.Test.Patterns import (
-	IsEqualTo as AssertEqualTo,
-	IsNotEqualTo as AssertNotEqualTo,
-	IsTrue as AssertTrue,
-	IsFalse as AssertFalse,
-	IsExceptionWith as AssertExceptionWith,
-)
-
 from Liquirizia.Util import PrettyPrint, PrettyDump
 
 from random import random, randrange

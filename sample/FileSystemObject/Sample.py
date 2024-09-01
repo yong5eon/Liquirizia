@@ -7,6 +7,17 @@ from Liquirizia.FileSystemObject import (
 	FileObject,
 )
 from Liquirizia.FileSystemObject.Errors import *
+from Liquirizia.FileSystemObject.Errors import FileNotFoundError as FileNotExistError
+
+from os import stat
+from os.path import isfile
+
+from time import timezone, mktime
+from mimetypes import guess_type
+from email.utils import formatdate, parsedate_tz
+from hashlib import sha1
+from os.path import split
+
 
 class SampleFileSystemObjectConfiguration(FileSystemObjectConfiguration):
 	def __init__(self, path):
