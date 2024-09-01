@@ -2,7 +2,6 @@
 
 from .Order import OrderContext
 
-from collections.abc import Sequence
 from unittest import TestCase, TestLoader
 
 __all__ = (
@@ -11,7 +10,7 @@ __all__ = (
 
 
 class Loader(TestLoader):
-	def getTestCaseNames(self, testCaseClass: TestCase) -> Sequence[str]:
+	def getTestCaseNames(self, testCaseClass: TestCase) -> list[str]:
 		context = OrderContext()
 		cases = super().getTestCaseNames(testCaseClass)
 		orderedCases = context.get(testCaseClass.__name__)
