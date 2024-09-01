@@ -10,7 +10,7 @@ __all__ = (
 
 
 class Loader(TestLoader):
-	def getTestCaseNames(self, testCaseClass: TestCase) -> list[str]:
+	def getTestCaseNames(self, testCaseClass: TestCase):
 		context = OrderContext()
 		cases = super().getTestCaseNames(testCaseClass)
 		orderedCases = context.get(testCaseClass.__name__)
