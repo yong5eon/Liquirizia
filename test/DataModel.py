@@ -68,7 +68,7 @@ class TestDataModel(Case):
 
 	@Order(0)
 	def test_init(self):
-		_ = DataModel(
+		self._ = DataModel(
 			typeBool=True,
 			typeInteger=0,
 			typeFloat=1.0,

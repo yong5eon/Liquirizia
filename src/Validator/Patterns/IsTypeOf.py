@@ -3,6 +3,7 @@
 from ..Pattern import Pattern
 
 from collections.abc import Iterable
+from typing import Tuple
 
 __all__ = (
 	'IsTypeOf',
@@ -22,7 +23,7 @@ class IsTypeOf(Pattern):
 	def __init__(
 		self, 
 		type     : type,
-		patterns : tuple[Pattern] = (),
+		patterns : Tuple[Pattern] = (),
 		error                     = None
 	):
 		self.type = type

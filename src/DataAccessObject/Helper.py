@@ -5,6 +5,8 @@ from Liquirizia.Template import Singleton
 from .Connection import Connection
 from .Configuration import Configuration
 
+from typing import Type
+
 __all__ = (
 	'Helper'
 )
@@ -30,12 +32,12 @@ class Helper(Singleton):
 		return con
 
 	@classmethod
-	def Set(cls, key, o: type[Connection], conf: Configuration):
+	def Set(cls, key, o: Type[Connection], conf: Configuration):
 		helper = cls()
 		helper.set(key, o, conf)
 		return
 
-	def set(self, key, o: type[Connection], conf: Configuration):
+	def set(self, key, o: Type[Connection], conf: Configuration):
 		if not isinstance(o, type(Connection)):
 			raise RuntimeError('{} must be type of class based Connection'.format(o))
 		if not isinstance(conf, Configuration):

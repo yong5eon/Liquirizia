@@ -3,7 +3,7 @@
 from .Attribute import Attribute
 
 from collections.abc import Iterable, Mapping
-from copy import copy, deepcopy
+from copy import deepcopy
 
 __all__ = (
 	'Model'

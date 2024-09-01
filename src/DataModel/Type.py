@@ -1,8 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, ABCMeta
+from abc import ABC
 from operator import *
-from copy import deepcopy
 
 __all__ = (
 	'Type'
