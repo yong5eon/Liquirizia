@@ -2,6 +2,7 @@
 
 from abc import ABC
 from operator import *
+from collections.abc import Sequence, Mapping
 
 __all__ = (
 	'Type'
@@ -31,16 +32,13 @@ class Type(ABC):
 	
 	@classmethod
 	def Create(cls, value, attr, model):
-		PATTERNS = [type(None), bool, int, float, str]
+		PATTERNS = [type(None), bool, int, float, str, bytes]
 		if type(value) in PATTERNS:
 			return value
-		if isinstance(value, tuple):
-			from .Types import Tuple
-			return Tuple(value, attr, model)
-		if isinstance(value, list):
+		if isinstance(value, Sequence):
 			from .Types import List
 			return List(value, attr, model)
-		if isinstance(value, dict):
+		if isinstance(value, Mapping):
 			from .Types import Dictionary
 			return Dictionary(value, attr, model)
 		from .Types import Object
