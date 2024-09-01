@@ -2,21 +2,29 @@
 
 from ..Type import Type
 
-from copy import deepcopy
+from copy import copy, deepcopy
+from collections.abc import Sequence
+from typing import Iterator
 
 __all__ = (
 	'List'
 )
 
 
-class List(Type):
+class List(Type, Sequence):
 	"""List Data Type Object Class of Data Model Object"""
 
 	def __getattr__(self, name):
 		return self.__value__.__getattr__(name)
 	
-	def __iter__(self):
+	def __len__(self):
+		return self.__value__.__len__()
+	
+	def __iter__(self) -> Iterator:
 		return self.__value__.__iter__()
+	
+	def __reversed__(self) -> Iterator:
+		return self.__value__.__reversed__()
 
 	def __getitem__(self, key):
 		return Type.Create(
@@ -74,6 +82,12 @@ class List(Type):
 			)
 			raise e
 		return self
+	
+	def __copy__(self):
+		return copy(self.__value__)
+	
+	def __deepcopy(self):
+		return deepcopy(self.__value__)
 	
 	def __iadd__(self, values):
 		try:
@@ -256,3 +270,4 @@ class List(Type):
 			self.__attr__,
 			self.__model__,
 		)
+	

@@ -2,14 +2,15 @@
 
 from ..Type import Type
 
-from copy import deepcopy
+from collections.abc import Mapping
+from copy import copy, deepcopy
 
 __all__ = (
 	'Dictionary'
 )
 
 
-class Dictionary(Type):
+class Dictionary(Type, Mapping):
 	"""Dictionary Data Type Object Class of Data Model Object"""
 
 	def __getattr__(self, name):
@@ -17,6 +18,9 @@ class Dictionary(Type):
 	
 	def __iter__(self):
 		return self.__value__.__iter__()
+	
+	def __len__(self):
+		return self.__value__.__len__()
 
 	def __getitem__(self, key):
 		return Type.Create(
@@ -74,6 +78,12 @@ class Dictionary(Type):
 			)
 			raise e
 		return
+	
+	def __copy__(self):
+		return copy(self.__value__)
+	
+	def __deepcopy__(self):
+		return deepcopy(self.__value__)
 	
 	def clear(self) -> None:
 		try:
