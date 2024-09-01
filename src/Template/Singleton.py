@@ -13,15 +13,15 @@ __all__ = (
 
 class Meta(ABCMeta):
 	"""Singleton Meta Class"""
-
-	__object__ = {}
-
 	def __call__(cls, *args, **kwargs):
-		if cls.__object__ and (len(args) or len(kwargs.items())):
-			raise RuntimeError('{} is singleton, it is already initialized'.format(cls.__name__))
-		if cls not in cls.__object__:
-			cls.__object__[cls] = super(Meta, cls).__call__(*args, **kwargs)
-		return cls.__object__[cls]
+		try:
+			o = getattr(cls, '__object__')
+			if len(args) or len(kwargs.items()):
+				raise RuntimeError('{} is singleton, it is already initialized'.format(cls.__name__))
+			return o
+		except AttributeError:
+			cls.__object__ = super().__call__(*args, **kwargs)
+			return cls.__object__
 
 
 class Singleton(ABC, metaclass=Meta):
