@@ -1,16 +1,20 @@
 # -*- coding: utf-8 -*-
 
+from .Loader import Loader
 from .Runner import Runner
 from .Result import Result
 from .Parameterized import Parameterized
+from .Order import Order
 
 from inspect import getouterframes, currentframe
 from unittest import TestCase
 
 __all__ = (
-	'Runner',
+	'Case',
 	'Result',
+	'Runner',
 	'Parameterized',
+	'Order',
 	'ASSERT_TRUE',
 	'ASSERT_FALSE',
 	'ASSERT_IS',
@@ -47,6 +51,8 @@ __all__ = (
 	'ASSERT_WITHOUT_LOG',
 )
 
+
+Case = TestCase
 
 def ASSERT_TRUE(*args, **kwargs):
 	parent = getouterframes(currentframe())[1]

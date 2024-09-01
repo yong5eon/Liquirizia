@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .Result import Result
+from .Loader import Loader
 from .Runner import Runner
 
 from unittest import TestLoader, TestProgram
@@ -18,8 +18,11 @@ parser.add_argument('-p', '--pattern', dest='pattern', default='*.py', help='Pat
 
 args = parser.parse_args()
 
+def cmp(a, b):
+	return a
+
 # load tests
-loader = TestLoader()
+loader = Loader()
 tests =  loader.discover(args.path, top_level_dir=args.start, pattern=args.pattern)
 
 # run tests
