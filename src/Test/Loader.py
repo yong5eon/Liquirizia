@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from ..Template import Singleton
-
 from .Order import OrderContext
 
 from collections.abc import Sequence
@@ -13,7 +11,7 @@ __all__ = (
 
 
 class Loader(TestLoader):
-	def getTestCaseNames(self, testCaseClass: type[TestCase]) -> Sequence[str]:
+	def getTestCaseNames(self, testCaseClass: TestCase) -> Sequence[str]:
 		context = OrderContext()
 		cases = super().getTestCaseNames(testCaseClass)
 		orderedCases = context.get(testCaseClass.__name__)
