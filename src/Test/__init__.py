@@ -82,7 +82,7 @@ def ASSERT_IS_NONE(*args, **kwargs):
 	parent = getouterframes(currentframe())[1]
 	self = parent.frame.f_locals['self']
 	if not isinstance(self, TestCase): return
-	return self.assertIsNot(*args, **kwargs)
+	return self.assertIsNone(*args, **kwargs)
 
 def ASSERT_IS_NOT_NONE(*args, **kwargs):
 	parent = getouterframes(currentframe())[1]
