@@ -5,7 +5,7 @@ from setuptools import setup, find_packages
 PKG = 'Liquirizia'
 SRC = 'src'
 EXCLUDES = []
-DESC = 'Python Modernized Application Framework Library'
+DESC = 'Python Modernized Application Library'
 WHO = 'Heo Yongseon'
 
 PKGS = [PKG]

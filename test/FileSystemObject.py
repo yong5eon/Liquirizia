@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from Liquirizia.Test import *
+
 from Liquirizia.FileSystemObject import (
 	FileSystemObjectHelper,
 	FileSystemObjectConfiguration,
@@ -126,20 +128,28 @@ class SampleFileObject(FileObject):
 		return
 
 
-if __name__ == '__main__':
+class TestFileSystemObject(Case):
+	@classmethod
+	def setUpClass(cls) -> None:
+		FileSystemObjectHelper.Set(
+			'Sample',
+			SampleFileSystemObject,
+			SampleFileSystemObjectConfiguration('.')
+		)
+		return super().setUpClass()
+	
 
-	FileSystemObjectHelper.Set(
-		'Sample',
-		SampleFileSystemObject,
-		SampleFileSystemObjectConfiguration('.')
+	@Parameterized(
+			{'v': 'Hello'},
+			{'v': 'Hello World'},
+			{'v': 'Hello World Yongseon'},
 	)
-
-	fo = FileSystemObjectHelper.Get('Sample')
-
-	with fo.open('Sample.txt', 'w') as f:
-		f.write('Hello World')
-		f.close()
-
-	with fo.open('Sample.txt', 'r') as f:
-		print(f.read())
-		f.close()
+	def testWriteRead(self, v):
+		fo = FileSystemObjectHelper.Get('Sample')
+		with fo.open('Sample.txt', 'w') as f:
+			f.write(v)
+			f.close()
+		with fo.open('Sample.txt', 'r') as f:
+			ASSERT_IS_EQUAL(f.read(), v)
+			f.close()
+		return
