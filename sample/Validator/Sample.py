@@ -1,9 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from impm import ImportModule
-
-ImportModule('Liquirizia', 'Liquirizia/src')
-
 from Liquirizia.Validator import Validate, Validator, Pattern
 from Liquirizia.Validator.Patterns import *
 
@@ -33,7 +29,6 @@ if __name__ == '__main__':
 
 	# Validate Your Pattern
 	class IsOver(Pattern):
-
 		def __init__(self, base):
 			self.base = base
 			return
@@ -146,7 +141,7 @@ if __name__ == '__main__':
 		IsNotToNone(),
 		IsDictionary(
 			IsNotEmpty(),
-			IsRequiredIn(('a', 'b', 'c', 'd')),
+			IsRequiredIn('a', 'b', 'c', 'd'),
 			IsMappingOf({
 				'a': Validator(IsNotToNone()),
 				'b': Validator(IsNotToNone(), IsEqualTo(2)),
