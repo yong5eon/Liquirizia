@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from unittest import TestCase
-
 from Liquirizia.Test import *
 
 from Liquirizia.Serializer import SerializerHelper, Serializer
