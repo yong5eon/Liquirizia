@@ -1,26 +1,33 @@
 # -*- coding: utf-8 -*-
 
-from .SetDefault import SetDefault
-from .IsNotToNone import IsNotToNone
-from .IsAbleToNone import IsAbleToNone
+# COMMON
+from .Common import (
+	SetDefault,
+	IsToNone,
+	IsNotToNone,
+	IsNotEmpty,
+)
 
 # size
-from .IsSizeOf import IsSizeOf
-from .IsMinSizeOf import IsMinSizeOf
-from .IsMaxSizeOf import IsMaxSizeOf
-from .IsNotEmpty import IsNotEmpty
+from .Size import (
+	IsSizeOf, 
+	IsSizeIn,
+	IsMinSizeOf,
+	IsMaxSizeOf,
+)
 
 # compare
-from .IsEqualTo import IsEqualTo
-from .IsGreaterThan import IsGreaterThan
-from .IsGreaterEqualTo import IsGreaterEqualTo
-from .IsLessEqualTo import IsLessEqualTo
-from .IsLessThan import IsLessThan
-from .IsIn import IsIn
+from .Compare import (
+	IsEqualTo,
+	IsGreaterThan,
+	IsGreaterEqualTo,
+	IsLessEqualTo,
+	IsLessThan,
+	IsIn,
+)
 
 # type
-from .IsListable import IsListable
-from .IsTypeOf import (
+from .Type import (
 	IsTypeOf,
 	IsBool,
 	IsInteger,
@@ -29,11 +36,9 @@ from .IsTypeOf import (
 	IsList,
 	IsTuple,
 	IsDictionary,
-	IsBytes,
+	IsByteArray,
 	IsByteStream,
-)
-from .IsDateTime import IsDateTime
-from .ToTypeOf import (
+	IsDecimal,
 	ToTypeOf,
 	ToBool,
 	ToInteger,
@@ -42,32 +47,50 @@ from .ToTypeOf import (
 	ToList,
 	ToTuple,
 	ToDictionary,
+	ToByteArray,
+	ToByteStream,
+	ToDecimal,
+)
+from .DateTime import (
+	IsDateTime,
+	IsDate,
+	IsTime,
 )
 
 # numeric
-from .IsRange import IsRange
+from .Numeric import (
+	IsRange,
+)
 
 # string
-from .IsNumeric import IsNumeric
-from .IsAlphabet import IsAlphabet
-from .IsAlphaNumeric import IsAlphaNumeric
-from .ToUpper import ToUpper
-from .ToLower import ToLower
+from .String import (
+	IsNumeric,
+	IsAlphabet,
+	IsAlphaNumeric,
+	ToUpper,
+	ToLower,
+)
 
 # list
-from .IsListable import IsListable
-from .IsElementOf import IsElementOf
+from .List import (
+	IsListable,
+	IsElementOf,
+)
 
 # dictionary
-from .IsRequiredIn import IsRequiredIn
-from .IsMappingOf import IsMappingOf
+from .Dictionary import (
+	IsRequiredIn,
+	IsMappingOf,
+)
 
 __all__ = (
 	'SetDefault',
+	'IsToNone',
 	'IsNotToNone',
-	'IsAbleToNone',
+	'IsNotEmpty',
 	# size
 	'IsSizeOf',
+	'IsSizeIn',
 	'IsMinSizeOf',
 	'IsMaxSizeOf',
 	'IsNotEmpty',
@@ -78,7 +101,7 @@ __all__ = (
 	'IsLessEqualTo',
 	'IsLessThan',
 	'IsIn',
-	# type casting
+	# type
 	'IsTypeOf',
 	'IsBool',
 	'IsInteger',
@@ -87,6 +110,12 @@ __all__ = (
 	'IsList',
 	'IsTuple',
 	'IsDictionary',
+	'IsByteArray',
+	'IsByteStream',
+	'IsDateTime',
+	'IsDate',
+	'IsTime',
+	'IsDecimal',
 	'ToTypeOf',
 	'ToBool',
 	'ToInteger',
@@ -95,9 +124,9 @@ __all__ = (
 	'ToList',
 	'ToTuple',
 	'ToDictionary',
-	'IsBytes',
-	'IsByteStream',
-	'IsDateTime',
+	'ToByteArray',
+	'ToByteStream',
+	'ToDecimal',
 	# numeric 
 	'IsRange',
 	# string

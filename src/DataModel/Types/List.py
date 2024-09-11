@@ -2,29 +2,32 @@
 
 from ..Type import Type
 
-from copy import copy, deepcopy
-from collections.abc import Sequence
-from typing import Iterator
+from collections.abc import MutableSequence
+
+from copy import deepcopy
 
 __all__ = (
 	'List'
 )
 
 
-class List(Type, Sequence):
+class List(Type, MutableSequence):
 	"""List Data Type Object Class of Data Model Object"""
 
-	def __getattr__(self, name):
-		return self.__value__.__getattr__(name)
+	# def __getattr__(self, name):
+	#	 return self.__value__.__getattr__(name)
+ 
+	def __iter__(self):
+		return self.__value__.__iter__()
+	
+	def __reserved__(self):
+		return self.__value__.__reserved__()
 	
 	def __len__(self):
 		return self.__value__.__len__()
 	
-	def __iter__(self) -> Iterator:
-		return self.__value__.__iter__()
-	
-	def __reversed__(self) -> Iterator:
-		return self.__value__.__reversed__()
+	def __contains__(self, value):
+		return self.__value__.__contains__(value)
 
 	def __getitem__(self, key):
 		return Type.Create(
@@ -44,7 +47,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -69,7 +73,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -82,12 +87,6 @@ class List(Type, Sequence):
 			)
 			raise e
 		return self
-	
-	def __copy__(self):
-		return copy(self.__value__)
-	
-	def __deepcopy(self):
-		return deepcopy(self.__value__)
 	
 	def __iadd__(self, values):
 		try:
@@ -100,7 +99,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -114,6 +114,12 @@ class List(Type, Sequence):
 			raise e
 		return self
 	
+	def index(self, value: any, start: int = 0, stop: int = ...) -> int:
+		return self.__value__.index(value, start, stop)
+	
+	def count(self, value: any) -> int:
+		return self.__value__.count(value)
+
 	def insert(self, value):
 		try:
 			pv = deepcopy(self.__value__)
@@ -125,7 +131,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -150,7 +157,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -175,7 +183,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -200,7 +209,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -225,7 +235,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -250,7 +261,8 @@ class List(Type, Sequence):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po,
@@ -270,4 +282,9 @@ class List(Type, Sequence):
 			self.__attr__,
 			self.__model__,
 		)
+
+	def __eq__(self, other: object) -> bool:
+		return self.__value__.__eq__(other)
 	
+	def __ne__(self, other: object) -> bool:
+		return self.__value__.__ne__(other)

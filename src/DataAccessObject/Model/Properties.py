@@ -3,13 +3,12 @@
 from abc import ABCMeta, abstractmethod
 
 __all__ = (
-	'Type',
+	'Properties',
 )
 
 
-class Type(metaclass=ABCMeta):
-	"""Type Interface for Data Model to use as a Decorator"""
-
+class Properties(metaclass=ABCMeta):
+	"""Interface to Declare Properties of Model as a Decorator"""
 	@abstractmethod
 	def __call__(self, obj):
 		pass
