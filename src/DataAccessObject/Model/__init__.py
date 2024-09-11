@@ -1,17 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from .Type import Type
+from .Properties import Properties
 
 from .Executor import Executor
 from .Executors import Executors
 
-from .Executable import Executable
-from .Fetchable import Fetchable
+from .Run import Run
+from .Fetch import Fetch
 
 __all__ = (
-	'Type',
+	'Properties',
 	'Executor',
 	'Executors',
-	'Executable',
-	'Fetchable',
+	'Run',
+	'Fetch',
 )
