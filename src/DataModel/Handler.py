@@ -13,9 +13,10 @@ class Handler(metaclass=ABCMeta):
 	@abstractmethod
 	def __call__(
 		self, 
-		model : any,  				# Model
-		attr : any,						# Name
-		value : any,  				# Value
-		previousValue : any,	# Previous Value
+		model,     # Model
+		obj,       # Instance of Model
+		attr,      # Attribute of Model
+		value,     # Changed Value
+		preValue,  # Previous Value
 	):
 		pass

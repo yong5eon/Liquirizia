@@ -2,26 +2,42 @@
 
 from ..Type import Type
 
-from collections.abc import Mapping
-from copy import copy, deepcopy
+from collections.abc import MutableMapping
+
+from copy import deepcopy
 
 __all__ = (
 	'Dictionary'
 )
 
 
-class Dictionary(Type, Mapping):
+class Dictionary(Type, MutableMapping):
 	"""Dictionary Data Type Object Class of Data Model Object"""
 
-	def __getattr__(self, name):
-		return self.__value__.__getattr__(name)
-	
-	def __iter__(self):
-		return self.__value__.__iter__()
+	# def __getattr__(self, name):
+	#	 return self.__value__.__getattr__(name)
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			self.__value__.__repr__()[1:-1]
+		)
+
+	def __str__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			self.__value__.__repr__()[1:-1]
+		)
+
+	def __contains__(self, key):
+		return self.__value__.__contains__(key)
 	
 	def __len__(self):
 		return self.__value__.__len__()
 
+	def __iter__(self):
+		return self.__value__.__iter__()
+	
 	def __getitem__(self, key):
 		return Type.Create(
 			self.__value__.__getitem__(key) if key in self.__value__.keys() else None,
@@ -40,7 +56,8 @@ class Dictionary(Type, Mapping):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po
@@ -65,7 +82,8 @@ class Dictionary(Type, Mapping):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__object__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po
@@ -79,12 +97,21 @@ class Dictionary(Type, Mapping):
 			raise e
 		return
 	
-	def __copy__(self):
-		return copy(self.__value__)
+	def __eq__(self, other: object) -> bool:
+		return self.__value__.__eq__(other)
 	
-	def __deepcopy__(self):
-		return deepcopy(self.__value__)
+	def __ne__(self, other: object) -> bool:
+		return self.__value__.__ne__(other)
 	
+	def keys(self):
+		return self.__value__.keys()
+	
+	def items(self):
+		return self.__value__.items()
+	
+	def values(self):
+		return self.__value__.values()
+
 	def clear(self) -> None:
 		try:
 			pv = deepcopy(self.__value__)
@@ -96,7 +123,8 @@ class Dictionary(Type, Mapping):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__object__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po
@@ -121,7 +149,8 @@ class Dictionary(Type, Mapping):
 			)
 			if self.__attr__.callback:
 				self.__attr__.callback(
-					self.__model__, 
+					self.__model__.__class__, 
+					self.__model__,
 					self.__attr__, 
 					self.__model__.__object__.__getitem__(self.__attr__.name),
 					po
@@ -134,3 +163,4 @@ class Dictionary(Type, Mapping):
 			)
 			raise e
 		return
+	

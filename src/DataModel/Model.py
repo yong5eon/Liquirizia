@@ -2,6 +2,8 @@
 
 from .Attribute import Attribute
 
+from typing import ItemsView, KeysView, ValuesView
+
 from collections.abc import Iterable, Mapping
 from copy import deepcopy
 
@@ -10,7 +12,7 @@ __all__ = (
 )
 
 
-class Model(Mapping, Iterable):
+class Model(Mapping):
 	"""Abstract Model Class of Data Model"""
 
 	def __new__(cls, **kwargs):
@@ -28,19 +30,43 @@ class Model(Mapping, Iterable):
 		)
 
 	def __str__(self):
-		return self.__object__.__str__()
+		return '{}({})'.format(
+			self.__class__.__name__,
+			self.__object__.__repr__()[1:-1]
+		)
 
-	# implements interfaces of Iterable
+	# implements interface of Container
+	def __contains__(self, key: object) -> bool:
+		return self.__object__.__contains__(key)
+	
+	# implements interface of Sized
+	def __len__(self):
+		return self.__object__.__len__()
+
+	# implements interfaces of Iterable 
 	def __iter__(self):
 		return self.__object__.__iter__()
 
 	# implements interfaces of Mapping
 	def __getitem__(self, key):
 		return self.__object__.__getitem__(key)
+	
+	def keys(self) -> KeysView:
+		return self.__object__.keys()
+	
+	def items(self) -> ItemsView:
+		return self.__object__.items()
+	
+	def values(self) -> ValuesView:
+		return self.__object__.values()
+	
+	def __eq__(self, other: any) -> bool:
+		return self.__object__.__eq__(other)
+	
+	def __ne__(self, other: any) -> bool:
+		return self.__object__.__ne__(other)
 
-	def __len__(self):
-		return self.__object__.__len__()
-
+	# copy
 	def __copy__(self):
 		return self.__class__.__new__(self.__class__, **self.__object__)
 

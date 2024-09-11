@@ -32,14 +32,33 @@ class Type(ABC):
 	
 	@classmethod
 	def Create(cls, value, attr, model):
-		PATTERNS = [type(None), bool, int, float, str, bytes]
-		if type(value) in PATTERNS:
-			return value
-		if isinstance(value, Sequence):
+		if isinstance(value, tuple):
+			from .Types import Tuple
+			return Tuple(value, attr, model)
+		if isinstance(value, list):
 			from .Types import List
 			return List(value, attr, model)
-		if isinstance(value, Mapping):
+		if isinstance(value, dict):
 			from .Types import Dictionary
 			return Dictionary(value, attr, model)
-		from .Types import Object
-		return Object(value, attr, model)
+		# TODO: Support  more Data Types
+		# 
+		# Python Data Types
+		# - int
+		# - float
+		# - decimal
+		# - string
+		# - bytes
+		# - bytearray
+		# - list
+		# - tuple
+		# - set
+		# - frozenset
+		# - dict
+		#
+		# PATTERNS = [type(None), bool, int, float, str]
+		# if type(value) in PATTERNS:
+		#	 return value
+		# from .Types import Object
+		# return Object(value, attr, model)
+		return value

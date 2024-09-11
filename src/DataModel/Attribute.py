@@ -50,6 +50,7 @@ class Attribute(object):
 		)
 		if self.callback:
 			self.callback(
+				obj.__class__,
 				obj,
 				self,
 				obj.__object__.__getitem__(self.name),
