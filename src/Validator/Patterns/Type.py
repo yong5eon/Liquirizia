@@ -5,6 +5,7 @@ from ..Pattern import Pattern
 from decimal import Decimal
 
 from collections.abc import Iterable, Sequence, Mapping
+from typing import Type, Tuple
 
 __all__ = (
 	'IsTypeOf',
@@ -35,8 +36,8 @@ __all__ = (
 class IsTypeOf(Pattern):
 	def __init__(
 		self, 
-		type     : type,
-		patterns : tuple[Pattern] = (),
+		type     : Type,
+		patterns : Tuple[Pattern] = (),
 		error                     = None
 	):
 		self.type = type
