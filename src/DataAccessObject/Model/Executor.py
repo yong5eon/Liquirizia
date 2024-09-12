@@ -1,8 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABCMeta, abstractmethod
-
 from ...DataModel import Model
+
+from abc import ABCMeta, abstractmethod
+from typing import Type
+
 
 __all__ = (
 	'Executor'
@@ -13,7 +15,7 @@ class Executor(metaclass=ABCMeta):
 	"""Executor Interface for Data Model"""
 
 	@abstractmethod
-	def __init__(self, o: type[Model]):
+	def __init__(self, o: Type[Model]):
 		pass
 
 	@property
