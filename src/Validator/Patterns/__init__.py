@@ -8,7 +8,7 @@ from .Common import (
 	IsNotEmpty,
 )
 
-# size
+# SIZE
 from .Size import (
 	IsSizeOf, 
 	IsSizeIn,
@@ -16,7 +16,7 @@ from .Size import (
 	IsMaxSizeOf,
 )
 
-# compare
+# COMPARE
 from .Compare import (
 	IsEqualTo,
 	IsGreaterThan,
@@ -26,7 +26,7 @@ from .Compare import (
 	IsIn,
 )
 
-# type
+# TYPE
 from .Type import (
 	IsTypeOf,
 	IsBool,
@@ -57,12 +57,12 @@ from .DateTime import (
 	IsTime,
 )
 
-# numeric
+# NUMERIC
 from .Numeric import (
 	IsRange,
 )
 
-# string
+# STRING
 from .String import (
 	IsNumeric,
 	IsAlphabet,
@@ -71,37 +71,43 @@ from .String import (
 	ToLower,
 )
 
-# list
+# LIST
 from .List import (
 	IsListable,
 	IsElementOf,
 )
 
-# dictionary
+# DICTIONARY
 from .Dictionary import (
 	IsRequiredIn,
 	IsMappingOf,
 )
 
+# CONDITION
+from .Codition import (
+	If,
+)
+
 __all__ = (
+	# COMMONT
 	'SetDefault',
 	'IsToNone',
 	'IsNotToNone',
 	'IsNotEmpty',
-	# size
+	# SIZE
 	'IsSizeOf',
 	'IsSizeIn',
 	'IsMinSizeOf',
 	'IsMaxSizeOf',
 	'IsNotEmpty',
-	# operand
+	# COMPARE
 	'IsEqualTo',
 	'IsGreaterThan',
 	'IsGreaterEqualTo',
 	'IsLessEqualTo',
 	'IsLessThan',
 	'IsIn',
-	# type
+	# TYPE
 	'IsTypeOf',
 	'IsBool',
 	'IsInteger',
@@ -127,18 +133,20 @@ __all__ = (
 	'ToByteArray',
 	'ToByteStream',
 	'ToDecimal',
-	# numeric 
+	# NUMERIC
 	'IsRange',
-	# string
+	# STRING
 	'IsAlphaNumeric',
 	'IsNumeric',
 	'IsAlphabet',
 	'ToUpper',
 	'ToLower',
-	# list
+	# LIST
 	'IsListable',
 	'IsElementOf',
-	# dictionary
+	# DICTIONARY
 	'IsRequiredIn',
 	'IsMappingOf',
+	# CONDITION
+	'If',
 )
