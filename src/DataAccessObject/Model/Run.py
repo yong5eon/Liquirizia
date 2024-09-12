@@ -7,7 +7,7 @@ from .Executor import Executor
 
 from ...DataModel import Model
 
-from typing import Type, Sequence
+from typing import Union, Sequence
 
 __all__ = (
 	'Run'
@@ -17,5 +17,5 @@ __all__ = (
 class Run(metaclass=ABCMeta):
 	"""Runnable Interface for Model"""
 	@abstractmethod
-	def run(self, executor: Type[Executor|Executors]) -> Type[Model|Sequence[Model]|Sequence]:
+	def run(self, executor: Union[Executor,Executors]) -> Union[Model,Sequence,Sequence[Model]]:
 		raise NotImplementedError('{} must be implemented run'.format(self.__class__.__name__))
