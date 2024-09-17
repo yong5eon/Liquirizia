@@ -40,8 +40,10 @@ class Tuple(Type, Sequence):
 	def count(self, value: any) -> int:
 		return self.__value__.count(value)
 	
-	def __eq__(self, other: object) -> bool:
+	def __eq__(self, other: any) -> bool:
+		if isinstance(other, Tuple): return self.__value__.__eq__(other.__value__)
 		return self.__value__.__eq__(other)
 	
-	def __ne__(self, other: object) -> bool:
+	def __ne__(self, other: any) -> bool:
+		if isinstance(other, Tuple): return self.__value__.__ne__(other.__value__)
 		return self.__value__.__ne__(other)

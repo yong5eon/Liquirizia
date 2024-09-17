@@ -61,9 +61,11 @@ class Model(Mapping):
 		return self.__object__.values()
 	
 	def __eq__(self, other: any) -> bool:
+		if isinstance(other, Model): return self.__object__.__eq__(other.__object__)
 		return self.__object__.__eq__(other)
 	
 	def __ne__(self, other: any) -> bool:
+		if isinstance(other, Model): return self.__object__.__ne__(other.__object__)
 		return self.__object__.__ne__(other)
 
 	# copy
