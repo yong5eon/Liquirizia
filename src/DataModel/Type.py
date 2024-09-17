@@ -55,6 +55,7 @@ class Type(ABC):
 		# - set
 		# - frozenset
 		# - dict
+		# - object
 		#
 		# PATTERNS = [type(None), bool, int, float, str]
 		# if type(value) in PATTERNS:

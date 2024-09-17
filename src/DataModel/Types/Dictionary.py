@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ..Type import Type
+from ..Model import Model
 
 from collections.abc import MutableMapping
 
@@ -98,9 +99,13 @@ class Dictionary(Type, MutableMapping):
 		return
 	
 	def __eq__(self, other: object) -> bool:
+		if isinstance(other, Dictionary): return self.__value__.__eq__(other.__value__)
+		if isinstance(other, Model): return self.__value__.__eq__(other.__object__)
 		return self.__value__.__eq__(other)
 	
 	def __ne__(self, other: object) -> bool:
+		if isinstance(other, Dictionary): return self.__value__.__ne__(other.__value__)
+		if isinstance(other, Model): return self.__value__.__ne__(other.__object__)
 		return self.__value__.__ne__(other)
 	
 	def keys(self):
