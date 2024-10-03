@@ -1,14 +1,14 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 __all__ = (
-	'FileSystemObjectConfiguration'
+	'Configuration'
 )
 
 
-class FileSystemObjectConfiguration(ABC):
-	"""File System Object Configuration Interface"""
+class Configuration(metaclass=ABCMeta):
+	"""Configuration Interface"""
 
 	@abstractmethod
 	def __init__(self, *args, **kwargs):

@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 
-from .FileSystemObjectHelper import FileSystemObjectHelper
-from .FileSystemObject import FileSystemObject
-from .FileSystemObjectConfiguration import FileSystemObjectConfiguration
-from .FileObject import FileObject
+from .Helper import Helper
+from .Connection import Connection
+from .Configuration import Configuration
+from .File import File
 
 __all__ = (
-	'FileSystemObjectHelper',
-	'FileSystemObject',
-	'FileSystemObjectConfiguration',
-	'FileObject',
+	'Helper',
+	'Connection',
+	'Configuration',
+	'File',
 )
