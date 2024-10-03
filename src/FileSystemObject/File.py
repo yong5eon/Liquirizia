@@ -1,19 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from .FileSystemObject import FileSystemObject
+from .Connection import Connection
 
-from abc import ABC, abstractmethod
+from abc import ABCMeta, abstractmethod
 
 __all__ = (
-	'FileObject'
+	'File'
 )
 
 
-class FileObject(ABC):
-	"""File Object Interface"""
+class File(metaclass=ABCMeta):
+	"""File Interface"""
 
 	@abstractmethod
-	def __init__(self, fso: FileSystemObject):
+	def __init__(self, fso: Connection):
 		raise NotImplementedError('{} must be implemented __init__'.format(self.__class__.__name__))
 
 	@abstractmethod

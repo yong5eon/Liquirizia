@@ -3,10 +3,10 @@
 from Liquirizia.Test import *
 
 from Liquirizia.FileSystemObject import (
-	FileSystemObjectHelper,
-	FileSystemObjectConfiguration,
-	FileSystemObject,
-	FileObject,
+	Helper,
+	Configuration,
+	Connection,
+	File,
 )
 from Liquirizia.FileSystemObject.Errors import *
 from Liquirizia.FileSystemObject.Errors import FileNotFoundError as FileNotExistError
@@ -21,14 +21,14 @@ from hashlib import sha1
 from os.path import split
 
 
-class SampleFileSystemObjectConfiguration(FileSystemObjectConfiguration):
+class SampleFileSystemObjectConfiguration(Configuration):
 	def __init__(self, path):
 		self.base = path
 		return
 	
 
-class SampleFileSystemObject(FileSystemObject):
-	def __init__(self, conf: FileSystemObjectConfiguration):
+class SampleFileSystemObject(Connection):
+	def __init__(self, conf: SampleFileSystemObjectConfiguration):
 		self.conf = conf
 		return
 
@@ -83,7 +83,7 @@ class SampleFileSystemObject(FileSystemObject):
 		pass
 
 
-class SampleFileObject(FileObject):
+class SampleFileObject(File):
 	def __init__(self, fso):
 		self.fso = fso
 		self.fo = None
@@ -131,7 +131,7 @@ class SampleFileObject(FileObject):
 class TestFileSystemObject(Case):
 	@classmethod
 	def setUpClass(cls) -> None:
-		FileSystemObjectHelper.Set(
+		Helper.Set(
 			'Sample',
 			SampleFileSystemObject,
 			SampleFileSystemObjectConfiguration('.')
@@ -145,7 +145,7 @@ class TestFileSystemObject(Case):
 			{'v': 'Hello World Yongseon'},
 	)
 	def testWriteRead(self, v):
-		fo = FileSystemObjectHelper.Get('Sample')
+		fo = Helper.Get('Sample')
 		with fo.open('Sample.txt', 'w') as f:
 			f.write(v)
 			f.close()
