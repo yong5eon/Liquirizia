@@ -15,8 +15,15 @@ from sys import stderr
 
 
 class DataModelPropertiesHandler(Handler):
-	def __call__(self, o : Model, n : str, v : any, p : any):
-		print('DataModelProperties changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
+	def __call__(
+		self, 
+		model,     # Model
+		obj,       # Instance of Model
+		attr,      # Attribute of Model
+		value,     # Changed Value
+		preValue,  # Previous Value
+	):
+		print('DataModelProperties changed {} from {} to {} in {}'.format(attr, value, preValue, obj))
 		return
 
 
@@ -26,8 +33,15 @@ class DataModelProperties(Model):
 
 
 class DataHandler(Handler):
-	def __call__(self, o : Model, n : str, v : any, p : any):
-		print('DataModel changed {} from {} to {} in {}'.format(n, p, v, PrettyDump(o)))
+	def __call__(
+		self, 
+		model,     # Model
+		obj,       # Instance of Model
+		attr,      # Attribute of Model
+		value,     # Changed Value
+		preValue,  # Previous Value
+	):
+		print('DataModel changed {} from {} to {} in {}'.format(attr, value, preValue, obj))
 		return
 
 
@@ -44,9 +58,9 @@ class DataModel(Model):
 	typeFloat = Attribute(Validator(IsFloat(IsRange(1, 10, 2))), fn=DataHandler())
 	typeString = Attribute(Validator(IsString(IsIn('Hello', 'Hi'))), fn=DataHandler())
 	typeList = Attribute(Validator(IsList(IsElementOf(IsInteger(IsRange(0, 10))))), fn=DataHandler())
-	typeListOfList = Attribute(Validator(IsAbleToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataHandler())
+	typeListOfList = Attribute(Validator(IsToNone(IsList(IsElementOf(IsList(IsElementOf(IsRange(0, 10))))))), fn=DataHandler())
 	typeListOfDict = Attribute(
-		Validator(IsAbleToNone(IsList(IsElementOf(IsDictionary(
+		Validator(IsToNone(IsList(IsElementOf(IsDictionary(
 			IsRequiredIn('typeInteger', 'typeFloat'),
 			IsMappingOf({
 				'typeInteger': Validator(IsInteger(IsIn(1,2,3))),

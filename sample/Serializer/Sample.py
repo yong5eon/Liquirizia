@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.Serializer import SerializerHelper, Serializer, Error
-from Liquirizia.Serializer.Implements.Text import Encoder, Decoder
 
 class SampleEncoder(Serializer):
 	def __call__(self, obj):
@@ -34,10 +33,3 @@ if __name__ == '__main__':
 	unpacked = SerializerHelper.Unpack(packed, charset='utf-8')
 	deserialized = SerializerHelper.Deserialize(unpacked, format='int')
 	print(unpacked, deserialized)
-
-	try:
-		encoded = SerializerHelper.Encode(0, format='text', charset='utf-8')
-		decoded = SerializerHelper.Decode(encoded, format='text', charset='utf-8')
-		print(encoded, decoded)
-	except Error as e:
-		print(str(e))

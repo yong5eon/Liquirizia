@@ -1,0 +1,189 @@
+
+{
+	// IntelliSense를 사용하여 가능한 특성에 대해 알아보세요.
+	// 기존 특성에 대한 설명을 보려면 가리킵니다.
+	// 자세한 내용을 보려면 https://go.microsoft.com/fwlink/?linkid=830387 을(를) 방문하세요.
+	"version": "0.2.0",
+	"configurations": [
+		{
+			"name": "Current File",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "${file}",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Test",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "bin/test.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - OOP - Encapsulation",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/OOP/Encapsulation.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - OOP - Ploymorphism",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/OOP/Polymorphism.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - OOP - Realization",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/OOP/Realization.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - OOP - Virtual Method",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/OOP/VirtualMethod.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Design Pattern - Singleton",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Template/Singleton.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Design Pattern - Factory",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Template/Factory.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - DataAccessObject",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/DataAccessObject/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - DataModel",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/DataModel/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Validator",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Validator/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Serializer",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Serializer/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Logger",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Logger/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - FileSystemObject",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/FileSystemObject/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Parallelizer - Multi-Thread - Pool",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Parallelizer/MultiThread/Pool/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Parallelizer - Mutil-Thread - Runner",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Parallelizer/MultiThread/Runner/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Parallelizer - Multi-Process - Pool",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Parallelizer/MultiProcess/Pool/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+		{
+			"name": "Sample - Parallelizer - Multi-Process - Runner",
+			"type": "debugpy",
+			"request": "launch",
+			"program": "sample/Parallelizer/MultiProcess/Runner/Sample.py",
+			"console": "integratedTerminal",
+			"justMyCode": true,
+			"env": {
+			}
+		},
+	]
+}

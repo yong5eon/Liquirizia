@@ -59,8 +59,10 @@ __pypackages__/
 .old
 *.old
 *.log
+*.Log
 *.LOG
 *.log.*
+*.Log.*
 *.LOG.*
 *.txt
 *.txt.*
