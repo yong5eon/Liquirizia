@@ -59,9 +59,9 @@
 * [이벤트 워커](https://github.com/yong5eon/Liquirizia.EventWorker)
 * [이벤트 스케줄러](https://github.com/yong5eon/Liquirizia.EventScheduler)
 
-### 웹 어플리케이션
+### 웹 서비스
 
-* [웹 어플리케이션](https://github.com/yong5eon/Liquirizia.WebApplication)
+* [WSGI(Web Server Gateway Interface)](https://github.com/yong5eon/Liquirizia.WSGI)
 
 ### 네트워크 확장 도구
 
