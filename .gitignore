@@ -79,3 +79,5 @@ src/Serializer/Implements/Text
 src/Serializer/Implements/JavaScriptObjectNotation
 src/Serializer/Implements/FormUrlEncoded
 src/EventBroker
+src/WSGI
+src/WSGI.Workers
