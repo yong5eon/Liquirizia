@@ -1,83 +1,71 @@
-# -*- coding: utf-8 -*-
+from Liquirizia.Logger import (
+    Logger,
+    LOG_LEVEL_DEBUG,
+    LOG_LEVEL_INFO,
+    LOG_LEVEL_ERROR,
+    LOG_INIT,
+    LOG_SET_FILE,
+    LOG_FILE_CREATE,
+    LOG_DEBUG,
+    LOG_INFO,
+    LOG_WARN,
+    LOG_ERROR,
+)
+from Liquirizia.Logger.Properties import ColoredStreamHandler
 
-from Liquirizia.Logger import LOG_INITIALIZE, LOG_SET, LOG_SET_FILE, LOG_SET_FILE_ROTATE
-from Liquirizia.Logger import LOG_DEBUG, LOG_INFO, LOG_WARNING, LOG_ERROR, LOG_CRITICAL, LOG_FATAL, LOG_EXCEPTION
-from Liquirizia.Logger import LOG_LEVEL_DEBUG, LOG_LEVEL_ERROR
+from logging import StreamHandler
 
-from Liquirizia.Logger import Handler
-from Liquirizia.Logger.Handler import QueueHandler
-from Liquirizia.Logger.Receiver import QueueReceiver
+_1 = Logger(LOG_LEVEL_DEBUG, name='1')
+_1.add(ColoredStreamHandler())
 
-from Liquirizia.System import Signal
+_2 = Logger(LOG_LEVEL_INFO, name='2')
+_2.add(StreamHandler())
 
-from queue import Queue
-from time import sleep
+import sys
 
-
-class SampleHandler(Handler):
-	def emit(self, record):
-		print('Sample Handler - {}'.format(record.message))
-
-
-class SampleQueueHandler(QueueHandler):
-	def __init__(self):
-		self.queue = Queue()
-		super(SampleQueueHandler, self).__init__(self.queue)
-		return
-
-
-class SampleQueueReceiver(QueueReceiver):
-	def __init__(self, handler):
-		super(SampleQueueReceiver, self).__init__(handler.queue, handler)
-		return
-
-	def callback(self, record):
-		print('Sample Queue Receiver - {}'.format(record.message))
-		return
+_1.debug('debug')
+_2.debug('debug')
+_1.info('info')
+_2.info('info')
+_1.warn('warn')
+_2.warn('warn')
+_1.error('error')
+_2.error('error')
 
 
-if __name__ == '__main__':
+try:
+    raise RuntimeError('runtime erorr')
+except BaseException as e:
+    _1.debug(str(e), e)
+    _1.info(str(e), e)
+    _1.warn(str(e), e)
+    _1.error(str(e), e)
+    _2.debug(str(e), e)
+    _2.info(str(e), e)
+    _2.warn(str(e), e)
+    _2.error(str(e), e)
 
-	LOG_INITIALIZE(LOG_LEVEL_DEBUG)
-	LOG_SET_FILE('Sample.Log')
-	LOG_SET_FILE_ROTATE('Sample.Rotate.Log', max=1024, backup=5)
-	LOG_SET(SampleHandler())
+_3 = Logger(LOG_LEVEL_ERROR, name='3')
 
-	LOG_DEBUG('DEBUG')
-	LOG_INFO('INFO')
-	LOG_WARNING('WARNING')
-	LOG_ERROR('ERROR')
-	LOG_CRITICAL('CRITICAL')
-	LOG_FATAL('FATAL')
+LOG_INIT(LOG_LEVEL_DEBUG)
+LOG_SET_FILE('.log')
+LOG_SET_FILE('.r.log', max = 1024)
 
-	try:
-		raise RuntimeError('Sample Runtime Error')
-	except RuntimeError as e:
-		LOG_EXCEPTION(LOG_LEVEL_ERROR, e)
+LOG_DEBUG('DEBUG')
+LOG_INFO('INFO')
+LOG_WARN('WARN')
+LOG_ERROR('ERROR')
 
-	h = SampleQueueHandler()
-	recv = SampleQueueReceiver(h)
+_3.debug('debug')
+_3.info('info')
+_3.warn('warn')
+_3.error('error')
 
-	LOG_SET(h)
 
-	def stop(sig):
-		print('flushing...')
-		recv.flush()
-		print('stopping...')
-		recv.stop()
-		print('stopped...')
-		return
-
-	signal = Signal(Signal.HUP, Signal.INT, Signal.QUIT, Signal.KILL, Signal.STOP, fn=stop)
-	signal.attach(Signal.TERM, fn=stop)
-
-	recv.start()
-
-	while not signal.now():
-		LOG_DEBUG('SLEEPING IN DEBUG')
-		LOG_INFO('SLEEPING IN INFO')
-		LOG_WARNING('SLEEPING IN WARNING')
-		LOG_ERROR('SLEEPING IN ERROR')
-		LOG_CRITICAL('SLEEPING IN CRITICAL')
-		LOG_FATAL('SLEEPING IN FATAL')
-		sleep(1)
+try:
+    raise RuntimeError('RUNTIME ERROR')
+except BaseException as e:
+    LOG_DEBUG(str(e), e)
+    LOG_INFO(str(e), e)
+    LOG_WARN(str(e), e)
+    LOG_ERROR(str(e), e)

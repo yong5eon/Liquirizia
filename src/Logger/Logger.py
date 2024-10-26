@@ -1,151 +1,107 @@
 # -*- coding: utf-8 -*-
 
-from ..Template import Singleton
-from ..System.Util import GetProcessId, GetHostName
-
-from logging import getLogger, captureWarnings, disable
-from logging import Formatter, StreamHandler
-from logging import DEBUG, INFO, WARNING, ERROR, CRITICAL, FATAL, NOTSET
-
-from .Handler import FileHandler, RotateFileHandler, QueueHandler
+from logging import (
+	Logger as PyLogger, 
+	getLogger,
+	Formatter,
+	Handler,
+	DEBUG,
+	INFO,
+	WARN,
+	ERROR,
+)
+from traceback import format_tb
+from inspect import currentframe, getframeinfo
+from os.path import basename
 
 __all__ = (
-	'Logger',
-	'FileHandler',
-	'RotateFileHandler',
-	'QueueHandler',
-	'LOG_LEVEL_DEBUG',
-	'LOG_LEVEL_INFO',
-	'LOG_LEVEL_WARNING',
-	'LOG_LEVEL_ERROR',
-	'LOG_LEVEL_CRITICAL',
-	'LOG_LEVEL_FATAL',
-	'LOG_FILE_APPEND',
-	'LOG_FILE_CREATE',
+	'Logger'
 )
 
-LOG_LEVEL_DEBUG = DEBUG
-LOG_LEVEL_INFO = INFO
-LOG_LEVEL_WARNING = WARNING
-LOG_LEVEL_ERROR = ERROR
-LOG_LEVEL_CRITICAL = CRITICAL
-LOG_LEVEL_FATAL = FATAL
+LOG_LEVEL_DEBUG = 'DEBUG'
+LOG_LEVEL_INFO  = 'INFO'
+LOG_LEVEL_WARN  = 'WARN'
+LOG_LEVEL_ERROR = 'ERROR'
 
-LOG_FILE_APPEND = 'a'
-LOG_FILE_CREATE = 'w'
+FORMAT = '%(asctime)s - %(filename)s:%(lineno)d - %(process)6d - %(thread)12d - %(levelname)-8s - %(message)s'
+FORMAT_WITH_NAME = '%(asctime)s - %(name)s - %(filename)s(%(lineno)d) - %(process)6d - %(thread)12d - %(levelname)-8s - %(message)s'
 
-
-class Logger(Singleton):
-
-	def __init__(self):
-		self.logger = None
-		self.name = GetHostName()
-		self.format = '%(asctime)s - %(process)6d - %(thread)6d - %(levelname)-8s - %(message)s'
-		self.formatter = Formatter('%(asctime)s - %(process)6d - %(thread)6d - %(levelname)-8s - %(message)s')
-		return
-
-	def initialize(self, level, format=None, name=None):
-
-		disable(NOTSET)
-
+class Logger(object):
+	def __init__(
+		self,
+		level: str,
+		name: str = None,
+		format: str = None,
+	):
+		self.logger: PyLogger = getLogger(name)
+		self.logger.setLevel(level)
 		self.level = level
-
-		if self.level > LOG_LEVEL_ERROR:
-			captureWarnings(True)
-
-		if format:
-			self.format = format
-			self.formatter = Formatter(format)
-
-		# expired to escape tensorflow logs, and set stream Logger as a default Logger
-		# basicConfig(format=self.format, level=self.level)
-
-		self.logger = getLogger(name)
-		self.logger.setLevel(self.level)
-
-		self.set(StreamHandler())  # set default stream Logger
+		self.format = format if format else FORMAT_WITH_NAME if name else FORMAT
+		for h in self.logger.handlers:
+			self.logger.removeHandler(h)
 		return
-
-	def set(self, handler, level=None, formatter=None, format=None):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR if not level else level, format='%(message)s')
-		handler.setLevel(level if level else self.level)
-		handler.setFormatter(self.formatter)
-		if formatter:
-			handler.setFormatter(formatter)
-		if format:
-			handler.setFormatter(Formatter(format))
-		self.logger.addHandler(handler)
+	
+	def add(self, h: Handler):
+		h.setLevel(self.level)
+		h.setFormatter(Formatter(self.format))
+		self.logger.addHandler(h)
 		return
+	
+	def traceback(self, e: BaseException):
+		return ''.join(format_tb(e.__traceback__)).strip()
+	
+	def debug(self, msg: str, e: BaseException = None, frame = None):
+		if not frame: frame = currentframe().f_back
+		info = getframeinfo(frame)
+		return self.logger.debug(
+			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''), 
+			extra={
+				'file': basename(info.filename),
+				'line': info.lineno,
+			},
+		)
 
-	def debug(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.debug(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
+	def info(self, msg: str, e: BaseException = None, frame = None):
+		if not frame: frame = currentframe().f_back
+		info = getframeinfo(frame)
+		return self.logger.info(
+			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''), 
+			extra={
+				'file': basename(info.filename),
+				'line': info.lineno,
+			},
+		)
 
-	def info(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.info(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
+	def warn(self, msg: str, e: BaseException = None, frame = None): 
+		if not frame: frame = currentframe().f_back
+		info = getframeinfo(frame)
+		return self.logger.warning(
+			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''),
+			extra={
+				'file': basename(info.filename),
+				'line': info.lineno,
+			},
+		)
 
-	def warning(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.warn(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
+	def error(self, msg: str, e: BaseException = None, frame = None):
+		if not frame: frame = currentframe().f_back
+		info = getframeinfo(frame)
+		return self.logger.error(
+			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''),
+			extra={
+				'file': basename(info.filename),
+				'line': info.lineno,
+			},
+		)
 
-	def error(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.error(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
-
-	def critical(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.critical(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
-
-	def fatal(self, message):
-		if not self.logger:
-			self.initialize(LOG_LEVEL_ERROR, format='%(message)s')
-		try:
-			self.logger.fatal(message)
-		except (
-			BaseException,
-			Exception
-		) as e:
-			pass
-		return
+	def exception(self, e: BaseException, level: str = LOG_LEVEL_ERROR, frame = None):
+		if not frame: frame = currentframe().f_back
+		reason = '{}\n'.format(str(e))
+		for line in ''.join(format_tb(e.__traceback__)).strip().split('\n'):
+			reason += line + '\n'
+		return {
+			DEBUG: self.debug(reason, frame=frame),
+			INFO : self.info(reason, frame=frame),
+			WARN : self.warn(reason, frame=frame),
+			ERROR: self.error(reason, frame=frame),
+		}.get(self.value, None)
