@@ -2,7 +2,13 @@
 
 from .Order import OrderContext
 
-from unittest import TestCase, TestLoader
+from unittest import TestCase, TestLoader, TestSuite
+
+from os.path import splitext, split
+from pathlib import Path
+from importlib.machinery import SourceFileLoader
+from inspect import getmembers, isclass
+
 from typing import Type, Sequence
 
 __all__ = (
@@ -25,3 +31,14 @@ class Loader(TestLoader):
 				_.append((case, orderedCases[case]))
 		_.sort(key=lambda o: o[1])
 		return [m for m, order in _]
+	
+	def file(self, path):
+		head, tail = split(path)
+		file, ext = splitext(tail)
+		head = head.replace('\\', '.').replace('/', '.')
+		mod = '{}.{}'.format(head, file)
+		loader = SourceFileLoader(mod, path)
+		mo = loader.load_module()
+		if not mo:
+			return None
+		return self.loadTestsFromModule(mo)
