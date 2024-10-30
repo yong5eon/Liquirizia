@@ -1,6 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.Template import Singleton
+from Liquirizia.Logger import Logger
 
 from .Errors import *
 
@@ -19,20 +20,14 @@ class SerializerHelper(Singleton):
 
 	def __init__(self):
 		self.serializers = {}
-		try:
-			package = import_module('Liquirizia.Serializer.Implements')
-			mos = []
-			for loader, name, isPackage in walk_packages(package.__path__):
-				fullname = package.__name__ + '.'	+ name
-				try:
-					mo = import_module(fullname)
-					for format in mo.FORMATS:
-						self.set(format, mo.Encoder, mo.Decoder)
-					mos.append(fullname)
-				except ModuleNotFoundError as e:
-					continue
-		except ModuleNotFoundError as e:
-			pass
+		package = import_module('Liquirizia.Serializer.Implements')
+		mos = []
+		for loader, name, isPackage in walk_packages(package.__path__):
+			fullname = package.__name__ + '.'	+ name
+			mo = import_module(fullname)
+			for format in mo.FORMATS:
+				self.set(format, mo.Encoder, mo.Decoder)
+			mos.append(fullname)
 		return
 	
 	@classmethod
