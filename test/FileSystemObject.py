@@ -8,6 +8,11 @@ from Liquirizia.FileSystemObject import (
 	Connection,
 	File,
 )
+from Liquirizia.FileSystemObject.Implements.FileSystem import (
+	Configuration as FileSystemConfiguration,
+	Connection as FileSystemConnection,
+)
+
 from Liquirizia.FileSystemObject.Errors import *
 from Liquirizia.FileSystemObject.Errors import FileNotFoundError as FileNotExistError
 
@@ -19,6 +24,10 @@ from mimetypes import guess_type
 from email.utils import formatdate, parsedate_tz
 from hashlib import sha1
 from os.path import split
+
+from random import sample
+
+PATTERN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 
 
 class SampleFileSystemObjectConfiguration(Configuration):
@@ -136,15 +145,19 @@ class TestFileSystemObject(Case):
 			SampleFileSystemObject,
 			SampleFileSystemObjectConfiguration('.')
 		)
+		Helper.Set(
+			'FileSystem',
+			FileSystemConnection,
+			FileSystemConfiguration('.')
+		)
 		return super().setUpClass()
-	
 
 	@Parameterized(
 			{'v': 'Hello'},
 			{'v': 'Hello World'},
 			{'v': 'Hello World Yongseon'},
 	)
-	def testWriteRead(self, v):
+	def test(self, v):
 		fo = Helper.Get('Sample')
 		with fo.open('Sample.txt', 'w') as f:
 			f.write(v)
@@ -153,3 +166,22 @@ class TestFileSystemObject(Case):
 			ASSERT_IS_EQUAL(f.read(), v)
 			f.close()
 		return
+	
+	@Parameterized(
+			{'v': 'Hello'},
+			{'v': 'Hello World'},
+			{'v': 'Hello World Yongseon'},
+			{'v': 'Hello World Heo Yongseon'},
+			{'v': str(sample(PATTERN, 8))},
+			{'v': str(sample(PATTERN, 16))},
+	)
+	def testFileSystem(self, v):
+		fo = Helper.Get('FileSystem')
+		with fo.open('Sample.txt', 'w') as f:
+			f.write(v)
+			f.close()
+		with fo.open('Sample.txt', 'r') as f:
+			ASSERT_IS_EQUAL(f.read(), v)
+			f.close()
+		return
+
