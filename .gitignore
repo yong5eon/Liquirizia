@@ -71,7 +71,6 @@ __pypackages__/
 tmp
 
 # Symlinks
-src/DataAccessObject/Implements/Sqlite
 src/DataAccessObject/Implements/PostgreSQL
 src/DataAccessObject/Implements/Redis
 src/DataAccessObject/Implements/RedisCluster
