@@ -78,7 +78,7 @@ class TestSqliteWithModel(Case):
 			colInteger=1,
 			colFloat=2.0,
 			colText='Hello Liquirizia',
-			colByteArray=open('VERSION', mode='rb').read(),
+			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
 		))
@@ -87,7 +87,7 @@ class TestSqliteWithModel(Case):
 		ASSERT_IS_EQUAL(row.colInteger, 1)
 		ASSERT_IS_EQUAL(row.colFloat, 2.0)
 		ASSERT_IS_EQUAL(row.colText, 'Hello Liquirizia')
-		ASSERT_IS_EQUAL(row.colByteArray, open('VERSION', mode='rb').read())
+		ASSERT_IS_EQUAL(row.colByteArray, open('README.md', mode='rb').read())
 		ASSERT_TRUE(isinstance(row.colDateTime, datetime))
 		ASSERT_TRUE(isinstance(row.colTimestamp, int))
 		return
@@ -100,7 +100,7 @@ class TestSqliteWithModel(Case):
 			colInteger=1,
 			colFloat=2.0,
 			colText='Hello Liquirizia',
-			colByteArray=open('VERSION', mode='rb').read(),
+			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
 		))
@@ -133,7 +133,7 @@ class TestSqliteWithModel(Case):
 			colInteger=1,
 			colFloat=2.0,
 			colText='Hello Liquirizia',
-			colByteArray=open('VERSION', mode='rb').read(),
+			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
 		))
@@ -160,7 +160,7 @@ class TestSqliteWithModel(Case):
 			colInteger=1,
 			colFloat=2.0,
 			colText='Hello Liquirizia',
-			colByteArray=open('VERSION', mode='rb').read(),
+			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
 		))
