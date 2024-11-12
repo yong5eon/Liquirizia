@@ -25,7 +25,7 @@ class Connection(metaclass=ABCMeta):
 		raise NotImplemented('{} must be implemented queue'.format(self.__class__.__name__))
 
 	@abstractmethod
-	def consumer(self, handler: EventHandler, **kwargs):
+	def consumer(self, queue: str, handler: EventHandler = None, **kwargs):
 		raise NotImplemented('{} must be implemented consumer'.format(self.__class__.__name__))
 
 	@abstractmethod

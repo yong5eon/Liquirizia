@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from .Event import Event
+
 from abc import ABCMeta, abstractmethod
 
 __all__ = (
@@ -13,10 +15,9 @@ class Consumer(metaclass=ABCMeta):
 	@abstractmethod
 	def qos(self, **kwargs):
 		raise NotImplementedError('{} must be implemented qos'.format(self.__class__.__name__))
-
-	@abstractmethod
-	def consume(self, queue: str):
-		raise NotImplementedError('{} must be implemented consume'.format(self.__class__.__name__))
+	
+	def read(self, **kwargs) -> Event:
+		raise NotImplementedError('{} must be implemented read'.format(self.__class__.__name__))
 
 	@abstractmethod
 	def run(self, **kwargs):
