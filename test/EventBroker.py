@@ -6,6 +6,9 @@ from Liquirizia.EventBroker import Helper
 from Liquirizia.EventBroker import (
 	Configuration as BaseConfiguration,
 	Connection as BaseConnection,
+	GetTopic,
+	GetQueue,
+	GetConsumer,
 	Topic as BaseTopic,
 	Queue as BaseQueue,
 	Consumer as BaseConsumer,
@@ -19,7 +22,7 @@ class Configuration(BaseConfiguration):
 	def __init__(self):
 		pass
 
-class Connection(BaseConnection):
+class Connection(BaseConnection, GetTopic, GetQueue, GetConsumer):
 	def __init__(self, conf: Configuration):
 		self.con = conf
 		self.t = {}
