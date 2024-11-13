@@ -133,7 +133,7 @@ class Consumer(BaseConsumer):
 
 
 
-class TestFileSystemObject(Case):
+class TestEventBroker(Case):
 	@classmethod
 	def setUpClass(cls) -> None:
 		Helper.Set(
