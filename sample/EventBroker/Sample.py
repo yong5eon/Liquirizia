@@ -1,12 +1,17 @@
+
 from Liquirizia.EventBroker import Helper
 from Liquirizia.EventBroker import (
 	Configuration as BaseConfiguration,
 	Connection as BaseConnection,
-	Topic as BaseTopic,
+	GetExchange,
+	GetQueue,
+	GetConsumer,
+	Exchange as BaseExchange,
 	Queue as BaseQueue,
 	Consumer as BaseConsumer,
 	EventHandler,
 )
+from Liquirizia.System.Util import SetTimer
 
 from queue import SimpleQueue, Empty
 
@@ -15,7 +20,7 @@ class Configuration(BaseConfiguration):
 	def __init__(self):
 		pass
 
-class Connection(BaseConnection):
+class Connection(BaseConnection, GetExchange, GetQueue, GetConsumer):
 	def __init__(self, conf: Configuration):
 		self.con = conf
 		self.t = {}
@@ -23,8 +28,8 @@ class Connection(BaseConnection):
 		return
 	def connect(self):
 		pass
-	def topic(self, topic: str = None):
-		return Topic(self, topic)
+	def exchange(self, exchange: str = None):
+		return Exchange(self, exchange)
 
 	def queue(self, queue: str = None):
 		return Queue(self, queue)
@@ -35,33 +40,35 @@ class Connection(BaseConnection):
 	def close(self):
 		pass
 
-class Topic(BaseTopic):
-	def __init__(self, con: Connection, topic: str):
+class Exchange(BaseExchange):
+	def __init__(self, con: Connection, exchange: str = None):
 		self.con = con
-		if topic:
-			self.create(topic)
-			self.topic = topic
+		if exchange:
+			self.create(exchange)
+		self.exchange = exchange
 		return
+	
+	def __str__(self): return self.exchange
 
-	def create(self, topic):
-		if topic in self.con.t.keys():
+	def create(self, exchange):
+		if exchange in self.con.t.keys():
 			return
-		self.con.t[topic] = set()
+		self.con.t[exchange] = set()
 		return
 
-	def bind(self, topic):
+	def bind(self, exchange):
 		pass
 
 	def send(self, v: any):
-		for queue in self.con.t[self.topic]:
+		for queue in self.con.t[self.exchange]:
 			self.con.q[queue].put(v)
 		return
 
-	def unbind(self, topic, **kwargs):
+	def unbind(self, exchange):
 		pass
 
 	def remove(self):
-		del self.con.t[self.topic]
+		del self.con.t[self.exchange]
 		return
 
 
@@ -73,12 +80,14 @@ class Queue(BaseQueue):
 			self.queue = queue
 		return
 
+	def __str__(self): return self.queue
+
 	def create(self, queue):
 		self.con.q[queue] = SimpleQueue()
 		return
 
-	def bind(self, topic):
-		self.con.t[topic].add(self.queue)
+	def bind(self, exchange):
+		self.con.t[exchange].add(self.queue)
 		return
 
 	def send(self, v: any):
@@ -86,12 +95,45 @@ class Queue(BaseQueue):
 		self.con.q[self.queue].put(v)
 		return
 
-	def unbind(self, topic):
-		self.con.t[topic].remove(self.queue)
+	def unbind(self, exchange):
+		self.con.t[exchange].remove(self.queue)
 		return
 
 	def remove(self):
 		del self.con.q[self.queue]
+		return
+
+
+class Consumer(BaseConsumer):
+	def __init__(self, con: Connection, queue: str, handler: EventHandler = None):
+		self.con = con
+		self.queue = queue
+		self.handler = handler
+		self.alive = True
+		return
+	
+	def read(self, timeout: float = None):
+		q: SimpleQueue = self.con.q[self.queue]
+		try:
+			return q.get(block=True, timeout=timeout)
+		except Empty:
+			return None
+
+	def run(self):
+		q: SimpleQueue = self.con.q[self.queue]
+		while self.alive:
+			try:
+				v = q.get(block=True, timeout=1)
+				if v:
+					self.handler(v)
+			except Empty:
+				if self.alive:
+					continue
+				break
+		return
+
+	def stop(self):
+		self.alive = False
 		return
 
 
@@ -100,32 +142,6 @@ class SampleEventHandler(EventHandler):
 		print(event)
 		return
 
-class Consumer(BaseConsumer):
-	def __init__(self, con: Connection, queue: str, handler: EventHandler = None):
-		self.con = con
-		self.queue = queue
-		self.eh = handler
-		self.alive = True
-		return
-
-	def qos(self, **kwargs):
-		pass
-
-	def read(self, timeout: float = None):
-		q: SimpleQueue = self.con.q[self.queue]
-		return q.get(block=True, timeout=timeout)
-
-	def run(self, timeout: float = None):
-		q: SimpleQueue = self.con.q[self.queue]
-		while self.alive:
-			v = q.get(block=True, timeout=timeout)
-			if v:
-				self.h(v)
-		return
-
-	def stop(self):
-		self.alive = False
-		return
 
 
 if __name__ == '__main__':
@@ -137,20 +153,26 @@ if __name__ == '__main__':
 	)
 
 	con = Helper.Get('Sample')
-	topic = con.topic('topic')
+	exchange = con.exchange('topic')
 	queue = con.queue('queue')
 	queue.bind('topic')
 
 	queue.send(1)
-	topic.send(2)
+	exchange.send(2)
 
-	# consumer = con.consumer('queue', SampleEventHandler())
-	# consumer.run()
+	reader = con.consumer('queue')
+	print(reader.read())
+	print(reader.read())
 
-	consumer = con.consumer('queue')
-	while True:
-		try:
-			v = consumer.read(1)
-			print(v)
-		except Empty as e:
-			break
+	queue.send(1)
+	exchange.send(2)
+
+	consumer = con.consumer('queue', SampleEventHandler())
+
+	def stop():
+		consumer.stop()
+		return
+	
+	SetTimer(1, stop)
+
+	consumer.run()

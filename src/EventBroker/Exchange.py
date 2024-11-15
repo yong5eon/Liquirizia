@@ -2,21 +2,20 @@
 
 from abc import ABCMeta, abstractmethod
 
-from .Exchange import Exchange
-
 from typing import Union
 
 __all__ = (
-	'Queue'
+	'Exchange'
 )
 
 
-class Queue(metaclass=ABCMeta):
-	"""Queue Interface for Event Broker"""
+class Exchange(metaclass=ABCMeta): pass
+class Exchange(metaclass=ABCMeta):
+	"""Topic Interface for Event Broker"""
 
 	@abstractmethod
 	def __str__(self):
-		raise NotImplementedError('{} must be implemented __Str__'.format(self.__class__.__name__))
+		raise NotImplementedError('{} must be implemented __str__'.format(self.__class__.__name__))
 
 	@abstractmethod
 	def create(self, name: str, **kwargs):

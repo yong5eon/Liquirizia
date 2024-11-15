@@ -4,6 +4,8 @@ from .Event import Event
 
 from abc import ABCMeta, abstractmethod
 
+from typing import Optional
+
 __all__ = (
 	'Consumer'
 )
@@ -13,14 +15,11 @@ class Consumer(metaclass=ABCMeta):
 	"""Consumer Interface of Event Broker"""
 
 	@abstractmethod
-	def qos(self, **kwargs):
-		raise NotImplementedError('{} must be implemented qos'.format(self.__class__.__name__))
-	
-	def read(self, **kwargs) -> Event:
+	def read(self, timeout: float = None) -> Optional[Event]:
 		raise NotImplementedError('{} must be implemented read'.format(self.__class__.__name__))
 
 	@abstractmethod
-	def run(self, **kwargs):
+	def run(self):
 		raise NotImplementedError('{} must be implemented run'.format(self.__class__.__name__))
 
 	@abstractmethod

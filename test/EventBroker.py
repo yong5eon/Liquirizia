@@ -6,11 +6,15 @@ from Liquirizia.EventBroker import Helper
 from Liquirizia.EventBroker import (
 	Configuration as BaseConfiguration,
 	Connection as BaseConnection,
-	Topic as BaseTopic,
+	GetExchange,
+	GetQueue,
+	GetConsumer,
+	Exchange as BaseExchange,
 	Queue as BaseQueue,
 	Consumer as BaseConsumer,
 	EventHandler,
 )
+from Liquirizia.System.Util import SetTimer
 
 from queue import SimpleQueue, Empty
 
@@ -19,7 +23,7 @@ class Configuration(BaseConfiguration):
 	def __init__(self):
 		pass
 
-class Connection(BaseConnection):
+class Connection(BaseConnection, GetExchange, GetQueue, GetConsumer):
 	def __init__(self, conf: Configuration):
 		self.con = conf
 		self.t = {}
@@ -27,45 +31,47 @@ class Connection(BaseConnection):
 		return
 	def connect(self):
 		pass
-	def topic(self, topic: str = None):
-		return Topic(self, topic)
+	def exchange(self, exchange: str = None):
+		return Exchange(self, exchange)
 
 	def queue(self, queue: str = None):
 		return Queue(self, queue)
 
-	def consumer(self, queue: str, handler: EventHandler = None):
-		return Consumer(self, queue, handler)
+	def consumer(self, queue: str, handler: EventHandler = None, timeout: float = None):
+		return Consumer(self, queue, handler, timeout)
 
 	def close(self):
 		pass
 
-class Topic(BaseTopic):
-	def __init__(self, con: Connection, topic: str):
+class Exchange(BaseExchange):
+	def __init__(self, con: Connection, exchange: str = None):
 		self.con = con
-		if topic:
-			self.create(topic)
-			self.topic = topic
+		if exchange:
+			self.create(exchange)
+		self.exchange = exchange
 		return
+	
+	def __str__(self): return self.exchange
 
-	def create(self, topic):
-		if topic in self.con.t.keys():
+	def create(self, exchange):
+		if exchange in self.con.t.keys():
 			return
-		self.con.t[topic] = set()
+		self.con.t[exchange] = set()
 		return
 
-	def bind(self, topic):
+	def bind(self, exchange):
 		pass
 
 	def send(self, v: any):
-		for queue in self.con.t[self.topic]:
+		for queue in self.con.t[self.exchange]:
 			self.con.q[queue].put(v)
 		return
 
-	def unbind(self, topic, **kwargs):
+	def unbind(self, exchange):
 		pass
 
 	def remove(self):
-		del self.con.t[self.topic]
+		del self.con.t[self.exchange]
 		return
 
 
@@ -77,12 +83,14 @@ class Queue(BaseQueue):
 			self.queue = queue
 		return
 
+	def __str__(self): return self.queue
+
 	def create(self, queue):
 		self.con.q[queue] = SimpleQueue()
 		return
 
-	def bind(self, topic):
-		self.con.t[topic].add(self.queue)
+	def bind(self, exchange):
+		self.con.t[exchange].add(self.queue)
 		return
 
 	def send(self, v: any):
@@ -90,8 +98,8 @@ class Queue(BaseQueue):
 		self.con.q[self.queue].put(v)
 		return
 
-	def unbind(self, topic):
-		self.con.t[topic].remove(self.queue)
+	def unbind(self, exchange):
+		self.con.t[exchange].remove(self.queue)
 		return
 
 	def remove(self):
@@ -99,38 +107,47 @@ class Queue(BaseQueue):
 		return
 
 
-class SampleEventHandler(EventHandler):
-	def __call__(self, event):
-		print(event)
-		return
-
 class Consumer(BaseConsumer):
-	def __init__(self, con: Connection, queue: str, handler: EventHandler = None):
+	def __init__(self, con: Connection, queue: str, handler: EventHandler, timeout: float = None):
 		self.con = con
 		self.queue = queue
-		self.eh = handler
+		self.handler = handler
 		self.alive = True
+		self.timeout = timeout
 		return
-
-	def qos(self, **kwargs):
-		pass
-
+	
 	def read(self, timeout: float = None):
 		q: SimpleQueue = self.con.q[self.queue]
-		return q.get(block=True, timeout=timeout)
+		try:
+			return q.get(block=True, timeout=timeout)
+		except Empty:
+			return None
 
-	def run(self, timeout: float = None):
+	def run(self):
 		q: SimpleQueue = self.con.q[self.queue]
 		while self.alive:
-			v = q.get(block=True, timeout=timeout)
-			if v:
-				self.h(v)
+			try:
+				v = q.get(block=True, timeout=self.timeout)
+				if v:
+					self.handler(v)
+			except Empty:
+				if self.alive:
+					continue
+				break
 		return
 
 	def stop(self):
 		self.alive = False
 		return
 
+
+class TestEventHandler(EventHandler):
+	def __init__(self, q: SimpleQueue):
+		self.q = q
+		return
+	def __call__(self, v):
+		self.q.put(v)
+		return
 
 
 class TestEventBroker(Case):
@@ -142,12 +159,11 @@ class TestEventBroker(Case):
 			Configuration()
 		)
 		con = Helper.Get('Sample')
-		topic = con.topic('topic')
+		exchange = con.exchange('topic')
 		queue = con.queue('queue')
-		queue.bind('topic')
+		queue.bind(str(exchange))
 		return super().setUpClass()
 
-	@Order(1)
 	@Parameterized(
 		{'i': True},
 		{'i': 1},
@@ -159,17 +175,24 @@ class TestEventBroker(Case):
 		{'i': {1,2,2}},
 		{'i': {'a': True, 'b':1, 'c': 1.0, 'd': 'abc'}},
 	)
+	@Order(1)
 	def testSendToQueueReceiveFromQueue(self, i):
 		con = Helper.Get('Sample')
-		topic = con.queue('queue')
-		topic.send(i)
-		consumer = con.consumer('queue')
-		o = consumer.read()
-		ASSERT_IS_EQUAL(i, o)
+		queue = con.queue('queue')
+		queue.send(i)
+		reader = con.consumer('queue')
+		_ = reader.read()
+		ASSERT_IS_EQUAL(i, _)
+		queue.send(i)
+		_ = SimpleQueue()
+		consumer = con.consumer('queue', TestEventHandler(_), timeout=0.1)
+		def stop():
+			consumer.stop()
+		SetTimer(0.1, stop)
+		consumer.run()
+		ASSERT_IS_EQUAL(i, _.get())
 		return
-	
 
-	@Order(2)
 	@Parameterized(
 		{'i': True},
 		{'i': 1},
@@ -181,12 +204,20 @@ class TestEventBroker(Case):
 		{'i': {1,2,2}},
 		{'i': {'a': True, 'b':1, 'c': 1.0, 'd': 'abc'}},
 	)
+	@Order(2)
 	def testSendToTopicReceiveFromQueue(self, i):
 		con = Helper.Get('Sample')
-		topic = con.topic('topic')
+		topic = con.exchange('topic')
 		topic.send(i)
-		consumer = con.consumer('queue')
-		o = consumer.read()
-		ASSERT_IS_EQUAL(i, o)
+		reader = con.consumer('queue')
+		_ = reader.read()
+		ASSERT_IS_EQUAL(i, _)
+		topic.send(i)
+		_ = SimpleQueue()
+		consumer = con.consumer('queue', TestEventHandler(_), timeout=0.1)
+		def stop():
+			consumer.stop()
+		SetTimer(0.1, stop)
+		consumer.run()
+		ASSERT_IS_EQUAL(i, _.get())
 		return
-	
