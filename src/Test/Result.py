@@ -58,7 +58,7 @@ class Result(BaseTestResult):
 	
 	def stopTestRun(self) -> None:
 		for f in self.failures:
-			self.stream.write(RED)
+			self.stream.write(YELLOW)
 			self.stream.write('-' * 80)
 			self.stream.write(LF)
 			self.stream.write('FAIL   - ')
@@ -91,7 +91,7 @@ class Result(BaseTestResult):
 			self.stream.write(RESET)
 			self.stream.write(LF)
 		if len(self.failures):
-			self.stream.write(RED)
+			self.stream.write(YELLOW)
 			self.stream.write('FAIL   - {:71}'.format(len(self.failures)))
 			self.stream.write(RESET)
 			self.stream.write(LF)
@@ -127,7 +127,7 @@ class Result(BaseTestResult):
 		test.__properties__['end'] = time()
 		test.__properties__['duration'] = test.__properties__['end'] - test.__properties__['start']
 		if test.__properties__['result'] == 'PASS': self.stream.write(GREEN)
-		if test.__properties__['result'] == 'FAIL': self.stream.write(RED)
+		if test.__properties__['result'] == 'FAIL': self.stream.write(YELLOW)
 		if test.__properties__['result'] == 'ERROR': self.stream.write(BRIGHT_RED)
 		if test.__properties__['result'] == 'SKIP': self.stream.write(DARK_GRAY)
 		self.stream.write(self.fmt.format(**test.__properties__))
