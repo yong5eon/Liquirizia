@@ -4,11 +4,11 @@ from .Helper import Helper
 
 from .Configuration import Configuration
 from .Connection import Connection
-from .GetTopic import GetTopic
+from .GetExchange import GetExchange
 from .GetQueue import GetQueue
 from .GetConsumer import GetConsumer
 
-from .Topic import Topic
+from .Exchange import Exchange
 from .Queue import Queue
 from .Consumer import Consumer
 
@@ -19,10 +19,10 @@ __all__ = (
 	'Helper',
 	'Configuration',
 	'Connection',
-	'GetTopic',
+	'GetExchange',
 	'GetQueue',
 	'GetConsumer',
-	'Topic',
+	'Exchange',
 	'Queue',
 	'Consumer',
 	'Event',

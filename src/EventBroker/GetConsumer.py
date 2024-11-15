@@ -13,5 +13,5 @@ class GetConsumer(metaclass=ABCMeta):
 	"""GetConsumer Interface for Event Broker"""
 
 	@abstractmethod
-	def consumer(self, queue: str, handler: EventHandler = None, **kwargs):
+	def consumer(self, queue: str, handler: EventHandler, **kwargs):
 		raise NotImplemented('{} must be implemented consumer'.format(self.__class__.__name__))

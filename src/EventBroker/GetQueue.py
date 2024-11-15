@@ -8,8 +8,8 @@ __all__ = (
 
 
 class GetQueue(metaclass=ABCMeta):
-	"""Connection Interface for Event Broker"""
+	"""GetQueue Interface for Event Broker"""
 
 	@abstractmethod
-	def queue(self, queue: str = None, **kwargs):
+	def queue(self, name: str = None, **kwargs):
 		raise NotImplemented('{} must be implemented queue'.format(self.__class__.__name__))

@@ -1,7 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from .EventHandler import EventHandler
-
 from abc import ABCMeta, abstractmethod
 
 __all__ = (
