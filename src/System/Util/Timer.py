@@ -32,8 +32,8 @@ class Timer(object):
 		if system().upper() == 'WINDOWS':
 			self.timer.cancel()
 		else:
-			from signal import signal, SIGALRM, setitimer, ITIMER_REAL
-			signal(SIGALRM, None)
+			from signal import signal, SIGALRM, SIG_DFL
+			signal(SIGALRM, SIG_DFL)
 		return
 	
 
