@@ -5,7 +5,7 @@ from os import getpid
 from threading import get_ident
 from uuid import uuid4
 
-from .Timer import SetTimer
+from .Timer import SetTimer, Timeout
 
 __all__ = (
 	'GetHostName',
@@ -13,6 +13,7 @@ __all__ = (
 	'GetThreadId',
 	'GenerateUUID',
 	'SetTimer',
+	'Timeout'
 )
 
 
