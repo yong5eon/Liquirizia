@@ -4,8 +4,17 @@ from ..Pattern import Pattern
 
 from decimal import Decimal
 
-from collections.abc import Iterable, Sequence, Mapping
-from typing import Type, Tuple
+from collections.abc import (
+	Iterable,
+	MutableSequence,
+	Sequence,
+	MutableSet,
+	Set,
+	MutableMapping,
+	Mapping,
+)
+
+from typing import Type, Sequence
 
 __all__ = (
 	'IsTypeOf',
@@ -15,7 +24,10 @@ __all__ = (
 	'IsString',
 	'IsList',
 	'IsTuple',
+	'IsSet',
+	'IsFixedSet',
 	'IsDictionary',
+	'IsMapping',
 	'IsByteArray',
 	'IsByteStream',
 	'IsDecimal',
@@ -26,19 +38,21 @@ __all__ = (
 	'ToString',
 	'ToList',
 	'ToTuple',
+	'ToSet',
 	'ToDictionary',
 	'ToByteArray',
 	'ToByteStream',
 	'ToDecimal',
+	'IsElementOf'
 )
 
 
 class IsTypeOf(Pattern):
 	def __init__(
 		self, 
-		type     : Type,
-		patterns : Tuple[Pattern] = (),
-		error                     = None
+		type: Type,
+		patterns: Sequence[Pattern] = (),
+		error: BaseException = None
 	):
 		self.type = type
 		self.patterns = patterns if isinstance(patterns, Iterable) else (patterns,)
@@ -46,18 +60,32 @@ class IsTypeOf(Pattern):
 		return
 
 	def __call__(self, parameter):
-		if not isinstance(parameter, self.type):
+		op = {
+			MutableSequence: lambda o: not isinstance(o, self.type),
+			Sequence: lambda o: not isinstance(o, self.type),
+			MutableSet: lambda o: not isinstance(o, self.type),
+			Set: lambda o: not isinstance(o, self.type),
+			MutableMapping: lambda o: not isinstance(o, self.type),
+			Mapping: lambda o: not isinstance(o, self.type),
+		}.get(self.type, lambda o: not type(parameter) is self.type)
+		if op(parameter):
 			if self.error:
 				raise self.error
-			raise TypeError('{} must be {}'.format(parameter, self.type.__name__))
+			raise TypeError('{} must be {}'.format(
+				'\'{}\''.format(parameter) if isinstance(parameter, str) else parameter, 
+				self.type.__name__,
+			))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
 
 	def __repr__(self):
-		return '{}({})'.format(
+		return '{}({}{})'.format(
 			self.__class__.__name__,
 			self.type.__name__,
+			', ({})'.format(
+				', '.join([p.__repr__() for p in self.patterns])
+			) if self.patterns and len(self.patterns) else ''
 		)
 
 
@@ -86,7 +114,7 @@ class IsString(IsTypeOf):
 
 class IsList(IsTypeOf):
 	def __init__(self, *args, error=None):
-		super().__init__(Sequence, patterns=args, error=error)
+		super().__init__(MutableSequence, patterns=args, error=error)
 		return
 
 
@@ -96,7 +124,25 @@ class IsTuple(IsTypeOf):
 		return
 
 
+class IsSet(IsTypeOf):
+	def __init__(self, *args, error=None):
+		super().__init__(MutableSet, patterns=args, error=error)
+		return
+
+
+class IsFixedSet(IsTypeOf):
+	def __init__(self, *args, error=None):
+		super().__init__(Set, patterns=args, error=error)
+		return
+
+
 class IsDictionary(IsTypeOf):
+	def __init__(self, *args, error=None):
+		super().__init__(MutableMapping, patterns=args, error=error)
+		return
+
+
+class IsMapping(IsTypeOf):
 	def __init__(self, *args, error=None):
 		super().__init__(Mapping, patterns=args, error=error)
 		return
@@ -173,6 +219,12 @@ class ToTuple(ToTypeOf):
 	def __init__(self, error=None):
 		super().__init__(tuple, error)
 		return
+	
+
+class ToSet(ToTypeOf):
+	def __init__(self, error=None):
+		super().__init__(set, error)
+		return
 
 
 class ToDictionary(ToTypeOf):
@@ -197,3 +249,4 @@ class ToDecimal(ToTypeOf):
 	def __init__(self, error=None):
 		super().__init__(Decimal, error)
 		return
+	

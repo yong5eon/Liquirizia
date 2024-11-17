@@ -8,6 +8,8 @@ from collections.abc import Mapping
 __all__ = (
 	'IsRequiredIn',
 	'IsMappingOf',
+	'IsKeyOf',
+	'IsValueOf',
 )
 
 
@@ -83,5 +85,67 @@ class IsMappingOf(Pattern):
 			self.__class__.__name__,
 			', '.join(
 				['{}: {}'.format(k, repr(v)) for k, v in self.mappings.items()]
+			)
+		)
+
+
+class IsKeyOf(Pattern):
+	def __init__(self, *args, error=None):
+		self.patterns = args
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		if not isinstance(parameter, Mapping):
+			if self.error:
+				raise self.error
+			raise TypeError('{} must be dict'.format(parameter))
+		try:
+			for k, v in parameter.items():
+				for pattern in self.patterns:
+					k = pattern(k)
+				parameter[k] = v
+			return parameter
+		except Exception as e:
+			if self.error:
+				raise self.error
+			raise e
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join(
+				[repr(p) for p in self.patterns]
+			)
+		)
+
+
+class IsValueOf(Pattern):
+	def __init__(self, *args, error=None):
+		self.patterns = args
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		if not isinstance(parameter, Mapping):
+			if self.error:
+				raise self.error
+			raise TypeError('{} must be dict'.format(parameter))
+		try:
+			for k, v in parameter.items():
+				for pattern in self.patterns:
+					v = pattern(v)
+				parameter[k] = v
+			return parameter
+		except Exception as e:
+			if self.error:
+				raise self.error
+			raise e
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join(
+				[repr(p) for p in self.patterns]
 			)
 		)

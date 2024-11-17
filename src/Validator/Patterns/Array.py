@@ -5,12 +5,12 @@ from ..Pattern import Pattern
 from collections.abc import Iterable
 
 __all__ = (
-	'IsListable',
 	'IsElementOf',
+	'IsArray',
 )
 
 
-class IsListable(Pattern):
+class IsArray(Pattern):
 	def __init__(self, *args, error=None):
 		self.patterns = args
 		self.error = error
@@ -20,7 +20,7 @@ class IsListable(Pattern):
 		if not isinstance(parameter, Iterable):
 			if self.error:
 				raise self.error
-			raise TypeError('{} must be listable'.format(parameter))
+			raise TypeError('{} must be iterable'.format(parameter))
 		if parameter is None:
 			for pattern in self.patterns:
 				parameter = pattern(parameter)
@@ -34,11 +34,11 @@ class IsElementOf(Pattern):
 		return
 
 	def __call__(self, parameter):
-		parameter = list(parameter)
+		_ = list(parameter)
 		for pattern in self.patterns:
-			for i, e in enumerate(parameter):
-				parameter[i] = pattern(e)
-		return parameter
+			for i, e in enumerate(_):
+				_[i] = pattern(e)
+		return type(parameter)(_)
 
 	def __repr__(self):
 		return '{}({})'.format(
