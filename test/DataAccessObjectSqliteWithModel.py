@@ -7,24 +7,31 @@ from Liquirizia.DataAccessObject.Errors import *
 from Liquirizia.DataAccessObject.Properties.Database.Errors import *
 
 from Liquirizia.DataAccessObject.Implements.Sqlite import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Model import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Type import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Constraint import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Filters import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Orders import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Joins import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Exprs import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Functions import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Handler import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Types import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Constraints import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Functions import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Filters import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Orders import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Joins import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Exprs import *
 
-from Liquirizia.DataModel import Model
+from Liquirizia.DataModel import Handler
 
 from datetime import datetime
 from time import mktime
 
 
-@Table(
+class Updater(Handler):
+	def __call__(self, m, o, v, pv):
+		m.__cursor__.run(Update(TestModel).set(
+			**{o.name: v}
+		).where(
+			IsEqualTo(TestModel.id, m.id)
+		))
+		return
+class TestModel(
+	Table,
 	name='TEST',
 	constraints=(
 		PrimaryKey(cols='ID', autoincrement=True),
@@ -33,8 +40,7 @@ from time import mktime
 		Index(name='IDX_TEST_COL_INTEGER', colexprs='COL_INTEGER'),
 	),
 	fn=Updater(),
-)
-class TestModel(Model):
+):
 	id = INTEGER(name='ID')
 	colInteger = INTEGER(name='COL_INTEGER', null=True)
 	colFloat = FLOAT(name='COL_FLOAT', null=True)
