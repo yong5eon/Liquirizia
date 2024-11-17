@@ -10,28 +10,25 @@ __all__ = (
 
 
 class Tuple(Type, Sequence):
-	"""Tuple Data Type Object Class of Data Model Object"""
-
-	# def __getattr__(self, name):
-	#	 return self.__value__.__getattr__(name)
+	"""Tuple Type Object Class of Data Model"""
 
 	def __contains__(self, value):
 		return self.__value__.__contains__(value)
 	
 	def __len__(self):
 		return self.__value__.__len__()
-	
-	def __iter__(self, name):
+
+	def __iter__(self):
 		return self.__value__.__iter__()
 
-	def __reserved__(self):
-		return self.__value__.__reserved__()
+	def __reversed__(self):
+		return self.__value__.__reversed__()
 
-	def __getitem__(self, key):
+	def __getitem__(self, index):
 		return Type.Create(
-			self.__value__.__getitem__(key) if key < len(self.__value__) else None,
-			self.__attr__,
+			self.__value__.__getitem__(index),
 			self.__model__,
+			self.__descriptor__,
 		)
 
 	def index(self, value: any, start: int = 0, stop: int = ...) -> int:
@@ -39,11 +36,3 @@ class Tuple(Type, Sequence):
 
 	def count(self, value: any) -> int:
 		return self.__value__.count(value)
-	
-	def __eq__(self, other: any) -> bool:
-		if isinstance(other, Tuple): return self.__value__.__eq__(other.__value__)
-		return self.__value__.__eq__(other)
-	
-	def __ne__(self, other: any) -> bool:
-		if isinstance(other, Tuple): return self.__value__.__ne__(other.__value__)
-		return self.__value__.__ne__(other)

@@ -7,12 +7,12 @@ from collections.abc import MutableSequence
 from copy import deepcopy
 
 __all__ = (
-	'List'
+	'ByteArray'
 )
 
 
-class List(Type, MutableSequence):
-	"""List Type Object Class of Data Model"""
+class ByteArray(Type, MutableSequence):
+	"""Byte Array Type Object Class of Data Model"""
 
 	def __iter__(self):
 		return self.__value__.__iter__()

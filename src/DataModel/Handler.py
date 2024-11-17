@@ -2,6 +2,8 @@
 
 from abc import ABCMeta, abstractmethod
 
+from typing import Any
+
 __all__ = (
 	'Handler'
 )
@@ -12,11 +14,10 @@ class Handler(metaclass=ABCMeta):
 
 	@abstractmethod
 	def __call__(
-		self, 
-		model,     # Model
-		obj,       # Instance of Model
-		attr,      # Attribute of Model
-		value,     # Changed Value
-		preValue,  # Previous Value
+		self,
+		m, # model
+		o, # value descriptor
+		v: Any, # changed value
+		pv: Any,  # previous value
 	):
 		pass
