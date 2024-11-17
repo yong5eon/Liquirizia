@@ -1,11 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.DataAccessObject.Properties.Database import Session as BaseSession
-from Liquirizia.DataAccessObject.Model import (
-    Run,
-    Fetch,
-    Executor,
-    Executors,
+from Liquirizia.DataAccessObject.Properties.Database import (
+	Session as BaseSession,
+	Run,
+	Fetch,
+	Executor,
+	Executors,
 )
 
 from Liquirizia.DataAccessObject import Error

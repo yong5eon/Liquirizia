@@ -1,11 +1,17 @@
 # -*- coding: utf-8 -*-
 
-from typing import Any
 from .Configuration import Configuration
 from .Connection import Connection
 from .Cursor import Cursor
 from .Session import Session
 from .Context import Context
+
+from .Table import Table
+from .View import View
+
+from .Constraint import Constraint
+from .Index import Index
+from .Function import Function
 
 from sqlite3 import register_adapter
 from datetime import datetime
@@ -16,6 +22,11 @@ __all__ = (
 	'Cursor',
 	'Session',
 	'Context',
+	'Table',
+	'View',
+	'Constraint',
+	'Index',
+	'Function',
 )
 
 

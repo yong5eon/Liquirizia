@@ -1,18 +1,17 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.DataAccessObject import Connection as BaseConnection
-from Liquirizia.DataAccessObject.Properties.Database import Database
-
-from Liquirizia.DataAccessObject import Error
-from Liquirizia.DataAccessObject.Errors import *
-from Liquirizia.DataAccessObject.Properties.Database.Errors import *
-
-from Liquirizia.DataAccessObject.Model import (
+from Liquirizia.DataAccessObject.Properties.Database import (
+	Database,
 	Executors,
 	Executor,
 	Run,
 	Fetch,
 )
+
+from Liquirizia.DataAccessObject import Error
+from Liquirizia.DataAccessObject.Errors import *
+from Liquirizia.DataAccessObject.Properties.Database.Errors import *
 
 from .Configuration import Configuration
 from .Context import Context
