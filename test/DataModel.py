@@ -191,7 +191,7 @@ class TestDataModel(Case):
 	@Order(5)
 	def testList(self, v):
 		class TestModel(Model):
-			v = Value(Validator(IsToNone(IsList())))
+			v: Optional[list]
 		_ = TestModel()
 		ASSERT_IS_NONE(_.v)
 		_.v = []
@@ -233,7 +233,7 @@ class TestDataModel(Case):
 	@Order(8)
 	def testDict(self, v):
 		class TestModel(Model):
-			v = Value(Validator(IsToNone(IsDictionary())))
+			v: Optional[dict]
 		_ = TestModel()
 		ASSERT_IS_NONE(_.v)
 		o = {}
