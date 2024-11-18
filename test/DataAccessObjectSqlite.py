@@ -3,8 +3,6 @@
 from Liquirizia.Test import *
 
 from Liquirizia.DataAccessObject import Helper
-from Liquirizia.DataAccessObject.Errors import *
-from Liquirizia.DataAccessObject.Properties.Database.Errors import *
 
 from Liquirizia.DataAccessObject.Implements.Sqlite import Configuration, Connection
 	

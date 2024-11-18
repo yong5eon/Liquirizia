@@ -6,7 +6,6 @@ from Liquirizia.DataAccessObject import Helper
 from Liquirizia.DataAccessObject import (
 	Configuration as BaseConfiguration,
 	Connection as BaseConnection,
-	Error,
 )
 
 class Configuration(BaseConfiguration):
@@ -37,12 +36,12 @@ class Connection(BaseConnection):
 
 	def get(self):
 		if self.data is None:
-			raise Error('{} is not connected and initialized'.format(self.__class__.__name__))
+			raise RuntimeError('{} is not connected and initialized'.format(self.__class__.__name__))
 		return self.data
 
 	def set(self, data):
 		if not isinstance(data, int):
-			raise Error('{} must be int'.format(data))
+			raise RuntimeError('{} must be int'.format(data))
 		self.data = data
 		return self.data
 	
@@ -67,6 +66,6 @@ class TestDataAccessObject(Case):
 		ASSERT_IS_EQUAL(con.get(), 3)
 		con.set(v)
 		ASSERT_IS_EQUAL(con.get(), v)
-		with ASSERT_EXCEPT(Error) as e:
+		with ASSERT_EXCEPT(RuntimeError) as e:
 			con.set('a')
-			ASSERT_IS_EQUAL(e.exception, Error)
+			ASSERT_IS_EQUAL(e.exception, RuntimeError)
