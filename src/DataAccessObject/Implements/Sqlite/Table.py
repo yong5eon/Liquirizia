@@ -37,14 +37,14 @@ class Table(Model):
 
 	def __init_subclass__(
 		cls,
-		name: str = None,
+		table: str = None,
 		constraints: Sequence[Constraint] = None,
 		indexes: Sequence[Index] = None,
 		description: str = None,
 		schema: Object = None,
 		fn: Handler = None,
 	):
-		cls.__model__ = name if name else cls.__name__
+		cls.__model__ = table if table else cls.__name__
 		if constraints:
 			if isinstance(constraints, Constraint): constraints = [constraints]
 		cls.__constraints__ = constraints

@@ -34,29 +34,47 @@ __all__ = (
 )
 
 
-class ModelCreator(ABCMeta):
-
-	def __new__(metacls, clsname, bases, namespace, *args, **kwargs):
-		cls = super().__new__(metacls, clsname, bases, namespace, *args, **kwargs)
+class ModelCreator(type):
+	def __init__(self, name, bases, namespace, *args, **kwargs):
+		super().__init__(name, bases, namespace, *args, **kwargs)
 		try:
-			for k, t in cls.__annotations__.items():
-				v = cls.__dict__[k] if k in cls.__dict__.keys() else None
+			for k, t in self.__annotations__.items():
+				v = self.__dict__[k] if k in self.__dict__.keys() else None
 				if not isinstance(v, Value):
-					v = cls.__value__(k, t, v)
-					setattr(cls, k, v)
+					v = self.__value__(k, t, v)
+					setattr(self, k, v)
 		except Exception as e:
 			pass
-		cls.__mapper__ = OrderedDict()
-		cls.__description__ = None
-		cls.__schema__ = None
-		for k, v in cls.__dict__.items():
+		self.__mapper__ = OrderedDict()
+		self.__description__ = None
+		self.__schema__ = None
+		for k, v in self.__dict__.items():
 			if not isinstance(v, Value): continue
-			v.__set_name__(cls, k)
-			cls.__mapper__[k] = v
-		return cls
+			v.__set_name__(self, k)
+			self.__mapper__[k] = v
+		return
+
+# 	def __new__(metacls, clsname, bases, namespace, *args, **kwargs):
+# 		cls = super().__new__(metacls, clsname, bases, namespace, *args, **kwargs)
+# 		try:
+# 			for k, t in cls.__annotations__.items():
+# 				v = cls.__dict__[k] if k in cls.__dict__.keys() else None
+# 				if not isinstance(v, Value):
+# 					v = cls.__value__(k, t, v)
+# 					setattr(cls, k, v)
+# 		except Exception as e:
+# 			pass
+# 		cls.__mapper__ = OrderedDict()
+# 		cls.__description__ = None
+# 		cls.__schema__ = None
+# 		for k, v in cls.__dict__.items():
+# 			if not isinstance(v, Value): continue
+# 			v.__set_name__(cls, k)
+# 			cls.__mapper__[k] = v
+# 		return cls
 
 
-class Model(ABC, metaclass=ModelCreator):
+class Model(object, metaclass=ModelCreator):
 	"""Abstract Model Class of Data Model"""
 
 	def __new__(cls, **kwargs):

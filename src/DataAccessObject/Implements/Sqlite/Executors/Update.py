@@ -44,6 +44,7 @@ class Update(Executor, Fetch):
 		return list(self.kwargs.values())
 
 	def fetch(self, cursor: Cursor):
-		obj = self.obj(**dict(cursor.row()))
+		row = dict(cursor.row())
+		obj = self.obj(**row)
 		obj.__cursor__ = cursor
 		return obj
