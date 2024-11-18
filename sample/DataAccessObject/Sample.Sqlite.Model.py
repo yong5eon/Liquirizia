@@ -39,7 +39,7 @@ class StudentUpdated(Handler):
 		return
 class Student(
 	Table,
-	name='STUDENT',
+	table='STUDENT',
 	constraints=(
 		PrimaryKey('ID', autoincrement=True),
 		Unique('IDX_UNIQUE_STUDENT_CODE', colexprs='CODE'),
@@ -76,7 +76,7 @@ class ClassUpdated(Handler):
 		return
 class Class(
 	Table,
-	name='CLASS',
+	table='CLASS',
 	constraints=(
 		PrimaryKey('ID', autoincrement=True),
 		Unique(name='IDX_CLASS_CODE', colexprs='CODE'),
@@ -113,7 +113,7 @@ class StudentClassUpdated(Handler):
 		return
 class StudentOfClass(
 	Table,
-	name='STUDENT_CLASS',
+	table='STUDENT_CLASS',
 	constraints=(
 		PrimaryKey(('STUDENT', 'CLASS')),
 		ForeignKey(cols='STUDENT', reference='STUDENT', referenceCols='ID'),
@@ -138,7 +138,7 @@ class StudentOfClass(
 # View 
 class StatOfStudent(
 	View,
-	name='STAT_STUDENT',
+	view='STAT_STUDENT',
 	executor=Select(Student).join(
 		LeftOuter(StudentOfClass, IsEqualTo(Student.id, StudentOfClass.studentId)),
 		LeftOuter(Class, IsEqualTo(StudentOfClass.classId, Class.id)),
@@ -169,7 +169,7 @@ class StatOfStudent(
 
 class StatOfClass(
 	View,
-	name='STAT_CLASS',
+	view='STAT_CLASS',
 	executor=Select(Class).join(
 		LeftOuter(StudentOfClass, IsEqualTo(Class.id, StudentOfClass.classId)),
 		LeftOuter(Student), IsEqualTo(StudentOfClass.studentId, Student.id)

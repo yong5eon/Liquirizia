@@ -32,7 +32,7 @@ class Updater(Handler):
 		return
 class TestModel(
 	Table,
-	name='TEST',
+	table='TEST',
 	constraints=(
 		PrimaryKey(cols='ID', autoincrement=True),
 	),
