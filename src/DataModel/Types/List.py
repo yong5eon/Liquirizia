@@ -12,16 +12,13 @@ __all__ = (
 
 
 class List(Type, MutableSequence):
-	"""List Data Type Object Class of Data Model Object"""
+	"""List Type Object Class of Data Model"""
 
-	# def __getattr__(self, name):
-	#	 return self.__value__.__getattr__(name)
- 
 	def __iter__(self):
 		return self.__value__.__iter__()
 	
-	def __reserved__(self):
-		return self.__value__.__reserved__()
+	def __reversed__(self):
+		return self.__value__.__reversed__()
 	
 	def __len__(self):
 		return self.__value__.__len__()
@@ -29,264 +26,345 @@ class List(Type, MutableSequence):
 	def __contains__(self, value):
 		return self.__value__.__contains__(value)
 
-	def __getitem__(self, key):
+	def __getitem__(self, index):
 		return Type.Create(
-			self.__value__.__getitem__(key) if key < len(self.__value__) else None,
-			self.__attr__,
+			self.__value__.__getitem__(index),
 			self.__model__,
+			self.__descriptor__,
 		)
 
-	def __setitem__(self, key, value):
+	def __setitem__(self, index, value):
+		pv = deepcopy(self.__value__.__getitem__(index)) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.__setitem__(key, value)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.__setitem__(index, value)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
-			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__value__.__setitem__(index, pv)
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 	
-	def __delitem__(self, key):
+	def __delitem__(self, index):
+		pv = deepcopy(self.__value__.__getitem__(index)) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.__delitem__(key)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.__delitem__(index)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
-			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__value__.__setitem__(index, pv)
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 	
 	def __iadd__(self, values):
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.__iadd__(values)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.__iadd__(values)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 	
 	def index(self, value: any, start: int = 0, stop: int = ...) -> int:
 		return self.__value__.index(value, start, stop)
 	
 	def count(self, value: any) -> int:
 		return self.__value__.count(value)
-
-	def insert(self, value):
+	
+	def insert(self, index, value):
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.insert(value)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.insert(index, value)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 
 	def append(self, value):
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.append(value)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.append(value)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 	
 	def clear(self):
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.clear()
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.clear()
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return
 	
 	def reverse(self):
+		pv = deepcopy(self.__value__)
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.reverse()
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.reverse()
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return self
 	
 	def extend(self, values):
+		pv = deepcopy(self.__value__)
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			pv = deepcopy(self.__value__)
-			po = deepcopy(self.__model__.__object__.__getitem__(self.__attr__.name))
-			self.__value__.extend(values)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.extend(values)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return
 	
 	def remove(self, value):
 		pv = deepcopy(self.__value__)
-		po = deepcopy(self.__attr__.__getitem__(self.__attr__.name))
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			self.__value__.remove(value)
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				self.__attr__.validator(self.__model__.__object__.__getitem__(self.__attr__.name))
-			)
-			if self.__attr__.callback:
-				self.__attr__.callback(
-					self.__model__.__class__, 
-					self.__model__,
-					self.__attr__, 
-					self.__model__.__object__.__getitem__(self.__attr__.name),
-					po,
+			v = self.__value__.remove(value)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
 		except Exception as e:
 			self.__value__ = pv
-			self.__model__.__object__.__setitem__(
-				self.__attr__.name,
-				po
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
 			)
 			raise e
-		return
 	
-	def pop(self, key: int = -1):
-		return Type.Create(
-			self.__value__.pop(key),
-			self.__attr__,
-			self.__model__,
-		)
-
-	def __eq__(self, other: any) -> bool:
-		if isinstance(other, List): return self.__value__.__eq__(other.__value__)
-		return self.__value__.__eq__(other)
-	
-	def __ne__(self, other: any) -> bool:
-		if isinstance(other, List): return self.__value__.__ne__(other.__value__)
-		return self.__value__.__ne__(other)
+	def pop(self, index: int = -1):
+		pv = deepcopy(self.__value__)
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+		try:
+			v = self.__value__.pop(index)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
+		except Exception as e:
+			self.__value__ = pv
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
+			)
+			raise e

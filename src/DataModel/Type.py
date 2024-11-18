@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC
-from operator import *
-from collections.abc import Sequence, Mapping
+from abc import ABC, abstractmethod
+
+from typing import Any
 
 __all__ = (
 	'Type'
@@ -12,54 +12,52 @@ __all__ = (
 class Type(ABC):
 	"""Abstract Type Class of Data Model"""
 
-	def __new__(
-		cls,
-		value,
-		attr,
-		model,
+	def __init__(
+		self,
+		v: Any,
+		obj,
+		descriptor,
 	):
-		n = object.__new__(cls)
-		n.__value__= value
-		n.__attr__ = attr
-		n.__model__ = model
-		return n
-
+		self.__value__ = v
+		self.__model__ = obj
+		self.__descriptor__ = descriptor
+		return
+	
 	def __repr__(self):
 		return self.__value__.__repr__()
-	
-	def __str__(self):
-		return self.__value__.__str__()
-	
+
 	@classmethod
-	def Create(cls, value, attr, model):
-		if isinstance(value, tuple):
+	def Create(cls, v: Any, obj, descriptor):
+		if isinstance(v, tuple):
 			from .Types import Tuple
-			return Tuple(value, attr, model)
-		if isinstance(value, list):
+			return Tuple(v, obj, descriptor)
+		if isinstance(v, set):
+			from .Types import Set
+			return Set(v, obj, descriptor)
+		if isinstance(v, list):
 			from .Types import List
-			return List(value, attr, model)
-		if isinstance(value, dict):
+			return List(v, obj, descriptor)
+		# TODO : support bytearray
+		if isinstance(v, dict):
 			from .Types import Dictionary
-			return Dictionary(value, attr, model)
-		# TODO: Support  more Data Types
-		# 
-		# Python Data Types
-		# - int
-		# - float
-		# - decimal
-		# - string
-		# - bytes
-		# - bytearray
-		# - list
-		# - tuple
-		# - set
-		# - frozenset
-		# - dict
-		# - object
-		#
-		# PATTERNS = [type(None), bool, int, float, str]
-		# if type(value) in PATTERNS:
-		#	 return value
-		# from .Types import Object
-		# return Object(value, attr, model)
-		return value
+			return Dictionary(v, obj, descriptor)
+		from decimal import Decimal
+		from datetime import datetime, date, time
+		PATTERNS = [
+			type(None),
+			bool,
+			int,
+			float,
+			str,
+			bytes,
+			frozenset,
+			Decimal,
+			datetime,
+			date,
+			time,
+		]
+		if type(v) in PATTERNS:
+			return v
+		# TODO : support Model
+		from .Types import Object
+		return Object(v, obj, descriptor)

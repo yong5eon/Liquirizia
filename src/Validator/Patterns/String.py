@@ -2,12 +2,15 @@
 
 from ..Pattern import Pattern
 
+from operator import eq
+
 __all__ = (
 	'IsAlphabet',
 	'IsAlphaNumeric',
 	'IsNumeric',
 	'ToUpper',
 	'ToLower',
+	'IsSubString',
 )
 
 
@@ -64,3 +67,19 @@ class ToLower(Pattern):
 
 	def __repr__(self):
 		return '{}()'.format(self.__class__.__name__)
+
+
+class IsSubString(Pattern):
+	def __init__(self, match: str, end: int, start: int = 0, error=None):
+		self.error = error
+		self.match = match
+		self.start = start
+		self.end = end
+		return
+	
+	def __call__(self, parameter):
+		if not eq(parameter[self.start:self.end], self.match):
+			if self.error:
+				raise self.error
+			raise ValueError('{} is not equal to {}'.format(parameter[self.start:self.end], self.match))
+		return parameter

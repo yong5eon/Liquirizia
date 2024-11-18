@@ -1,80 +1,172 @@
 # -*- coding: utf-8 -*-
 
-from .Attribute import Attribute
+from .Value import Value
+from .Format import Object
+from .Handler import Handler
 
-from typing import ItemsView, KeysView, ValuesView
+from Liquirizia.Validator import Validator
+from Liquirizia.Validator.Patterns import (
+	IsToNone,
+	IsNotToNone,
+	IsTypeOf,
+	IsElementOf,
+	IsKeyOf,
+	IsValueOf,
+	Any as IsAny,
+)
 
-from collections.abc import Iterable, Mapping
-from copy import deepcopy
+from collections import OrderedDict
+from abc import ABC, ABCMeta
+
+from typing import (
+	get_origin,
+	get_args,
+	Any,
+	Type,
+	Union,
+)
+
+# TODO : support UnionType in 3.8
+# from types import UnionType
 
 __all__ = (
 	'Model'
 )
 
 
-class Model(Mapping):
+class ModelCreator(type):
+	def __init__(self, name, bases, namespace, *args, **kwargs):
+		super().__init__(name, bases, namespace, *args, **kwargs)
+		try:
+			for k, t in self.__annotations__.items():
+				v = self.__dict__[k] if k in self.__dict__.keys() else None
+				if not isinstance(v, Value):
+					v = self.__value__(k, t, v)
+					setattr(self, k, v)
+		except Exception as e:
+			pass
+		self.__mapper__ = OrderedDict()
+		self.__description__ = None
+		self.__schema__ = None
+		for k, v in self.__dict__.items():
+			if not isinstance(v, Value): continue
+			v.__set_name__(self, k)
+			self.__mapper__[k] = v
+		return
+
+# 	def __new__(metacls, clsname, bases, namespace, *args, **kwargs):
+# 		cls = super().__new__(metacls, clsname, bases, namespace, *args, **kwargs)
+# 		try:
+# 			for k, t in cls.__annotations__.items():
+# 				v = cls.__dict__[k] if k in cls.__dict__.keys() else None
+# 				if not isinstance(v, Value):
+# 					v = cls.__value__(k, t, v)
+# 					setattr(cls, k, v)
+# 		except Exception as e:
+# 			pass
+# 		cls.__mapper__ = OrderedDict()
+# 		cls.__description__ = None
+# 		cls.__schema__ = None
+# 		for k, v in cls.__dict__.items():
+# 			if not isinstance(v, Value): continue
+# 			v.__set_name__(cls, k)
+# 			cls.__mapper__[k] = v
+# 		return cls
+
+
+class Model(object, metaclass=ModelCreator):
 	"""Abstract Model Class of Data Model"""
 
 	def __new__(cls, **kwargs):
 		o = object.__new__(cls)
-		o.__object__ = dict()
-		for k, v in cls.__dict__.items():
-			if isinstance(v, Attribute):
-				v.__init_object__(o, kwargs[k] if k in kwargs.keys() else None)
+		o.__properties__ = {}
 		return o
+	
+	def __init__(self, **kwargs):
+		for k, v in self.__mapper__.items():
+			if k in kwargs.keys():
+				v.__set__(self, kwargs[k], init=True)
+			else:
+				v.__set__(self, v.default, init=True)
+		return
+	
+	def __init_subclass__(cls, description: str = None, schema: Object = None, fn: Handler = None):
+		cls.__description__ = description
+		cls.__schema__ = schema
+		cls.__callback__ = fn
+		return super().__init_subclass__()
 
 	def __repr__(self):
+		_ = []
+		for k, t in self.__mapper__.items():
+			_.append('{}={}'.format(k, getattr(self, k)))
 		return '{}({})'.format(
 			self.__class__.__name__,
-			self.__object__.__repr__()[1:-1]
+			', '.join(_)
 		)
+	
+	def __setattr__(self, name, value):
+		if name in ('__properties__'): return super().__setattr__(name, value)
+		if name not in self.__mapper__.keys():
+			raise ValueError('{} is not member of {}'.format(name, self.__class__.__name__))
+		return super().__setattr__(name, value)
 
-	def __str__(self):
-		return '{}({})'.format(
-			self.__class__.__name__,
-			self.__object__.__repr__()[1:-1]
+	@classmethod
+	def __value__(cls, k: str, t: Type, v: Any):
+		hv = k in cls.__dict__.keys()
+		vaps = cls.__vaps__(t, v, hv)
+		v = Value(
+			va=Validator(vaps) if vaps else Validator(),
+			default=v,
 		)
+		return v
 
-	# implements interface of Container
-	def __contains__(self, key: object) -> bool:
-		return self.__object__.__contains__(key)
-	
-	# implements interface of Sized
-	def __len__(self):
-		return self.__object__.__len__()
+	@classmethod
+	def __vaps__(cls, t, v: Any, hv: bool):
+		targs = get_args(t)
+		t = get_origin(t) if get_origin(t) else t
+		if t in (bool, int, float, str, bytes):
+			if hv and v is None:
+				return IsToNone(IsTypeOf(t))
+			else:
+				return IsNotToNone(IsTypeOf(t))
+		if t in (set, frozenset, tuple, list, bytearray):
+			vaps = []
+			for ta in targs:
+				vaps.append(cls.__vaps__(ta, v, hv))
+			return IsToNone(IsTypeOf(t, IsElementOf(*vaps))) if hv and v is None else IsNotToNone(IsTypeOf(t, IsElementOf(*vaps)))
+		if t is dict:
+			vaps = []
+			if len(targs):
+				kvaps = cls.__vaps__(targs[0], None, False)
+				vaps.append(IsKeyOf(kvaps,))
+			if len(targs) > 1:
+				vvaps = cls.__vaps__(targs[1], None, False)
+				vaps.append(IsValueOf(vvaps,))
+			return IsToNone(IsTypeOf(t, vaps)) if hv and v is None else IsNotToNone(IsTypeOf(t, vaps))
+		# TODO : if want to do special for Model
 
-	# implements interfaces of Iterable 
-	def __iter__(self):
-		return self.__object__.__iter__()
+		# TODO : support UnionType in 3.8
+		# if t in (Union, UnionType):
+		if t in (Union,):
+			return cls.__vaps_union__(targs, v, hv)
+		# raise TypeError('{} is not support type in Model'.format(t))
+		return IsToNone(IsTypeOf(t)) if hv and v is None else IsNotToNone(IsTypeOf(t))
 
-	# implements interfaces of Mapping
-	def __getitem__(self, key):
-		return self.__object__.__getitem__(key)
-	
-	def keys(self) -> KeysView:
-		return self.__object__.keys()
-	
-	def items(self) -> ItemsView:
-		return self.__object__.items()
-	
-	def values(self) -> ValuesView:
-		return self.__object__.values()
-	
-	def __eq__(self, other: any) -> bool:
-		if isinstance(other, Model): return self.__object__.__eq__(other.__object__)
-		return self.__object__.__eq__(other)
-	
-	def __ne__(self, other: any) -> bool:
-		if isinstance(other, Model): return self.__object__.__ne__(other.__object__)
-		return self.__object__.__ne__(other)
-
-	# copy
-	def __copy__(self):
-		return self.__class__.__new__(self.__class__, **self.__object__)
-
-	def __deepcopy__(self, memo={}):
-		o = self.__class__.__new__(self.__class__, **self.__object__)
-		memo[id(self)] = o
-		for k, v in self.__dict__.items():
-			setattr(o, k, deepcopy(v, memo))
-		return o
+	@classmethod
+	def __vaps_union__(cls, types: set, v: Any, hv: bool):
+		ts = []
+		for t in types:
+			if t is type(None):
+				v = None
+				hv = True
+				continue
+			ts.append(t)
+		if len(ts) == 0:
+			return ()
+		if len(ts) == 1:
+			return cls.__vaps__(ts[0], v, hv)
+		vaps = []
+		for t in ts:
+			vaps.append(cls.__vaps__(t, v, hv))
+		return IsAny(*vaps)

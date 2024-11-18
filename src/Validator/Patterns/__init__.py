@@ -35,7 +35,10 @@ from .Type import (
 	IsString,
 	IsList,
 	IsTuple,
+	IsSet,
+	IsFixedSet,
 	IsDictionary,
+	IsMapping,
 	IsByteArray,
 	IsByteStream,
 	IsDecimal,
@@ -46,6 +49,7 @@ from .Type import (
 	ToString,
 	ToList,
 	ToTuple,
+	ToSet,
 	ToDictionary,
 	ToByteArray,
 	ToByteStream,
@@ -69,27 +73,32 @@ from .String import (
 	IsAlphaNumeric,
 	ToUpper,
 	ToLower,
+	IsSubString,
 )
 
-# LIST
-from .List import (
-	IsListable,
+# ARRAY
+from .Array import (
+	IsArray,
 	IsElementOf,
 )
 
-# DICTIONARY
+# dictionary
 from .Dictionary import (
 	IsRequiredIn,
 	IsMappingOf,
+	IsKeyOf,
+	IsValueOf,
 )
 
 # CONDITION
-from .Codition import (
+from .Condition import (
 	If,
+	And,
+	Any,
 )
 
 __all__ = (
-	# COMMONT
+	# COMMON
 	'SetDefault',
 	'IsToNone',
 	'IsNotToNone',
@@ -99,7 +108,6 @@ __all__ = (
 	'IsSizeIn',
 	'IsMinSizeOf',
 	'IsMaxSizeOf',
-	'IsNotEmpty',
 	# COMPARE
 	'IsEqualTo',
 	'IsGreaterThan',
@@ -115,7 +123,10 @@ __all__ = (
 	'IsString',
 	'IsList',
 	'IsTuple',
+	'IsSet',
+	'IsFixedSet',
 	'IsDictionary',
+	'IsMapping',
 	'IsByteArray',
 	'IsByteStream',
 	'IsDateTime',
@@ -129,6 +140,7 @@ __all__ = (
 	'ToString',
 	'ToList',
 	'ToTuple',
+	'ToSet',
 	'ToDictionary',
 	'ToByteArray',
 	'ToByteStream',
@@ -141,12 +153,17 @@ __all__ = (
 	'IsAlphabet',
 	'ToUpper',
 	'ToLower',
-	# LIST
-	'IsListable',
+	'IsSubString',
+	# ARRAY
+	'IsArray',
 	'IsElementOf',
 	# DICTIONARY
 	'IsRequiredIn',
 	'IsMappingOf',
+	'IsKeyOf',
+	'IsValueOf',
 	# CONDITION
 	'If',
+	'And',
+	'Any',
 )

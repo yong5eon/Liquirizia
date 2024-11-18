@@ -5,20 +5,16 @@ from Liquirizia.DataAccessObject.Errors import *
 from Liquirizia.DataAccessObject.Properties.Database.Errors import *
 
 from Liquirizia.DataAccessObject.Implements.Sqlite import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Model import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Type import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Constraint import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Filters import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Orders import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Joins import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Exprs import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Executor.Functions import *
-from Liquirizia.DataAccessObject.Implements.Sqlite.Handler import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Types import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Constraints import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Functions import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Filters import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Orders import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Joins import *
+from Liquirizia.DataAccessObject.Implements.Sqlite.Executors.Exprs import *
 
-from Liquirizia.DataModel import Model
-from Liquirizia.Validator.Patterns import IsIn
-
+from Liquirizia.DataModel import Handler
 from Liquirizia.Util import *
 
 from random import randrange
@@ -26,8 +22,24 @@ from datetime import datetime
 
 
 # Tables
-@Table(
-	name = 'STUDENT',
+class StudentUpdated(Handler):
+	def __call__(self, m, o, v, pv):
+		print('{}({}) of {}({}) is changed {} to {}'.format(
+			o.name, o.key,
+			m.__class__.__name__, m.__model__,
+			pv,
+			v,
+		))
+		changed = m.__cursor__.run(Update(Student).set(
+			**{o.name: v}
+		).where(
+			IsEqualTo(Student.id, m.id)
+		))
+		PrettyPrint(changed)
+		return
+class Student(
+	Table,
+	table='STUDENT',
 	constraints=(
 		PrimaryKey('ID', autoincrement=True),
 		Unique('IDX_UNIQUE_STUDENT_CODE', colexprs='CODE'),
@@ -37,19 +49,34 @@ from datetime import datetime
 		Index(name='IDX_STUDENT_AT_CREATED', colexprs='AT_CREATED DESC'),
 		Index(name='IDX_STUDENT_AT_UPDATED', colexprs='AT_UPDATED DESC'),
 	),
-	fn=Updater()
-)
-class Student(Model):
+	fn=StudentUpdated(),
+):
 	id = Integer('ID')
 	code = Text('CODE')
 	name = Text(name='NAME')
 	metadata = BLOB(name='METADATA')
 	atCreated = DateTime(name='AT_CREATED', default='CURRENT_TIMESTAMP')
 	atUpdated = Timestamp(name='AT_UPDATED', null=True)
-	isDeleted = Text(name='IS_DELETED', default='"N"', vaps=IsIn('Y', 'N'))
+	isDeleted = Text(name='IS_DELETED', default='N')
 
-@Table(
-	name='CLASS',
+class ClassUpdated(Handler):
+	def __call__(self, m, o, v, pv):
+		print('{}({}) of {}({}) is changed {} to {}'.format(
+			o.name, o.key,
+			m.__class__.__name__, m.__model__,
+			pv,
+			v,
+		))
+		changed = m.__cursor__.run(Update(Class).set(
+			**{o.name: v}
+		).where(
+			IsEqualTo(Class.id, m.id)
+		))
+		PrettyPrint(changed)
+		return
+class Class(
+	Table,
+	table='CLASS',
 	constraints=(
 		PrimaryKey('ID', autoincrement=True),
 		Unique(name='IDX_CLASS_CODE', colexprs='CODE'),
@@ -58,30 +85,47 @@ class Student(Model):
 		Index(name='IDX_CLASS_IS_DELETED', colexprs='IS_DELETED'),
 		Index(name='IDX_CLASS_AT_CREATED', colexprs='AT_CREATED DESC'),
 		Index(name='IDX_CLASS_AT_UPDATED', colexprs='AT_UPDATED DESC'),
-	)
-)
-class Class(Model):
+	),
+	fn=ClassUpdated(),
+):
 	id = Integer(name='ID')
 	code = Text(name='CODE')
 	name = Text(name='NAME')
 	atCreated = DateTime(name='AT_CREATED', default='CURRENT_TIMESTAMP')
 	atUpdated = Timestamp(name='AT_UPDATED', null=True)
-	isDeleted = Text(name='IS_DELETED', default='"N"', vaps=IsIn('Y', 'N'))
+	isDeleted = Text(name='IS_DELETED', default='N')
 
-@Table(
-	name='STUDENT_CLASS',
+class StudentClassUpdated(Handler):
+	def __call__(self, m, o, v, pv):
+		print('{}({}) of {}({}) is changed {} to {}'.format(
+			o.name, o.key,
+			m.__class__.__name__, m.__model__,
+			pv,
+			v,
+		))
+		changed = m.__cursor__.run(Update(StudentOfClass).set(
+			**{o.name: v}
+		).where(
+			IsEqualTo(StudentOfClass.studentId, m.studentId),
+			IsEqualTo(StudentOfClass.classId, m.classId),
+		))
+		PrettyPrint(changed)
+		return
+class StudentOfClass(
+	Table,
+	table='STUDENT_CLASS',
 	constraints=(
 		PrimaryKey(('STUDENT', 'CLASS')),
 		ForeignKey(cols='STUDENT', reference='STUDENT', referenceCols='ID'),
-		ForeignKey(cols='CLASS', reference='CLASS', referenceCols='ID')
+		ForeignKey(cols='CLASS', reference='CLASS', referenceCols='ID'),
 	),
 	indexes=(
 		Index(name='IDX_STUDENT_CLASS_SCORE', colexprs='SCORE'),
 		Index(name='IDX_STUDENT_CLASS_AT_CREATED', colexprs='AT_CREATED DESC'),
 		Index(name='IDX_STUDENT_CLASS_AT_UPDATED', colexprs='AT_UPDATED DESC'),
-	)
-)
-class StudentOfClass(Model):
+	),
+	fn=StudentClassUpdated(),
+):
 	studentId = Integer(name='STUDENT')
 	studentName = Text(name='STUDENT_NAME')
 	classId = Integer(name='CLASS')
@@ -92,8 +136,9 @@ class StudentOfClass(Model):
 
 
 # View 
-@View(
-	name='STAT_STUDENT',
+class StatOfStudent(
+	View,
+	view='STAT_STUDENT',
 	executor=Select(Student).join(
 		LeftOuter(StudentOfClass, IsEqualTo(Student.id, StudentOfClass.studentId)),
 		LeftOuter(Class, IsEqualTo(StudentOfClass.classId, Class.id)),
@@ -104,16 +149,15 @@ class StudentOfClass(Model):
 	).values(
 		Student.id,
 		Student.name,
-		Count(Class.id, 'COUNT'),
-		Sum(StudentOfClass.score, 'SUM'),
-		Average(StudentOfClass.score, 'AVG'),
+		Alias(Count(Class.id), 'COUNT'),
+		Alias(Sum(StudentOfClass.score), 'SUM'),
+		Alias(Average(StudentOfClass.score), 'AVG'),
 		Student.atCreated,
 		Student.atUpdated,
 	).orderBy(
 		Ascend(Student.id)
-	)
-)
-class StatOfStudent(Model):
+	),
+):
 	id = Integer(name='ID')
 	name = Text(name='NAME')
 	count = Integer(name='COUNT')
@@ -123,8 +167,9 @@ class StatOfStudent(Model):
 	atUpdated = Timestamp(name='AT_UPDATED', null=True)
 
 
-@View(
-	name='STAT_CLASS',
+class StatOfClass(
+	View,
+	view='STAT_CLASS',
 	executor=Select(Class).join(
 		LeftOuter(StudentOfClass, IsEqualTo(Class.id, StudentOfClass.classId)),
 		LeftOuter(Student), IsEqualTo(StudentOfClass.studentId, Student.id)
@@ -135,16 +180,15 @@ class StatOfStudent(Model):
 	).values(
 		Class.id,
 		Class.name,
-		Count(Student.id, 'COUNT'),
-		Sum(StudentOfClass.score, 'SUM'),
-		Average(StudentOfClass.score, 'AVG'),
+		Alias(Count(Student.id), 'COUNT'),
+		Alias(Sum(StudentOfClass.score), 'SUM'),
+		Alias(Average(StudentOfClass.score), 'AVG'),
 		Class.atCreated,
 		Class.atUpdated,
 	).orderBy(
 		Ascend(Class.id)
-	)
-)
-class StatOfClass(Model):
+	),
+):
 	id = Integer(name='ID')
 	name = Text(name='NAME')
 	count = Integer(name='COUNT')
@@ -183,10 +227,10 @@ if __name__ == '__main__':
 	con.run(Create(StatOfClass))
 
 	STUDENT = [
-		['SU970001', 'Koo Hayoon', 'VERSION'],
-		['SU970002', 'Ma Youngin', 'VERSION'],
-		['SU970003', 'Kang Miran', 'VERSION'],
-		['SU970004', 'Song Hahee', 'VERSION'],
+		['SU970001', 'Koo Hayoon', 'README.md'],
+		['SU970002', 'Ma Youngin', 'README.md'],
+		['SU970003', 'Kang Miran', 'README.md'],
+		['SU970004', 'Song Hahee', 'README.md'],
 	]
 
 	CLASS = [
@@ -310,9 +354,9 @@ if __name__ == '__main__':
 			Alias(Student.name, 'STUDENT_NAME'),
 			Alias(Class.id, 'CLASS_ID'),
 			Alias(Class.name, 'CLASS_NAME'),
-			Count(StudentOfClass.score, 'COUNT'),
-			Sum(StudentOfClass.score, 'SUM'),
-			Average(StudentOfClass.score, 'AVG'),
+			Alias(Count(StudentOfClass.score), 'COUNT'),
+			Alias(Sum(StudentOfClass.score), 'SUM'),
+			Alias(Average(StudentOfClass.score), 'AVG'),
 			Alias(Student.atCreated, 'STUDENT_AT_CREATED'),
 			Alias(StudentOfClass.atCreated, 'STUDENT_OF_CLASS_AT_CREATED'),
 			Alias(StudentOfClass.atUpdated, 'STUDENT_OF_CLASS_AT_UPDATED'),
@@ -327,7 +371,7 @@ if __name__ == '__main__':
 			Descend('AVG'),
 			Ascend('SUM'),
 		).limit(0, 10)
-	
+
 	PrettyPrint(con.run(exec))
 
 	con.run(Delete(StudentOfClass).where(

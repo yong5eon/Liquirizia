@@ -41,22 +41,16 @@ class IsToNone(Pattern):
 			parameter = pattern(parameter)
 		return parameter
 
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join([p.__repr__() for p in self.patterns])
+		)
 
-class IsNotToNone(Pattern):
-	def __init__(self, error=None):
-		self.error = error
-		return
-
-	def __call__(self, parameter):
-		if parameter is None:
-			if self.error:
-				raise self.error
-			raise ValueError('{} is None'.format(parameter))
-		return parameter
-	
 
 class IsNotEmpty(Pattern):
-	def __init__(self, error=None):
+	def __init__(self, *args, error=None):
+		self.patterns = args
 		self.error = error
 		return
 
@@ -65,5 +59,35 @@ class IsNotEmpty(Pattern):
 			if self.error:
 				raise self.error
 			raise ValueError('{} must be not empty'.format(parameter))
+		for pattern in self.patterns:
+			parameter = pattern(parameter)
 		return parameter
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join([p.__repr__() for p in self.patterns])
+		)
+
+
+class IsNotToNone(Pattern):
+	def __init__(self, *args, error=None):
+		self.patterns = args
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		if parameter is None:
+			if self.error:
+				raise self.error
+			raise ValueError('{} is None'.format(parameter))
+		for pattern in self.patterns:
+			parameter = pattern(parameter)
+		return parameter
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join([p.__repr__() for p in self.patterns])
+		)
 
