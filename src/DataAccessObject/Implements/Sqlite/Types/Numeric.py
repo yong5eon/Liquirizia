@@ -11,6 +11,9 @@ from Liquirizia.Validator.Patterns import (
 	IsNotToNone,
 	IsInteger,
 	IsFloat,
+	ToInteger,
+	ToFloat,
+	If,
 )
 
 
@@ -61,9 +64,9 @@ class Float(Type, typestr='REAL'):
 		):
 		if not va:
 			if null:
-				va = Validator(IsToNone(IsFloat()))
+				va = Validator(IsToNone(If(IsInteger(ToFloat())), IsFloat()))
 			else:
-				va = Validator(IsNotToNone(IsFloat()))
+				va = Validator(IsNotToNone(If(IsInteger(ToFloat())), IsFloat()))
 		super().__init__(
 			key=name, 
 			type=self.typestr,
