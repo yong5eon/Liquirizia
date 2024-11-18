@@ -14,7 +14,7 @@ from collections.abc import (
 	Mapping,
 )
 
-from typing import Type, Sequence
+from typing import Type, Sequence as TSequence
 
 __all__ = (
 	'IsTypeOf',
@@ -51,7 +51,7 @@ class IsTypeOf(Pattern):
 	def __init__(
 		self, 
 		type: Type,
-		patterns: Sequence[Pattern] = (),
+		patterns: TSequence[Pattern] = (),
 		error: BaseException = None
 	):
 		self.type = type
