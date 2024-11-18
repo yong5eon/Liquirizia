@@ -2,12 +2,6 @@
 
 from Liquirizia.DataAccessObject.Properties.Database import Context as BaseContext
 
-from Liquirizia.DataAccessObject import Error
-from Liquirizia.DataAccessObject.Errors import *
-from Liquirizia.DataAccessObject.Properties.Database.Errors import *
-
-from sqlite3 import DatabaseError, IntegrityError, ProgrammingError, OperationalError, NotSupportedError
-
 __all__ = (
 	'Context'
 )
@@ -26,24 +20,10 @@ class Context(BaseContext):
 			for i, row in enumerate(rows):  # iterate throw the sqlite3.Row objects
 				li.append(dict(row))
 			return li
-		try:
-			return transform(self.cursor.fetchall())
-		except (DatabaseError, IntegrityError, ProgrammingError, NotSupportedError) as e:
-			raise CursorError(error=e)
-		except OperationalError as e:
-			raise ConnectionClosedError(error=e)
-		except Exception as e:
-			raise Error(str(e), error=e)
+		return transform(self.cursor.fetchall())
 
 	def row(self):
-		try:
-			return dict(self.cursor.fetchone())
-		except (DatabaseError, IntegrityError, ProgrammingError, NotSupportedError) as e:
-			raise CursorError(error=e)
-		except OperationalError as e:
-			raise ConnectionClosedError(error=e)
-		except Exception as e:
-			raise Error(str(e), error=e)
+		return dict(self.cursor.fetchone())
 	
 	def count(self):
 		return self.cursor.connection.total_changes
