@@ -54,6 +54,7 @@ jobs:
           echo "NEW_VERSION=$NEW_VERSION" > $GITHUB_ENV
           echo "UPDATE=$UPDATE" > $GITHUB_ENV
       - name: Read Pull Request Body
+        if: env.UPDATE == 'true'
         run: |
           if [[ ! -f docs/$BRANCH.md ]]; then
             echo "Error: Pull request body file docs/$BRANCH.md not found."
