@@ -8,6 +8,8 @@ jobs:
   update-version:
     # Run only if tests succeeded and the target branch is master
     if: ${{github.event.workflow_run.conclusion == 'success'}}
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       # Checkout repository
@@ -52,7 +54,7 @@ jobs:
           echo "Updated VERSION from $OLD_VERSION to $NEW_VERSION"
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "UPDATE=$UPDATE" > $GITHUB_ENV
+          echo "UPDATE=$UPDATE" >> $GITHUB_ENV
       - name: Read Pull Request Body
         if: env.UPDATE == 'true'
         run: |
