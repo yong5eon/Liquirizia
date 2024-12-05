@@ -8,6 +8,8 @@ jobs:
   update-version:
     # Run only if tests succeeded and the target branch is master
     if: ${{github.event.workflow_run.conclusion == 'success'}}
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       # Checkout repository
