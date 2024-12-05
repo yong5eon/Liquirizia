@@ -1,5 +1,8 @@
 name: Update VERSION
 on:
+  push:
+    branches:
+      - master
   workflow_run:
     workflows: ["Test Liquirizia"]
     types:
@@ -23,6 +26,7 @@ jobs:
           # Read the current branch name
           BRANCH_NAME=$(echo "${{github.event.workflow_run.head_branch}}" | tr '[:upper:]' '[:lower:]')
           # Read current version
+          UPDATE=false
           OLD_VERSION=$(cat VERSION)
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           # Determine update logic based on branch name
