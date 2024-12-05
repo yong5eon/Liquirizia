@@ -23,7 +23,7 @@ jobs:
         run: |
           BRANCH=$(git rev-parse --abbrev-ref HEAD)
           echo "Current Branch : $BRANCH"
-          echo "BRANCH=$BRANCH" > $GITHUB_ENV
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
       - name: Update VERSION
         run: |
           # Read current version
@@ -50,8 +50,8 @@ jobs:
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
           echo "$NEW_VERSION" > VERSION
           echo "Updated VERSION from $OLD_VERSION to $NEW_VERSION"
-          echo "OLD_VERSION=$OLD_VERSION" > $GITHUB_ENV
-          echo "NEW_VERSION=$NEW_VERSION" > $GITHUB_ENV
+          echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
+          echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "UPDATE=$UPDATE" > $GITHUB_ENV
       - name: Read Pull Request Body
         if: env.UPDATE == 'true'
@@ -61,7 +61,9 @@ jobs:
             exit 1
           fi
           BODY=$(cat docs/$BRANCH.md)
-          echo "BODY=$BODY" >> $GITHUB_ENV
+          echo "BODY<<EOF" >> $GITHUB_ENV
+          echo "$BODY" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Commit and Push Updated VERSION
         if: env.UPDATE == 'true'
         run: |
