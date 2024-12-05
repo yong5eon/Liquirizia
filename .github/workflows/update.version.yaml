@@ -1,0 +1,61 @@
+name: Update VERSION
+on:
+  workflow_run:
+    workflows: ["Test Liquirizia"]
+    types:
+      - completed
+jobs:
+  update-version:
+    # Run only if tests succeeded and the target branch is master
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master' }}
+    runs-on: ubuntu-latest
+    steps:
+      # Checkout repository
+      - name: Checkout repository
+        uses: actions/checkout@v3
+      - name: Set up Git
+        run: |
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+      - name: Determine version update
+        id: update_version
+        run: |
+          # Read the current branch name
+          BRANCH_NAME=$(echo "${{ github.event.workflow_run.head_branch }}" | tr '[:upper:]' '[:lower:]')
+          # Read current version
+          CURRENT_VERSION=$(cat VERSION)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          # Determine update logic based on branch name
+          if [[ "$BRANCH_NAME" =~ ^(bug|fix|hotfix) ]]; then
+            PATCH=$((PATCH + 1))
+          elif [[ "$BRANCH_NAME" =~ ^(feature|feat) ]]; then
+            MINOR=$((MINOR + 1))
+            PATCH=0  # Reset PATCH when MINOR is incremented
+          elif [[ "$BRANCH_NAME" =~ ^(release|rel) ]]; then
+            cat "${{ github.event.workflow_run.head_branch }}/VERSION" > VERSION
+            echo "Using VERSION from release branch: $(cat VERSION)"
+            exit 0
+          else
+            echo "No version update needed for branch: $BRANCH_NAME"
+            exit 0
+          fi
+          # Write updated version back to file
+          NEW_VERSION="$MAJOR.$MINOR.$PATCH"
+          echo "$NEW_VERSION" > VERSION
+          echo "Updated VERSION to $NEW_VERSION"
+          echo "::set-output name=new_version::$NEW_VERSION"
+      - name: Create new branch for version update
+        run: |
+          NEW_BRANCH="release/${{ steps.update_version.outputs.new_version }}"
+          git checkout -b "$NEW_BRANCH"
+          git add VERSION
+          git commit -m "Update VERSION to ${{ steps.update_version.outputs.new_version }}"
+          git push origin "$NEW_BRANCH"
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: $NEW_BRANCH
+          title: "Update VERSION to ${{ steps.update_version.outputs.new_version }}"
+          body: "Automatically updated the VERSION file."
+          base: master

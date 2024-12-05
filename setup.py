@@ -20,6 +20,7 @@ setup(
 	long_description=open('README.md', encoding='utf-8').read(),
 	long_description_content_type='text/markdown',
 	author=WHO,
+	version=open('VERSION', encoding='utf-8').read(),
 	packages=PKGS,
 	package_dir=DIRS,
 	include_package_data=False,
@@ -31,7 +32,6 @@ setup(
 		'Programming Language :: Python :: 3.12',
 		'Liquirizia',
 	],
-	install_requires=[
-	],
+	install_requires=[],
 	python_requires='>=3.8'
 )
