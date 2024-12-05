@@ -52,7 +52,7 @@ jobs:
           echo "Updated VERSION from $OLD_VERSION to $NEW_VERSION"
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
-          echo "UPDATE=$UPDATE" > $GITHUB_ENV
+          echo "UPDATE=$UPDATE" >> $GITHUB_ENV
       - name: Read Pull Request Body
         if: env.UPDATE == 'true'
         run: |
