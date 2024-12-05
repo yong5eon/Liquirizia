@@ -70,9 +70,14 @@ jobs:
       - name: Commit and Push Updated VERSION
         if: env.UPDATE == 'true'
         run: |
+          git checkout -B $BRANCH
+          if git diff --quiet VERSION; then
+            echo "No changes in VERSION file. Skipping commit."
+            exit 0
+          fi
           git add VERSION
           git commit -m "Update VERSION from $OLD_VERSION to $NEW_VERSION"
-          git push || (echo "Git Push Failed" && exit 1)
+          git push origin $BRANCH || (echo "Git Push Failed" && exit 1)
       - name: Create Pull Request
         if: env.UPDATE == 'true'
         uses: peter-evans/create-pull-request@v5
