@@ -7,38 +7,44 @@ on:
 jobs:
   update-version:
     # Run only if tests succeeded and the target branch is master
-    if: ${{ github.event.workflow_run.conclusion == 'success'}}
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
     runs-on: ubuntu-latest
     steps:
       # Checkout repository
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          ref: ${{github.event.workflow_run.head_branch}}
       - name: Setup Git
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
-      - name: Update VERSION
-        id: update_version
+      - name: Get Branch Name
         run: |
-          # Read the current branch name
-          BRANCH_NAME=$(echo "${{github.event.workflow_run.head_branch}}" | tr '[:upper:]' '[:lower:]')
+          BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "Current Branch : $BRANCH"
+          echo "BRANCH=$BRANCH" > $GITHUB_ENV
+      - name: Update VERSION
+        run: |
           # Read current version
           UPDATE=false
           OLD_VERSION=$(cat VERSION)
+          if ! [[ "$OLD_VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+$ ]]; then
+            echo "VERSION file has invalid format: $OLD_VERSION"
+            echo "0.0.0" > VERSION
+            OLD_VERSION="0.0.0"
+          fi
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           # Determine update logic based on branch name
-          if [[ "$BRANCH_NAME" =~ ^(bug|fix|hotfix) ]]; then
+          if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
             PATCH=$((PATCH + 1))
             UPDATE=true
-          elif [[ "$BRANCH_NAME" =~ ^(feature|feat) ]]; then
+          elif [[ "$BRANCH" =~ ^(feature|feat) ]]; then
             MINOR=$((MINOR + 1))
             PATCH=0  # Reset PATCH when MINOR is incremented
             UPDATE=true
-          elif [[ "$BRANCH_NAME" =~ ^(release|rel) ]]; then
-            cat "${{github.event.workflow_run.head_branch}}/VERSION" > VERSION
-            echo "Using VERSION from release branch: $(cat VERSION)"
           else
-            echo "No version update needed for branch: $BRANCH_NAME"
+            echo "No version update needed for branch: $BRANCH"
           fi
           # Write updated version back to file
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
@@ -47,19 +53,26 @@ jobs:
           echo "OLD_VERSION=$OLD_VERSION" > $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION" > $GITHUB_ENV
           echo "UPDATE=$UPDATE" > $GITHUB_ENV
+      - name: Read Pull Request Body
+        if: env.UPDATE == 'true'
+        run: |
+          if [[ ! -f docs/$BRANCH.md ]]; then
+            echo "Error: Pull request body file docs/$BRANCH.md not found."
+            exit 1
+          fi
+          BODY=$(cat docs/$BRANCH.md)
+          echo "BODY=$BODY" >> $GITHUB_ENV
       - name: Commit and Push Updated VERSION
         if: env.UPDATE == 'true'
         run: |
-          NEW_BRANCH="release/${{env.NEW_VERSION}}"
           git add VERSION
-          git commit -m "Update VERSION from ${{env.OLD_VERSION}} to ${{env.NEW_VERSION}}"
-          git push origin ${{github.ref}}
+          git commit -m "Update VERSION from $OLD_VERSION to $NEW_VERSION"
+          git push || (echo "Git Push Failed" && exit 1)
       - name: Create Pull Request
         if: env.UPDATE == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{secrets.GITHUB_TOKEN}}
-          branch: ${{github.ref}}
-          title: "Release - ${{env.NEW_VERSION}}"
-          body: "Update VERSION from ${{env.OLD_VERSION}} to ${{env.NEW_VERSION}}"
+          title: "Release - ${{env.NEW_VERSION}} - ${{env.BRANCH}}"
+          body: ${{env.BODY}}
           base: master
