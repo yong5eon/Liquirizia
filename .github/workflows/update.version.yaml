@@ -21,18 +21,20 @@ jobs:
         id: update_version
         run: |
           # Read the current branch name
-          BRANCH_NAME=$(echo "${{ github.event.workflow_run.head_branch }}" | tr '[:upper:]' '[:lower:]')
+          BRANCH_NAME=$(echo "${{github.event.workflow_run.head_branch}}" | tr '[:upper:]' '[:lower:]')
           # Read current version
-          CURRENT_VERSION=$(cat VERSION)
-          IFS='.' read -r MAJOR MINOR PATCH <<< "$CURRENT_VERSION"
+          OLD_VERSION=$(cat VERSION)
+          IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           # Determine update logic based on branch name
           if [[ "$BRANCH_NAME" =~ ^(bug|fix|hotfix) ]]; then
             PATCH=$((PATCH + 1))
+            UPDATE=true
           elif [[ "$BRANCH_NAME" =~ ^(feature|feat) ]]; then
             MINOR=$((MINOR + 1))
             PATCH=0  # Reset PATCH when MINOR is incremented
+            UPDATE=true
           elif [[ "$BRANCH_NAME" =~ ^(release|rel) ]]; then
-            cat "${{ github.event.workflow_run.head_branch }}/VERSION" > VERSION
+            cat "${{github.event.workflow_run.head_branch}}/VERSION" > VERSION
             echo "Using VERSION from release branch: $(cat VERSION)"
             exit 0
           else
@@ -44,18 +46,21 @@ jobs:
           echo "$NEW_VERSION" > VERSION
           echo "Updated VERSION to $NEW_VERSION"
           echo "::set-output name=new_version::$NEW_VERSION"
+          echo "::set-output name=update_needed::$UPDATE"
       - name: Create new branch for version update
+        if: steps.update_version.outputs.update_needed == 'true'
         run: |
-          NEW_BRANCH="release/${{ steps.update_version.outputs.new_version }}"
+          NEW_BRANCH="release/${{steps.update_version.outputs.new_version}}"
           git checkout -b "$NEW_BRANCH"
           git add VERSION
-          git commit -m "Update VERSION to ${{ steps.update_version.outputs.new_version }}"
+          git commit -m "Update VERSION to ${{steps.update_version.outputs.new_version}}"
           git push origin "$NEW_BRANCH"
       - name: Create Pull Request
+        if: steps.update_version.outputs.update_needed == 'true'
         uses: peter-evans/create-pull-request@v5
         with:
           token: ${{ secrets.GITHUB_TOKEN }}
           branch: $NEW_BRANCH
-          title: "Update VERSION to ${{ steps.update_version.outputs.new_version }}"
+          title: "Update VERSION to ${{steps.update_version.outputs.new_version}}"
           body: "Automatically updated the VERSION file."
           base: master
