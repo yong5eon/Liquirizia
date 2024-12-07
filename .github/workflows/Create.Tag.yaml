@@ -12,8 +12,13 @@ jobs:
     - name: Check if VERSION file changed
       id: check_version
       run: |
-        # Get the latest commit where the VERSION file was changed
         VERSION_FILE="VERSION"
+        # Check if VERSION file exists
+        if [ ! -f "$VERSION_FILE" ]; then
+          echo "VERSION file not found!"
+          exit 1
+        fi
+        # Get the latest commit where the VERSION file was changed
         LAST_CHANGE=$(git log -1 --format="%H" -- $VERSION_FILE)
         # Get the latest commit on master branch
         LATEST_COMMIT=$(git rev-parse HEAD)
@@ -23,18 +28,26 @@ jobs:
         else
           echo "VERSION file changed in the latest commit."
           echo "CREATE_TAG=true" >> $GITHUB_ENV
+    - name: Exit if no tag should be created
+      if: env.CREATE_TAG == 'false'
+      run: exit 0
     - name: Create and push tag
       if: env.CREATE_TAG == 'true'
       run: |
-        VERSION=$(cat VERSION)
-        if [ ! -f VERSION ]; then
+        VERSION_FILE="VERSION"
+        # Check if VERSION file exists
+        if [ ! -f "$VERSION_FILE" ]; then
           echo "VERSION file not found!"
           exit 1
         fi
+        # Get the version from the VERSION file
+        VERSION=$(cat "$VERSION_FILE")
+        # Check if the tag already exists
         if git rev-parse "$VERSION" >/dev/null 2>&1; then
           echo "Tag $VERSION already exists. Skipping."
           exit 0
         fi
+        # Configure Git and push tag
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
         git tag -a "$VERSION" -m "Release - $VERSION"

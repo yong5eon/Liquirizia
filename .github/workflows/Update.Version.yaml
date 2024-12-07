@@ -27,14 +27,19 @@ jobs:
             OLD_VERSION="0.0.0"
           fi
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
+          UPDATED=false
+          echo "UPDATED=$UPDATED" >> $GITHUB_ENV
           # Determine update logic based on branch name
           if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
             PATCH=$((PATCH + 1))
+            UPDATED=true
           elif [[ "$BRANCH" =~ ^(feature|feat) ]]; then
             MINOR=$((MINOR + 1))
             PATCH=0  # Reset PATCH when MINOR is incremented
+            UPDATED=true
           else
             echo "No version update needed for branch: $BRANCH"
+            exit 1
           fi
           # Write updated version back to file
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
@@ -42,7 +47,9 @@ jobs:
           echo "Updated VERSION from $OLD_VERSION to $NEW_VERSION"
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
+          echo "UPDATED=$UPDATED" >> $GITHUB_ENV
       - name: Commit and Push Updated VERSION
+        if: env.UPDATED == 'true'
         run: |
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
