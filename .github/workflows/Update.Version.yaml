@@ -16,7 +16,7 @@ jobs:
       - name: Update VERSION
         run: |
           # Load current version
-          if [ ! -f "$VERSION_FILE" ]; then
+          if [ ! -f "VERSION" ]; then
             echo "VERSION file not found!"
             exit 1
           fi
