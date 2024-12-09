@@ -10,70 +10,73 @@ jobs:
     if: ${{github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master'}}
     permissions:
       contents: write
+    env:
+      GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     runs-on: ubuntu-latest
     steps:
-    - name: Checkout repository
-      uses: actions/checkout@v4
-    - name: Get merged branch using GitHub API
-      run: |
-        # Get merged branch
-        MERGED=false
-        echo "MERGED=$MERGED" >> $GITHUB_ENV
-        PR_INFO=$(gh api \
-          repos/${{github.repository}}/commits/${{github.sha}}/pulls \
-          --jq '.[0]')
-        if [ -z "$PR_INFO" ]; then
-          echo "No merged PR found. Exiting."
-          exit 0
-        fi
-        BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
-        echo "MERGED=true" >> $GITHUB_ENV
-        echo "BRANCH=$BRANCH" >> $GITHUB_ENV
-        echo "Merged branch: $BRANCH"
-    - name: Check if VERSION file changed
-      if: env.MERGED == 'true'
-      run: |
-        # Check if VERSION file exists
-        VERSION_FILE="VERSION"
-        if [ ! -f "$VERSION_FILE" ]; then
-          echo "VERSION file not found!"
-          exit 1
-        fi
-        # Get the latest commit where the VERSION file was changed
-        LAST_CHANGE=$(git log -1 --format="%H" -- $VERSION_FILE)
-        echo "LAST_CHANGE=$LAST_CHANGE"
-        # Get the latest commit on master branch
-        LATEST_COMMIT=$(git rev-parse HEAD)
-        echo "LATEST_COMMIT=$LATEST_COMMIT"
-        if [ "$LAST_CHANGE" != "$LATEST_COMMIT" ]; then
-          echo "VERSION file was not changed in the latest commit. Skipping tag creation."
-          echo "CREATE_TAG=false" >> $GITHUB_ENV
-        else
-          echo "VERSION file changed in the latest commit."
-          echo "CREATE_TAG=true" >> $GITHUB_ENV
-        fi
-    - name: Exit if no tag should be created
-      if: env.CREATE_TAG == 'false'
-      run: exit 0
-    - name: Create and push tag
-      if: env.CREATE_TAG == 'true'
-      run: |
-        VERSION_FILE="VERSION"
-        # Check if VERSION file exists
-        if [ ! -f "$VERSION_FILE" ]; then
-          echo "VERSION file not found!"
-          exit 1
-        fi
-        # Get the version from the VERSION file
-        VERSION=$(cat "$VERSION_FILE")
-        # Check if the tag already exists
-        if git rev-parse "$VERSION" >/dev/null 2>&1; then
-          echo "Tag $VERSION already exists. Skipping."
-          exit 0
-        fi
-        # Configure git and push tag
-        git config user.name "GitHub Actions"
-        git config user.email "actions@github.com"
-        git tag -a "$VERSION" -m "Release - $VERSION"
-        # TODO : Create release note and change logs
-        git push origin "$VERSION"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      - name: Get merged branch using GitHub API
+        run: |
+          # Get merged branch
+          MERGED=false
+          echo "MERGED=$MERGED" >> $GITHUB_ENV
+          PR_INFO=$(gh api \
+            repos/${{github.repository}}/commits/${{github.sha}}/pulls \
+            --jq '.[0]')
+          if [ -z "$PR_INFO" ]; then
+            echo "No merged PR found. Exiting."
+            exit 0
+          fi
+          BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
+          echo "MERGED=true" >> $GITHUB_ENV
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          echo "Merged branch: $BRANCH"
+      - name: Check if VERSION file changed
+        if: env.MERGED == 'true'
+        run: |
+          # Check if VERSION file exists
+          VERSION_FILE="VERSION"
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "VERSION file not found!"
+            exit 1
+          fi
+          # Get the latest commit where the VERSION file was changed
+          LAST_CHANGE=$(git log -1 --format="%H" -- $VERSION_FILE)
+          echo "LAST_CHANGE=$LAST_CHANGE"
+          # Get the latest commit on master branch
+          LATEST_COMMIT=$(git rev-parse HEAD)
+          echo "LATEST_COMMIT=$LATEST_COMMIT"
+          if [ "$LAST_CHANGE" != "$LATEST_COMMIT" ]; then
+            echo "VERSION file was not changed in the latest commit. Skipping tag creation."
+            echo "CREATE_TAG=false" >> $GITHUB_ENV
+          else
+            echo "VERSION file changed in the latest commit."
+            echo "CREATE_TAG=true" >> $GITHUB_ENV
+          fi
+      - name: Exit if no tag should be created
+        if: env.CREATE_TAG == 'false'
+        run: exit 0
+      - name: Create and push tag
+        if: env.CREATE_TAG == 'true'
+        run: |
+          VERSION_FILE="VERSION"
+          # Check if VERSION file exists
+          if [ ! -f "$VERSION_FILE" ]; then
+            echo "VERSION file not found!"
+            exit 1
+          fi
+          # Get the version from the VERSION file
+          VERSION=$(cat "$VERSION_FILE")
+          # Check if the tag already exists
+          if git rev-parse "$VERSION" >/dev/null 2>&1; then
+            echo "Tag $VERSION already exists. Skipping."
+            exit 0
+          fi
+          # Configure git and push tag
+          git config user.name "GitHub Actions"
+          git config user.email "actions@github.com"
+          git tag -a "$VERSION" -m "Release - $VERSION"
+          # TODO : Create release note and change logs
+          git push origin "$VERSION"
+  
