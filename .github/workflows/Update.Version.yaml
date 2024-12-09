@@ -18,8 +18,8 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
       - name: Get merged branch using GitHub API
-        id: get_branch
         run: |
+          # Get merged branch
           MERGED=false
           echo "MERGED=$MERGED" >> $GITHUB_ENV
           PR_INFO=$(gh api \
