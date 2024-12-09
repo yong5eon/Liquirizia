@@ -1,11 +1,13 @@
 name: Update VERSION
 on:
-  pull_request:
+  workflow_run:
+    workflows:
+      - Test
     types:
-      - closed
+      - completed
 jobs:
   update-version:
-    if: github.event.pull_request.merged == true
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
     permissions:
       contents: write
     runs-on: ubuntu-latest
@@ -13,7 +15,24 @@ jobs:
       # Checkout repository
       - name: Checkout
         uses: actions/checkout@v4
+      - name: Get merged branch using GitHub API
+        id: get_branch
+        run: |
+          MERGED=false
+          echo "MERGED=$MERGED" >> $GITHUB_ENV
+          PR_INFO=$(gh api \
+            repos/${{github.repository}}/commits/${{github.sha}}/pulls \
+            --jq '.[0]')
+          if [ -z "$PR_INFO" ]; then
+            echo "No merged PR found. Exiting."
+            exit 0
+          fi
+          BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
+          echo "MERGED=true" >> $GITHUB_ENV
+          echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+          echo "Merged branch: $BRANCH"
       - name: Update VERSION
+        if: env.MERGED == 'true'
         run: |
           # Load current version
           if [ ! -f "VERSION" ]; then
@@ -29,7 +48,7 @@ jobs:
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           UPDATED=false
           # Determine branch type
-          BRANCH=${{github.head_ref}}
+          BRANCH=${{env.BRANCH}}
           echo "UPDATED=$UPDATED" >> $GITHUB_ENV
           # Determine update logic based on branch name
           if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
