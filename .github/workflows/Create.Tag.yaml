@@ -24,8 +24,10 @@ jobs:
         fi
         # Get the latest commit where the VERSION file was changed
         LAST_CHANGE=$(git log -1 --format="%H" -- $VERSION_FILE)
+        echo "LAST_CHANGE=$LAST_CHANGE"
         # Get the latest commit on master branch
         LATEST_COMMIT=$(git rev-parse HEAD)
+        echo "LAST_COMMIT=$LAST_COMMIT"
         if [ "$LAST_CHANGE" != "$LATEST_COMMIT" ]; then
           echo "VERSION file was not changed in the latest commit. Skipping tag creation."
           echo "CREATE_TAG=false" >> $GITHUB_ENV
@@ -55,6 +57,6 @@ jobs:
         # Configure git and push tag
         git config user.name "GitHub Actions"
         git config user.email "actions@github.com"
-        git tag -a "$VERSION" -m "Release - $VERSION"
+        git tag -a "release/$VERSION" -m "Release - $VERSION"
         # TODO : Create release note and change logs
-        git push origin "$VERSION"
+        git push origin "release/$VERSION"
