@@ -14,7 +14,24 @@ jobs:
     steps:
     - name: Checkout repository
       uses: actions/checkout@v4
+    - name: Get merged branch using GitHub API
+      run: |
+        # Get merged branch
+        MERGED=false
+        echo "MERGED=$MERGED" >> $GITHUB_ENV
+        PR_INFO=$(gh api \
+          repos/${{github.repository}}/commits/${{github.sha}}/pulls \
+          --jq '.[0]')
+        if [ -z "$PR_INFO" ]; then
+          echo "No merged PR found. Exiting."
+          exit 0
+        fi
+        BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
+        echo "MERGED=true" >> $GITHUB_ENV
+        echo "BRANCH=$BRANCH" >> $GITHUB_ENV
+        echo "Merged branch: $BRANCH"
     - name: Check if VERSION file changed
+      if: env.MERGED == 'true'
       run: |
         # Check if VERSION file exists
         VERSION_FILE="VERSION"
