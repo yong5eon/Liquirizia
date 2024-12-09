@@ -39,7 +39,7 @@ jobs:
             UPDATED=true
           else
             echo "No version update needed for branch: $BRANCH"
-            exit 1
+            exit 0
           fi
           # Write updated version back to file
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
