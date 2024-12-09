@@ -28,6 +28,8 @@ jobs:
           fi
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           UPDATED=false
+          # Determine branch type
+          BRANCH=${{github.head_ref}}
           echo "UPDATED=$UPDATED" >> $GITHUB_ENV
           # Determine update logic based on branch name
           if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
