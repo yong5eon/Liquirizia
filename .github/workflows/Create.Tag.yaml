@@ -7,7 +7,7 @@ on:
       - completed
 jobs:
   create-tag:
-    if: ${{github.event.workflow_run.conclusion == 'success' && github.ref_name == 'master'}}
+    if: ${{github.event.workflow_run.conclusion == 'success'}}
     permissions:
       contents: write
     env:
@@ -17,13 +17,14 @@ jobs:
       - name: Checkout repository
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 전체 Git 내역 가져오기
+          ref: ${{ github.event.workflow_run.head_branch }}
       - name: Get current branch
         run: |
           CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           echo "CURRENT=$CURRENT_BRANCH" >> $GITHUB_ENV
           echo "Current Branch is $CURRENT_BRANCH"
       - name: Get merged branch using GitHub API
+        if: env.CURRENT == 'master'
         run: |
           # Get merged branch
           MERGED=false
