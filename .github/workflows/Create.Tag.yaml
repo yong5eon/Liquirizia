@@ -16,6 +16,8 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # 전체 Git 내역 가져오기
       - name: Get current branch
         run: |
           CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
