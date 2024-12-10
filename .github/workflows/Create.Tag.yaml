@@ -50,22 +50,14 @@ jobs:
             echo "VERSION file not found!"
             exit 1
           fi
-          # Get the latest commit where the VERSION file was changed
-          LAST_CHANGE=$(git log -1 --format="%H" -- $VERSION_FILE)
-          echo "LAST_CHANGE=$LAST_CHANGE"
-          # Get the latest commit on master branch
-          LATEST_COMMIT=$(git rev-parse HEAD)
-          echo "LATEST_COMMIT=$LATEST_COMMIT"
-          if [ "$LAST_CHANGE" != "$LATEST_COMMIT" ]; then
-            echo "VERSION file was not changed in the latest commit. Skipping tag creation."
-            echo "CREATE_TAG=false" >> $GITHUB_ENV
-          else
-            echo "VERSION file changed in the latest commit."
+          # Check if VERSION file has changed in the latest commit
+          if ! git diff --quiet HEAD -- $VERSION_FILE; then
+            echo "VERSION file was changed."
             echo "CREATE_TAG=true" >> $GITHUB_ENV
+          else
+            echo "VERSION file was not changed."
+            echo "CREATE_TAG=false" >> $GITHUB_ENV
           fi
-      - name: Exit if no tag should be created
-        if: env.CREATE_TAG == 'false'
-        run: exit 0
       - name: Create and push tag
         if: env.CREATE_TAG == 'true'
         run: |
