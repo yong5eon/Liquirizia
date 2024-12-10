@@ -34,7 +34,7 @@ jobs:
             exit 0
           fi
           BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
-          if [[ "${{env.CURRENT}}" == "$BRANCH" ]; then
+          if [[ "${{env.CURRENT}}" == "$BRANCH" ]]; then
             echo "CURRENT and BRANCH are the same. Skipping workflow."
             exit 0
           fi
