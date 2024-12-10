@@ -21,7 +21,7 @@ jobs:
         run: |
           CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
           echo "CURRENT=$CURRENT_BRANCH" >> $GITHUB_ENV
-          echo "Current Branch is $CURRENT"
+          echo "Current Branch is $CURRENT_BRANCH"
       - name: Get merged branch using GitHub API
         run: |
           # Get merged branch
