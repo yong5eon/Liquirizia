@@ -7,7 +7,7 @@ on:
       - completed
 jobs:
   create-tag:
-    if: ${{github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.head_branch == 'master'}}
+    if: ${{github.event.workflow_run.conclusion == 'success' && github.ref_name == 'master'}}
     permissions:
       contents: write
     env:
