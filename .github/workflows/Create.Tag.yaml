@@ -16,6 +16,11 @@ jobs:
     steps:
       - name: Checkout repository
         uses: actions/checkout@v4
+      - name: Get current branch
+        run: |
+          CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
+          echo "CURRENT=$CURRENT_BRANCH" >> $GITHUB_ENV
+          echo "Current Branch is $CURRENT_BRANCH"
       - name: Get merged branch using GitHub API
         run: |
           # Get merged branch
@@ -29,6 +34,10 @@ jobs:
             exit 0
           fi
           BRANCH=$(echo "$PR_INFO" | jq -r '.head.ref')
+          if [[ "${{env.CURRENT}}" == "$BRANCH" ]; then
+            echo "CURRENT and BRANCH are the same. Skipping workflow."
+            exit 0
+          fi
           echo "MERGED=true" >> $GITHUB_ENV
           echo "BRANCH=$BRANCH" >> $GITHUB_ENV
           echo "Merged branch: $BRANCH"
@@ -79,4 +88,3 @@ jobs:
           git tag -a "$VERSION" -m "Release - $VERSION"
           # TODO : Create release note and change logs
           git push origin "$VERSION"
-  
