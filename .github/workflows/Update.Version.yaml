@@ -18,7 +18,7 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
         with:
-          fetch-depth: 0  # 전체 Git 내역 가져오기
+          ref: ${{ github.event.workflow_run.head_branch }}
       - name: Get current branch
         run: |
           CURRENT_BRANCH=$(git rev-parse --abbrev-ref HEAD)
