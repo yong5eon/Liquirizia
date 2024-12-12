@@ -77,4 +77,4 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
-          git push origin "$VERSION"
+          git push --tags -f
