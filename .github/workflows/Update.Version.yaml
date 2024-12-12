@@ -26,13 +26,14 @@ jobs:
           echo "Current Branch is $CURRENT_BRANCH"
       - name: Check if this is a merge commit
         run: |
-          PARENT_COUNT=$(git rev-list --count --parents -1 HEAD | awk '{print NF-1}')
-          if [ "$PARENT_COUNT" -gt 1 ]; then
-            echo "This is a merge commit."
+          PR_STATE=$(gh api repos/${{ github.repository }}/commits/${{ github.sha }}/pulls --jq '.[0].merged')
+          if [ "$PR_STATE" == "true" ]; then
+            echo "This PR was merged."
             echo "IS_MERGED=true" >> $GITHUB_ENV
           else
-            echo "This is not a merge commit."
+            echo "This PR was not merged."
             echo "IS_MERGED=false" >> $GITHUB_ENV
+            IS_MERGED=false
           fi
       - name: Get merged branch using GitHub API
         if: env.IS_MERGED == 'true'
