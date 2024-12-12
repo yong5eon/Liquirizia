@@ -5,6 +5,8 @@ on:
       - Update VERSION
     types:
       - completed
+    branches:
+      - master
 jobs:
   create-tag:
     if: ${{github.event.workflow_run.conclusion == 'success'}}
