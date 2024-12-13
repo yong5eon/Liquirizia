@@ -21,19 +21,6 @@ jobs:
           echo "BASE=${{github.event.pull_request.base.ref}}" >> $GITHUB_ENV
           echo "MERGED=${{github.event.pull_request.head.ref}}"
           echo "MERGED=${{github.event.pull_request.head.ref}}" >> $GITHUB_ENV
-      - name: Check Release Note
-        run: |
-          if [[ "${{env.BASE}}" -eq "master" ]]; then
-            if [[ "${{env.MERGED}}" =~ ^(release|rel|feature|feat|bug|fix|hotfix) ]]; then
-              if [ ! -f "docs/${{env.MERGED}}" ]; then
-                echo "Release information file(docs/${{env.MERGED}}) is not found"
-                exit 1
-              fi
-              RELEASE_NOTE=$(cat docs/${{env.MERGED}})
-              echo "$RELEASE_NOTE"
-            fi
-          fi
-          echo "IS_CHECK_RELEASE_NOTE=true" >> $GITHUB_ENV
       - name: Update VERSION
         if: env.IS_CHECK_RELEASE_NOTE == 'true'
         run: |
@@ -88,24 +75,32 @@ jobs:
             exit 1
           fi
           VERSION=$(cat VERSION)
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
           git push -f origin "$VERSION"
-      - name: Create Change Log
+      - name: Get Release Note
         if: github.event.pull_request.base.ref == 'master'
         run: |
-          BRANCH=${{github.event.pull_request.head.ref}}
-          CHANGE_LOG=$(cat docs/$BRANCH)
-          echo "CHANGE_LOG=$CHANGE_LOG" >> $GITHUB_ENV
+          VERSION=$(cat VERSION)
+          if [[ "${{env.MERGED}}" =~ ^(release|rel|feature|feat|bug|fix|hotfix) ]]; then
+            if [ ! -f "docs/${{env.MERGED}}" ]; then
+              echo "Release information file(docs/${{env.MERGED}}) is not found"
+              exit 1
+            fi
+            TEXT=$(cat docs/${{env.MERGED}})
+          	echo "TEXT=$TEXT" >> $GITHUB_ENV
+          fi
+          echo $TEXT
       - name: Create Release
         if: github.event.pull_request.base.ref == 'master'
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
         with:
-          tag_name: ${{env.NEW_VERSION}}
-          release_name: Release - ${{env.NEW_VERSION}}
-          body: ${{env.CHANGE_LOG}}
+          tag_name: ${{env.VERSION}}
+          release_name: Release - ${{env.VERSION}}
+          body: ${{env.TEXT}}
           draft: false
           prerelease: false
