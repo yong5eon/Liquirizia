@@ -29,10 +29,10 @@ jobs:
                 echo "Release information file(docs/${{env.MERGED}}) is not found"
                 exit 1
               fi
+              RELEASE_NOTE=$(cat docs/${{env.MERGED}})
+              echo "$RELEASE_NOTE"
             fi
           fi
-          RELEASE_NOTE=$(cat docs/${{env.MERGED}})
-          echo "$RELEASE_NOTE"
           echo "IS_CHECK_RELEASE_NOTE=true" >> $GITHUB_ENV
       - name: Update VERSION
         if: env.IS_CHECK_RELEASE_NOTE == 'true'
