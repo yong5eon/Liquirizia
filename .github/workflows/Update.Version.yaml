@@ -8,8 +8,6 @@ jobs:
     if: github.event.pull_request.merged == true
     permissions:
       contents: write
-    env:
-      GH_TOKEN: ${{secrets.GITHUB_TOKEN}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -20,8 +18,24 @@ jobs:
       - name: Show base and merged branch
         run: |
           echo "BASE=${{github.event.pull_request.base.ref}}"
+          echo "BASE=${{github.event.pull_request.base.ref}}" >> $GITHUB_ENV
           echo "MERGED=${{github.event.pull_request.head.ref}}"
+          echo "MERGED=${{github.event.pull_request.head.ref}}" >> $GITHUB_ENV
+      - name: Check Release Note
+        run: |
+          if [[ "${{env.BASE}}" -eq "master" ]]; then
+            if [[ "${{env.MERGED}}" =~ ^(release|rel|feature|feat|bug|fix|hotfix) ]]; then
+              if [ ! -f "docs/${{env.MERGED}}" ] then
+                echo "Release information file(docs/${{env.MERGED}}) is not found"
+                exit 1
+           	  fi
+            fi
+          fi
+          RELEASE_NOTE=$(cat docs/${{env.MERGED}})
+          echo "$RELEASE_NOTE"
+          echo "IS_CHECK_RELEASE_NOTE=true" >> $GITHUB_ENV
       - name: Update VERSION
+        if: env.IS_CHECK_RELEASE_NOTE == 'true'
         run: |
           # Check version file
           if [ ! -f "VERSION" ]; then
@@ -39,10 +53,10 @@ jobs:
           UPDATED=false
           BRANCH=${{github.event.pull_request.head.ref}}
           # Determine update logic based on branch name
-          if [[ "$BRANCH" =~ ^(bug|fix) ]]; then
+          if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
             PATCH=$((PATCH + 1))
             UPDATED=true
-          elif [[ "$BRANCH" =~ ^(feature) ]]; then
+          elif [[ "$BRANCH" =~ ^(feature|feat) ]]; then
             MINOR=$((MINOR + 1))
             PATCH=0  # Reset PATCH when MINOR is incremented
             UPDATED=true
@@ -77,4 +91,21 @@ jobs:
           git config user.name "GitHub Actions"
           git config user.email "actions@github.com"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
-          git push --tags -f
+          git push -f origin "$VERSION"
+      - name: Create Change Log
+        if: github.event.pull_request.base.ref == 'master'
+        run: |
+          BRANCH=${{github.event.pull_request.head.ref}}
+          CHANGE_LOG=$(cat docs/$BRANCH)
+          echo "CHANGE_LOG=$CHANGE_LOG" >> $GITHUB_ENV
+      - name: Create Release
+        if: github.event.pull_request.base.ref == 'master'
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        with:
+          tag_name: ${{env.NEW_VERSION}}
+          release_name: Release - ${{env.NEW_VERSION}}
+          body: ${{env.CHANGE_LOG}}
+          draft: false
+          prerelease: false
