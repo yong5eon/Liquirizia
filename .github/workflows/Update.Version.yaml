@@ -65,8 +65,8 @@ jobs:
           echo "${{env.NEW_VERSION}}" > VERSION
           CHANGES=$(cat docs/${{env.MERGED}}.md)
           echo "$CHANGES" > docs/VERSION/${{env.NEW_VERSION}}.md
-          git config user.name "${{env.ACTION_USERNAME}}"
-          git config user.email "${{env.ACTION_USEREMAIL}}"
+          git config user.name "${{vars.ACTION_USERNAME}}"
+          git config user.email "${{vars.ACTION_USEREMAIL}}"
           git add VERSION
           git add docs/VERSION/${{env.NEW_VERSION}}.md
           git commit -m "Update VERSION from $OLD_VERSION to ${{env.NEW_VERSION}}"
@@ -81,8 +81,8 @@ jobs:
           fi
           VERSION=$(cat VERSION)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          git config user.name "${{env.ACTION_USERNAME}}"
-          git config user.email "${{env.ACTION_USEREMAIL}}"
+          git config user.name "${{vars.ACTION_USERNAME}}"
+          git config user.email "${{vars.ACTION_USEREMAIL}}"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
           git push -f origin "$VERSION"
       - name: Get Release Note
