@@ -8,8 +8,6 @@ jobs:
     if: github.event.pull_request.merged == true
     permissions:
       contents: write
-    env:
-      GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout
@@ -93,13 +91,15 @@ jobs:
           VERSION=$(cat VERSION)
           TEXT=$(cat docs/VERSION/$VERSION.md)
           echo "TEXT=$TEXT" >> $GITHUB_ENV
-          echo $TEXT
       - name: Create Release
         if: github.event.pull_request.base.ref == 'master'
         uses: actions/create-release@v1
         with:
           tag_name: ${{env.VERSION}}
           release_name: "Release - ${{env.VERSION}}"
-          body: "${{env.TEXT}}"
+          body: |
+            ${{env.TEXT}}
           draft: false
           prerelease: false
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
