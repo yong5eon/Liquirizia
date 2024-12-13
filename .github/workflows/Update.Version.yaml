@@ -22,7 +22,6 @@ jobs:
           echo "MERGED=${{github.event.pull_request.head.ref}}"
           echo "MERGED=${{github.event.pull_request.head.ref}}" >> $GITHUB_ENV
       - name: Update VERSION
-        if: env.IS_CHECK_RELEASE_NOTE == 'true'
         run: |
           # Check version file
           if [ ! -f "VERSION" ]; then
@@ -38,60 +37,60 @@ jobs:
           fi
           IFS='.' read -r MAJOR MINOR PATCH <<< "$OLD_VERSION"
           UPDATED=false
-          BRANCH=${{github.event.pull_request.head.ref}}
           # Determine update logic based on branch name
-          if [[ "$BRANCH" =~ ^(bug|fix|hotfix) ]]; then
+          if [[ "${{env.MERGED}}" =~ ^(bug|fix|hotfix) ]]; then
             PATCH=$((PATCH + 1))
             UPDATED=true
-          elif [[ "$BRANCH" =~ ^(feature|feat) ]]; then
+          elif [[ "${{env.MERGED}}" =~ ^(feature|feat) ]]; then
             MINOR=$((MINOR + 1))
             PATCH=0  # Reset PATCH when MINOR is incremented
             UPDATED=true
           else
-            echo "No version update needed for branch: $BRANCH"
+            echo "No version update needed for branch: ${{env.MERGED}}"
             exit 0
           fi
           # Write updated version back to file
           NEW_VERSION="$MAJOR.$MINOR.$PATCH"
-          echo "$NEW_VERSION" > VERSION
           echo "Updated VERSION from $OLD_VERSION to $NEW_VERSION"
           echo "OLD_VERSION=$OLD_VERSION" >> $GITHUB_ENV
           echo "NEW_VERSION=$NEW_VERSION" >> $GITHUB_ENV
           echo "UPDATED=$UPDATED" >> $GITHUB_ENV
-      - name: Commit and Push Updated VERSION
+      - name: Commit and Push Updated VERSION and CHANGES
         if: env.UPDATED == 'true'
         run: |
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          if [ ! -f "docs/${{env.MERGED}}.md" ]; then
+            echo "docs/${{env.MERGED}}.md file is not found"
+            exit 1
+          fi
+          echo "${{env.NEW_VERSION}}" > VERSION
+          CHANGES=$(cat docs/${{env.MERGED}}.md)
+          echo "$CHANGES" > docs/VERSION/${{env.NEW_VERSION}}.md
+          git config user.name "${{env.ACTION_USERNAME}}"
+          git config user.email "${{env.ACTION_USEREMAIL}}"
           git add VERSION
-          git commit -m "Update VERSION from $OLD_VERSION to $NEW_VERSION"
+          git add docs/VERSION/${{env.NEW_VERSION}}.md
+          git commit -m "Update VERSION from $OLD_VERSION to ${{env.NEW_VERSION}}"
           git push origin ${{github.event.pull_request.base.ref}}
       - name: Create Tag
         if: github.event.pull_request.base.ref == 'master'
         run: |
           # Check version file
           if [ ! -f "VERSION" ]; then
-            echo "VERSION file not found!"
+            echo "VERSION file is not found!"
             exit 1
           fi
           VERSION=$(cat VERSION)
           echo "VERSION=$VERSION" >> $GITHUB_ENV
-          git config user.name "GitHub Actions"
-          git config user.email "actions@github.com"
+          git config user.name "${{env.ACTION_USERNAME}}"
+          git config user.email "${{env.ACTION_USEREMAIL}}"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
           git push -f origin "$VERSION"
       - name: Get Release Note
         if: github.event.pull_request.base.ref == 'master'
         run: |
           VERSION=$(cat VERSION)
-          if [[ "${{env.MERGED}}" =~ ^(release|rel|feature|feat|bug|fix|hotfix) ]]; then
-            if [ ! -f "docs/${{env.MERGED}}" ]; then
-              echo "Release information file(docs/${{env.MERGED}}) is not found"
-              exit 1
-            fi
-            TEXT=$(cat docs/${{env.MERGED}})
-          	echo "TEXT=$TEXT" >> $GITHUB_ENV
-          fi
+          TEXT=$(cat docs/VERSION/$VERSION.md)
+          echo "TEXT=$TEXT" >> $GITHUB_ENV
           echo $TEXT
       - name: Create Release
         if: github.event.pull_request.base.ref == 'master'
