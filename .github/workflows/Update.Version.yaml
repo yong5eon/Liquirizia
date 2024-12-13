@@ -25,10 +25,10 @@ jobs:
         run: |
           if [[ "${{env.BASE}}" -eq "master" ]]; then
             if [[ "${{env.MERGED}}" =~ ^(release|rel|feature|feat|bug|fix|hotfix) ]]; then
-              if [ ! -f "docs/${{env.MERGED}}" ] then
+              if [ ! -f "docs/${{env.MERGED}}" ]; then
                 echo "Release information file(docs/${{env.MERGED}}) is not found"
                 exit 1
-           	  fi
+              fi
             fi
           fi
           RELEASE_NOTE=$(cat docs/${{env.MERGED}})
