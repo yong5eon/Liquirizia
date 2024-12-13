@@ -85,22 +85,12 @@ jobs:
           git config user.email "${{vars.ACTION_USEREMAIL}}"
           git tag -a -f "$VERSION" -m "Release - $VERSION"
           git push -f origin "$VERSION"
-      - name: Get Release Note
-        if: github.event.pull_request.base.ref == 'master'
-        run: |
-          VERSION=$(cat VERSION)
-          TEXT=$(cat docs/VERSION/$VERSION.md)
-          echo "TEXT<<EOF" >> $GITHUB_ENV
-          echo "$TEXT" >> $GITHUB_ENV
-          echo "EOF" >> $GITHUB_ENV
       - name: Create Release
         if: github.event.pull_request.base.ref == 'master'
-        uses: actions/create-release@v1
+        uses: softprops/action-gh-release@v2
         with:
           tag_name: ${{env.VERSION}}
-          release_name: "Release - ${{env.VERSION}}"
-          body: ${{env.TEXT}}
-          draft: false
-          prerelease: false
+          name: "Release - ${{env.VERSION}}"
+          body_path: docs/VERSION/${{env.VERSION}}.md
         env:
           GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
