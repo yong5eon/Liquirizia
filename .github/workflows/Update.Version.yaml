@@ -90,15 +90,16 @@ jobs:
         run: |
           VERSION=$(cat VERSION)
           TEXT=$(cat docs/VERSION/$VERSION.md)
-          echo "TEXT=$TEXT" >> $GITHUB_ENV
+          echo "TEXT<<EOF" >> $GITHUB_ENV
+          echo "$TEXT" >> $GITHUB_ENV
+          echo "EOF" >> $GITHUB_ENV
       - name: Create Release
         if: github.event.pull_request.base.ref == 'master'
         uses: actions/create-release@v1
         with:
           tag_name: ${{env.VERSION}}
           release_name: "Release - ${{env.VERSION}}"
-          body: |
-            ${{env.TEXT}}
+          body: ${{env.TEXT}}
           draft: false
           prerelease: false
         env:
