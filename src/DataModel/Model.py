@@ -90,9 +90,9 @@ class Model(object, metaclass=ModelCreator):
 				v.__set__(self, v.default, init=True)
 		return
 	
-	def __init_subclass__(cls, description: str = None, schema: Object = None, fn: Handler = None):
+	def __init_subclass__(cls, description: str = None, format: Object = None, fn: Handler = None):
 		cls.__description__ = description
-		cls.__schema__ = schema
+		cls.__schema__ = format
 		cls.__callback__ = fn
 		return super().__init_subclass__()
 
