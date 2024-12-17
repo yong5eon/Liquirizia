@@ -6,7 +6,7 @@ from ..Format import Object, ObjectProperties
 from copy import copy
 from json import dumps
 
-from typing import Dict, Mapping
+from typing import Dict, Mapping, Type
 
 __all__ = (
 	'ToDict',
@@ -19,7 +19,7 @@ def ToDict(o: Model) -> Dict:
 	return copy(o.__properties__)
 
 
-def ToSchema(o: Model) -> Dict:
+def ToSchema(o: Type[Model]) -> Dict:
 	if o.__schema__: return o.__schema__
 	ops = ObjectProperties()
 	requires = []
