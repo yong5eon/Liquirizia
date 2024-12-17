@@ -1,6 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.DataAccessObject.Properties.Database import Executor, Fetch
+from Liquirizia.DataAccessObject.Properties.Database import (
+	Executor,
+	Fetch,
+	Mapper,
+	Filter
+)
 
 from ..Table import Table
 
@@ -36,8 +41,10 @@ class Insert(Executor, Fetch):
 	def args(self):
 		return list(self.kwargs.values())
 
-	def fetch(self, cursor):
+	def fetch(self, cursor, mapper: Mapper = None, filter: Filter = None):
 		row = dict(cursor.row())
+		if mapper: row = {mapper(k): v for k, v in row.items()}
+		if filter: row = filter(row)
 		obj = self.obj(**row)
 		obj.__cursor__ = cursor
 		return obj
