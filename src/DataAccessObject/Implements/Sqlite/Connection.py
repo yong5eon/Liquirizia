@@ -7,6 +7,8 @@ from Liquirizia.DataAccessObject.Properties.Database import (
 	Executor,
 	Run,
 	Fetch,
+	Mapper,
+	Filter,
 )
 
 from .Configuration import Configuration
@@ -74,20 +76,20 @@ class Connection(BaseConnection, Database, Run):
 		cursor.executemany(sql, args)
 		return Context(cursor)
 
-	def run(self, executor: Union[Executor,Executors]):
+	def run(self, executor: Union[Executor,Executors], mapper: Mapper = None, filter: Filter = None):
 		cursor = self.connection.cursor()
 		def execs(execs: Executors):
 			__ = []
 			for query, args in executor:
 				cursor.execute(query, args)
 				if not isinstance(executor, Fetch): continue
-				rows = executor.fetch(Cursor(cursor))
+				rows = executor.fetch(Cursor(cursor), mapper=mapper, filter=filter)
 				__.extend(rows)
 			return __
 		def exec(exec: Executor):
 			cursor.execute(executor.query, executor.args)
 			if not isinstance(exec, Fetch): return
-			return exec.fetch(Cursor(cursor))
+			return exec.fetch(Cursor(cursor), mapper=mapper, filter=filter)
 		if isinstance(executor, Executors): return execs(executor)
 		if isinstance(executor, Executor): return exec(executor)
 		raise RuntimeError('{} is not executor or executors'.format(executor.__class__.__name__))
