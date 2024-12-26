@@ -41,6 +41,7 @@
     - 리스트
   - 날자 및 시간 도구
   - 동작 시간 도구
+- [설정 도구](sample/Configuration/Sample.py)
 
 ## 확장 컴포넌트
 
