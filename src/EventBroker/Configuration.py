@@ -9,7 +9,7 @@ __all__ = (
 
 class Configuration(metaclass=ABCMeta):
 	"""Configuration Interface for Event Broker"""
-
 	@abstractmethod
 	def __init__(self, *args, **kwargs):
 		raise NotImplementedError('{} must be implemented __init__'.format(self.__class__.__name__))
+
