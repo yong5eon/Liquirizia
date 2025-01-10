@@ -76,5 +76,6 @@ src/DataAccessObject/Implements/Redis
 src/DataAccessObject/Implements/RedisCluster
 src/DataAccessObject/Implements/AWS
 src/EventBroker/Implements/RabbitMQ
+src/EventBroker/Implements/Redis
 src/WSGI
 src/WSGI.Workers
