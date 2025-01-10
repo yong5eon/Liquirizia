@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from Liquirizia.Test import *
+# Sample for EventBroker
 
 from Liquirizia.EventBroker import Helper
 from Liquirizia.EventBroker import (
@@ -15,7 +13,6 @@ from Liquirizia.EventBroker import (
 	Consumer as BaseConsumer,
 	EventHandler,
 )
-
 from Liquirizia.System.Util import SetTimer
 
 from queue import SimpleQueue, Empty
@@ -105,7 +102,7 @@ class Consumer(BaseConsumer):
 		q: SimpleQueue = self.con.q[self.queue]
 		while self.alive:
 			try:
-				v = q.get(block=True, timeout=0)
+				v = q.get(block=True, timeout=1)
 				if v:
 					self.handler(v)
 			except Empty:
@@ -119,101 +116,49 @@ class Consumer(BaseConsumer):
 		return
 
 
-class TestEventHandler(EventHandler):
-	def __init__(self, q: SimpleQueue):
-		self.q = q
-		return
-	def __call__(self, v):
-		self.q.put(v)
+class SampleEventHandler(EventHandler):
+	def __call__(self, event):
+		print(event)
 		return
 
 
-class TestEventBroker(Case):
-	@classmethod
-	def setUpClass(cls) -> None:
-		Helper.Set(
-			'Sample',
-			Connection,
-			Configuration()
-		)
-		con = Helper.Get('Sample')
-		exchange = con.exchange('topic')
-		queue = con.queue('queue')
-		queue.bind('topic')
-		return super().setUpClass()
+if __name__ == '__main__':
 
-	@Parameterized(
-		{'i': True},
-		{'i': 1},
-		{'i': 1.0},
-		{'i': 'abc'},
-		{'i': b'abc'},
-		{'i': (1,2,3)},
-		{'i': [1,2,3]},
-		{'i': {1,2,2}},
-		{'i': {'a': True, 'b':1, 'c': 1.0, 'd': 'abc'}},
+	Helper.Set(
+		'Sample',
+		Connection,
+		Configuration()
 	)
-	@Order(1)
-	def testSendToQueueReceiveFromQueue(self, i):
-		con = Helper.Get('Sample')
 
-		queue = con.queue('queue')
-		queue.send(i)
+	con = Helper.Get('Sample')
+	e = con.exchange('e')
+	q1 = con.queue('q1')
+	q2 = con.queue('q2')
+	q3 = con.queue('q3')
+	q1.bind('e')
+	q2.bind('e')
+	q3.bind('e')
 
-		reader = con.queue('queue')
-		_ = reader.get()
-		ASSERT_IS_EQUAL(i, _)
+	e.send(1) # expect q1, q2 have 1 
+	q1.send(2) # expect q1 has 1, 2
+	q3.send(2) # expect q3 has 1, 2
+	q2.send(3) # expect q2 has 1, 3
+	q3.send(3) # expect q3 has 1, 2, 3
 
-		queue.send(i)
+	print(q1.get()) # expect print 1
+	print(q1.get()) # expect print 2
 
-		_ = SimpleQueue()
-		consumer = con.consumer(TestEventHandler(_))
-		consumer.subs('queue')
+	print(q2.get()) # expect print 1
+	print(q2.get()) # expect print 3
 
-		def stop():
-			consumer.stop()
+	c = con.consumer(SampleEventHandler())
+	c.subs('q3')
 
-		SetTimer(0.1, stop)
-
-		consumer.run()
-
-		ASSERT_IS_EQUAL(i, _.get())
+	def stop():
+		c.stop()
 		return
+	
+	SetTimer(10, stop)
 
-	@Parameterized(
-		{'i': True},
-		{'i': 1},
-		{'i': 1.0},
-		{'i': 'abc'},
-		{'i': b'abc'},
-		{'i': (1,2,3)},
-		{'i': [1,2,3]},
-		{'i': {1,2,2}},
-		{'i': {'a': True, 'b':1, 'c': 1.0, 'd': 'abc'}},
-	)
-	@Order(2)
-	def testSendToTopicReceiveFromQueue(self, i):
-		con = Helper.Get('Sample')
-
-		topic = con.exchange('topic')
-		topic.send(i)
-
-		reader = con.queue('queue')
-		_ = reader.get()
-		ASSERT_IS_EQUAL(i, _)
-
-		topic.send(i)
-
-		_ = SimpleQueue()
-		consumer = con.consumer(TestEventHandler(_))
-		consumer.subs('queue')
-
-		def stop():
-			consumer.stop()
-		SetTimer(0.1, stop)
-
-		consumer.run()
-
-		ASSERT_IS_EQUAL(i, _.get())
-		return
+	c.run()
 

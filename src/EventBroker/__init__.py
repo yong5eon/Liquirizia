@@ -3,16 +3,19 @@
 from .Helper import Helper
 
 from .Configuration import Configuration
-from .Connection import Connection
-from .GetExchange import GetExchange
-from .GetQueue import GetQueue
-from .GetConsumer import GetConsumer
-
+from .Connection import (
+	Connection,
+	GetExchange,
+	GetQueue,
+	GetConsumer,
+)
 from .Exchange import Exchange
-from .Queue import Queue
+from .Queue import (
+	Queue,
+	Gettable,
+	Readable,
+)
 from .Consumer import Consumer
-
-from .Event import Event
 from .EventHandler import EventHandler
 
 __all__ = (
@@ -25,6 +28,6 @@ __all__ = (
 	'Exchange',
 	'Queue',
 	'Consumer',
-	'Event',
 	'EventHandler',
 )
+
