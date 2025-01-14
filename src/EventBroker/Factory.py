@@ -16,11 +16,10 @@ class Factory(object):
 	def __init__(self, object: Type[Connection], conf: Configuration):
 		self.object = object
 		self.conf = conf
-		self.connection = None
 		return
 
 	def connect(self) -> Connection:
-		if not self.connection:
-			self.connection = self.object(self.conf)
-		self.connection.connect()
-		return self.connection
+		connection = self.object(self.conf)
+		connection.connect()
+		return connection
+
