@@ -54,6 +54,9 @@ target/
 # PEP 582; used by e.g. github.com/David-OConnor/pyflow
 __pypackages__/
 
+# MISC
+.DS_Store
+
 # Liquirizia
 .idea
 .old
