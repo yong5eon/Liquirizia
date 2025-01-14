@@ -129,19 +129,6 @@ class TestEventHandler(EventHandler):
 
 
 class TestEventBroker(Case):
-	@classmethod
-	def setUpClass(cls) -> None:
-		Helper.Set(
-			'Sample',
-			Connection,
-			Configuration()
-		)
-		con = Helper.Get('Sample')
-		exchange = con.exchange('topic')
-		queue = con.queue('queue')
-		queue.bind('topic')
-		return super().setUpClass()
-
 	@Parameterized(
 		{'i': True},
 		{'i': 1},
@@ -155,6 +142,11 @@ class TestEventBroker(Case):
 	)
 	@Order(1)
 	def testSendToQueueReceiveFromQueue(self, i):
+		Helper.Set(
+			'Sample',
+			Connection,
+			Configuration()
+		)
 		con = Helper.Get('Sample')
 
 		queue = con.queue('queue')
@@ -193,7 +185,15 @@ class TestEventBroker(Case):
 	)
 	@Order(2)
 	def testSendToTopicReceiveFromQueue(self, i):
+		Helper.Set(
+			'Sample',
+			Connection,
+			Configuration()
+		)
 		con = Helper.Get('Sample')
+		exchange = con.exchange('topic')
+		queue = con.queue('queue')
+		queue.bind('topic')
 
 		topic = con.exchange('topic')
 		topic.send(i)
