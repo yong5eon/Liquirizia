@@ -28,6 +28,6 @@ class Gettable(metaclass=ABCMeta):
 class Readable(metaclass=ABCMeta):
 	"""Readable Interface for Queue of Event Broker"""
 	@abstractmethod
-	def read(self, timeout: int = None):
+	def read(self):
 		raise NotImplementedError('{} must be implemented read'.format(self.__class__.__name__))
 
