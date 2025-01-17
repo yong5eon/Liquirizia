@@ -149,7 +149,7 @@ class TestValidator(Case):
 					'b': Validator(IsNotToNone(), IsEqualTo(2)),
 					'c': Validator(IsNotToNone(), IsIn(3, 4, 5, 6, 7, 8)),
 					'd': Validator(SetDefault(4)),
-					'e': Validator(IsArray(IsOver(3)), IsNotToNone()),
+					'e': Validator(IsNotToNone(), IsArray(IsElementOf(IsOver(3)))),
 					'f': Validator(IsDictionary(
 						IsNotEmpty(),
 						IsRequiredIn('a', 'b'),

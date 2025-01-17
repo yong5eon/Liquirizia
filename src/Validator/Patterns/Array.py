@@ -5,8 +5,8 @@ from ..Pattern import Pattern
 from collections.abc import Iterable
 
 __all__ = (
-	'IsElementOf',
 	'IsArray',
+	'IsElementOf',
 )
 
 
@@ -21,11 +21,15 @@ class IsArray(Pattern):
 			if self.error:
 				raise self.error
 			raise TypeError('{} must be iterable'.format(parameter))
-		if parameter is None:
-			for pattern in self.patterns:
-				parameter = pattern(parameter)
-			return parameter
+		for pattern in self.patterns:
+			parameter = pattern(parameter)
 		return parameter
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join([p.__repr__() for p in self.patterns])
+		)
 
 
 class IsElementOf(Pattern):
@@ -47,3 +51,4 @@ class IsElementOf(Pattern):
 				[repr(p) for p in self.patterns]
 			)
 		)
+

@@ -95,9 +95,14 @@ if __name__ == '__main__':
 
 	# Validate List or Tuple
 	validator = Validator(
-		IsNotToNone(),
-		IsNotEmpty(),
-		IsListable(IsOver(0))
+		IsNotToNone(
+			IsArray(
+				IsNotEmpty(),
+				IsElementOf(
+					IsOver(0),
+				)
+			)
+		),
 	)
 
 	parameter = []
@@ -147,7 +152,7 @@ if __name__ == '__main__':
 				'b': Validator(IsNotToNone(), IsEqualTo(2)),
 				'c': Validator(IsNotToNone(), IsIn(3, 4, 5, 6, 7, 8)),
 				'd': Validator(SetDefault(4)),
-				'e': Validator(IsListable(IsOver(3)), IsNotToNone()),
+				'e': Validator(IsNotToNone(IsArray(IsElementOf(IsOver(3))))),
 				'f': Validator(IsDictionary(
 					IsNotEmpty(),
 					IsRequiredIn('a', 'b'),
@@ -172,7 +177,7 @@ if __name__ == '__main__':
 		'b': (IsNotToNone(), IsGreaterEqualTo(0)),
 		'c': IsNotToNone(),
 		'd': (IsNotToNone(), IsLessEqualTo(10)),
-		'e': (IsListable(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
+		'e': (IsArray(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
 		'f': 
 		IsDictionary(
 			IsNotEmpty(),
@@ -200,7 +205,7 @@ if __name__ == '__main__':
 			'b': (IsNotToNone(), IsGreaterEqualTo(0)),
 			'c': IsNotToNone(),
 			'd': (IsNotToNone(), IsLessEqualTo(10)),
-			'e': (IsListable(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
+			'e': (IsArray(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
 			'f': 
 			IsDictionary(
 				IsNotEmpty(),
