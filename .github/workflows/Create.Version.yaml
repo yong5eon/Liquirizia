@@ -85,4 +85,15 @@ jobs:
           git push origin $RELEASE_BRANCH
           git log -1
           git branch -vv
+      - name: Create Pull Request
+        if: ${{env.UPDATED == 'true'}}
+        env:
+          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
+        run: |
+          RELEASE_BRANCH="release/${{env.NEW_VERSION}}"
+          TITLE="Release - ${{env.NEW_VERSION}}"
+          BODY=$(cat docs/VERSION/${{env.NEW_VERSION}}.md)
+          BASE="${{github.event.pull_request.base.ref}}"
+          gh auth login --with-token <<< $GITHUB_TOKEN
+          gh pr create --title "$TITLE" --body "$BODY" --head "$RELEASE_BRANCH" --base "$BASE_BRANCH"
 
