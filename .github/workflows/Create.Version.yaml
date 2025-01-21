@@ -85,13 +85,4 @@ jobs:
           git push origin $RELEASE_BRANCH
           git log -1
           git branch -vv
-      - name: Create Pull Request
-        if: ${{env.UPDATED == 'true'}}
-        uses: peter-evans/create-pull-request@v7
-        with:
-          token: ${{secrets.GITHUB_TOKEN}}
-          branch: "release/${{env.NEW_VERSION}}"
-          base: ${{github.event.pull_request.base.ref}}
-          title: "Release - ${{env.NEW_VERSION}}"
-          body-path: docs/VERSION/${{env.NEW_VERSION}}.md
 
