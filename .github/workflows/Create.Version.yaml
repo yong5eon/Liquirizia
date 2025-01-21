@@ -89,5 +89,5 @@ jobs:
           base: ${{ github.event.pull_request.base.ref }}
           title: "Release - ${{env.NEW_VERSION}}"
           body: |
-            $(cat docs/VERSION/${{ env.NEW_VERSION }}.md)
+            $(cat docs/VERSION/${{env.NEW_VERSION}}.md)
 
