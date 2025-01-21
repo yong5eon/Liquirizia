@@ -94,6 +94,5 @@ jobs:
           TITLE="Release - ${{env.NEW_VERSION}}"
           BODY=$(cat docs/VERSION/${{env.NEW_VERSION}}.md)
           BASE="${{github.event.pull_request.base.ref}}"
-          gh auth login --with-token <<< $GITHUB_TOKEN
           gh pr create --title "$TITLE" --body "$BODY" --head "$RELEASE_BRANCH" --base "$BASE_BRANCH"
 
