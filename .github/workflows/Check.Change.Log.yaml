@@ -6,6 +6,12 @@ on:
       - synchronize 
 jobs:
   check-file:
+    if: |
+      startsWith(github.event.pull_request.head.ref, 'feature/') ||
+      startsWith(github.event.pull_request.head.ref, 'bug/') ||
+      startsWith(github.event.pull_request.head.ref, 'fix/')
+    permissions:
+      contents: write
     runs-on: ubuntu-latest
     steps:
       - name: Checkout Code
@@ -24,3 +30,4 @@ jobs:
           else
             echo "Success: File $TARGET_FILE exists."
           fi
+
