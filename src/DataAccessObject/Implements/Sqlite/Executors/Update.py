@@ -6,6 +6,7 @@ from Liquirizia.DataAccessObject.Properties.Database import (
 	Mapper,
 	Filter,
 )
+from Liquirizia.DataModel import Model
 
 from ..Table import Table
 
@@ -48,10 +49,15 @@ class Update(Executor, Fetch):
 	def args(self):
 		return list(self.kwargs.values())
 
-	def fetch(self, cursor: Cursor, mapper: Mapper = None, filter: Filter = None):
+	def fetch(self, cursor: Cursor, mapper: Mapper = None, filter: Filter = None, fetch: Type[Model] = None):
 		row = dict(cursor.row())
 		if mapper: row = {mapper(k): v for k, v in row.items()}
 		if filter: row = filter(row)
-		obj = self.obj(**row)
-		obj.__cursor__ = cursor
-		return obj
+		if fetch:
+			obj = fetch(**row)
+			if issubclass(fetch, Table):
+				obj.__cursor__ = cursor
+			return obj
+		else:
+			return row
+

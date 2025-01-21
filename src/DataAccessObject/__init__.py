@@ -8,7 +8,7 @@ from .Type import Type
 __all__ = (
 	'Connection',
 	'Configuration',
-	'Error',
 	'Helper',
 	'Type',
 )
+

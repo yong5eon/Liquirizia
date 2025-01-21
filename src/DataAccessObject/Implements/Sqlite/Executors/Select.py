@@ -36,7 +36,6 @@ class Select(Executor, Fetch):
 		self.vals = None
 		self.offset = None
 		self.size = None
-		self.o = None
 		return
 
 	def join(self, *args):
@@ -68,10 +67,6 @@ class Select(Executor, Fetch):
 		self.vals = args
 		return self
 	
-	def to(self, o: Type[Model]):
-		self.o = o
-		return self
-	
 	@property
 	def query(self):
 		args = []
@@ -97,15 +92,17 @@ class Select(Executor, Fetch):
 	def args(self):
 		return list(self.kwargs.values())
 
-	def fetch(self, cursor: Cursor, mapper: Mapper = None, filter: Filter = None):
+	def fetch(self, cursor: Cursor, mapper: Mapper = None, filter: Filter = None, fetch: Type[Model] = None):
 		_ = []
 		for i, row in enumerate(cursor.rows()):
 			if mapper: row = {mapper(k): v for k, v in row.items()}
 			if filter: row = filter(row)
-			if self.o:
-				obj = self.o(**row)
-				obj.__cursor__ = cursor
+			if fetch:
+				obj = fetch(**row)
+				if issubclass(fetch, (Table, View)):
+					obj.__cursor__ = cursor
 				_.append(obj)
 			else:
 				_.append(row)
 		return _ if len(_) else None
+
