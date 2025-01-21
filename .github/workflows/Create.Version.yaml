@@ -21,7 +21,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: ${{github.event.pull_request.base.ref}}
-          fetch-depth: 0
       - name: Show base and merged branch
         run: |
           echo "BASE=${{github.event.pull_request.base.ref}}"
@@ -83,7 +82,7 @@ jobs:
           git add -f VERSION
           git add -f docs/VERSION/${{env.NEW_VERSION}}.md
           git commit -m "Update VERSION from ${{env.OLD_VERSION}} to ${{env.NEW_VERSION}}"
-          git push -u origin $RELEASE_BRANCH
+          git push --force-with-lease origin $RELEASE_BRANCH
           git log -1
           git branch -vv
       - name: Create Pull Request
