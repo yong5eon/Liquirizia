@@ -84,14 +84,10 @@ jobs:
         if: ${{env.UPDATED == 'true'}}
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{secrets.GITHUB_TOKEN}}
           branch: "release/${{env.NEW_VERSION}}"
-          base: ${{ github.event.pull_request.base.ref }}
+          base: ${{github.event.pull_request.base.ref}}
           title: "Release - ${{env.NEW_VERSION}}"
           body: |
-<<<<<<< HEAD
             $(cat docs/VERSION/${{env.NEW_VERSION}}.md)
-=======
-            $(cat docs/VERSION/${{ env.NEW_VERSION }}.md)
->>>>>>> a727f6c (PR 생성을 액션으로 변경)
 
