@@ -2,10 +2,12 @@
 
 from Liquirizia.DataModel import Model
 
+from .Executor import Executor
+
 from abc import abstractmethod
 from collections.abc import Iterable
 
-from typing import Type
+from typing import Type, Iterable
 
 __all__ = (
 	'Executors'
@@ -20,5 +22,6 @@ class Executors(Iterable):
 		pass
 	
 	@abstractmethod
-	def __iter__(self):
+	def __iter__(self) -> Iterable[Executor]:
 		pass
+

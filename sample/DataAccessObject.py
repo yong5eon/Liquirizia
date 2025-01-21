@@ -4,7 +4,6 @@ from Liquirizia.DataAccessObject import Helper
 from Liquirizia.DataAccessObject import (
 	Configuration as BaseConfiguration,
 	Connection as BaseConnection,
-	Error,
 )
 
 import sys
@@ -38,12 +37,12 @@ class Connection(BaseConnection):
 
 	def get(self):
 		if self.data is None:
-			raise Error('{} is not connected and initialized'.format(self.__class__.__name__))
+			raise RuntimeError('{} is not connected and initialized'.format(self.__class__.__name__))
 		return self.data
 
 	def set(self, data):
 		if not isinstance(data, int):
-			raise Error('{} must be int'.format(data))
+			raise RuntimeError('{} must be int'.format(data))
 		self.data = data
 		return self.data
 
@@ -65,7 +64,5 @@ if __name__ == '__main__':
 		print(con.get())  # expected print 3
 		print(con.set(5))  # expected print 5
 		print(con.set('a'))  # expected Error
-	except Error as e:
-		print(str(e), file=sys.stderr)
 	except RuntimeError as e:
 		print(str(e), file=sys.stderr)

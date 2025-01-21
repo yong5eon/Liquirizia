@@ -85,7 +85,7 @@ class TestSqliteWithModel(Case):
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
-		))
+		), fetch=TestModel)
 		ASSERT_IS_NOT_NONE(row)
 		ASSERT_IS_EQUAL(row.id, 1)
 		ASSERT_IS_EQUAL(row.colInteger, 1)
@@ -107,7 +107,7 @@ class TestSqliteWithModel(Case):
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
-		))
+		), fetch=TestModel)
 		updated = con.run(Update(TestModel).where(IsEqualTo(TestModel.id, inserted.id)).set(
 			colInteger=2,
 			colFloat=2.8,
@@ -115,7 +115,7 @@ class TestSqliteWithModel(Case):
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
-		))
+		), fetch=TestModel)
 
 		ASSERT_IS_NOT_NONE(updated)
 		ASSERT_IS_EQUAL(updated.id, 1)
@@ -140,12 +140,12 @@ class TestSqliteWithModel(Case):
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
-		))
+		), fetch=TestModel)
 		inserted.colInteger = 2
 		inserted.colFloat = 2.8
 		inserted.colText = 'Hello World'
 
-		updated = con.run(Get(TestModel).where(IsEqualTo(TestModel.id, inserted.id)).to(TestModel))
+		updated = con.run(Get(TestModel).where(IsEqualTo(TestModel.id, inserted.id)), fetch=TestModel)
 
 		ASSERT_IS_NOT_NONE(updated)
 		ASSERT_IS_EQUAL(updated.id, 1)
@@ -167,8 +167,9 @@ class TestSqliteWithModel(Case):
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
 			colTimestamp=int(mktime(datetime.now().timetuple())),
-		))
+		), fetch=TestModel)
 		con.run(Delete(TestModel).where(IsEqualTo(TestModel.id, inserted.id)))
-		updated = con.run(Get(TestModel).where(IsEqualTo(TestModel.id, inserted.id)).to(TestModel))
+		updated = con.run(Get(TestModel).where(IsEqualTo(TestModel.id, inserted.id)), fetch=TestModel)
 		ASSERT_IS_NONE(updated)
 		return
+

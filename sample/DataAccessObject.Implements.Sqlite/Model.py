@@ -203,7 +203,7 @@ if __name__ == '__main__':
 		'Sample',
 		Connection,
 		Configuration(
-			path='tmp/Sample.DB',  # File Path for SQLite Database File
+			path='Sample.DB',  # File Path for SQLite Database File
 			autocommit=False
 		)
 	)
@@ -225,10 +225,10 @@ if __name__ == '__main__':
 	con.run(Create(StatOfClass))
 
 	STUDENT = [
-		['SU970001', 'Koo Hayoon', 'README.md'],
-		['SU970002', 'Ma Youngin', 'README.md'],
-		['SU970003', 'Kang Miran', 'README.md'],
-		['SU970004', 'Song Hahee', 'README.md'],
+		['SU970001', 'Koo Hayoon', 'Connection.py'],
+		['SU970002', 'Ma Youngin', 'Connection.py'],
+		['SU970003', 'Kang Miran', 'Connection.py'],
+		['SU970004', 'Song Hahee', 'Connection.py'],
 	]
 
 	CLASS = [
@@ -279,7 +279,8 @@ if __name__ == '__main__':
 				code=_[0],
 				name=_[1],
 				metadata=open(_[2], mode='rb').read(),
-			)
+			),
+			fetch=Student,
 		))
 	
 	for _ in students:
@@ -287,7 +288,7 @@ if __name__ == '__main__':
 		_.atUpdated = int(round(datetime.now().timestamp()*1000))
 		PrettyPrint(_)
 	
-	students = con.run(Select(Student).to(Student))
+	students = con.run(Select(Student), fetch=Student)
 	PrettyPrint(students)
 
 	classes = []
@@ -296,7 +297,8 @@ if __name__ == '__main__':
 			Insert(Class).values(
 				code=_[0],
 				name=_[1],
-			)
+			),
+			fetch=Class,
 		))
 	
 	for _ in classes:
@@ -304,20 +306,20 @@ if __name__ == '__main__':
 		_.atUpdated = int(round(datetime.now().timestamp()*1000))
 		PrettyPrint(_)
 	
-	classes = con.run(Select(Class).to(Class))
+	classes = con.run(Select(Class), fetch=Class)
 	PrettyPrint(classes)
 	
 	for scode, ccode in STUDENT_OF_CLASS:
-		s = con.run(Get(Student).where(IsEqualTo(Student.code, scode)).to(Student))
-		c = con.run(Get(Class).where(IsEqualTo(Class.code, ccode)).to(Class))
+		s = con.run(Get(Student).where(IsEqualTo(Student.code, scode)), fetch=Student)
+		c = con.run(Get(Class).where(IsEqualTo(Class.code, ccode)), fetch=Class)
 		con.run(Insert(StudentOfClass).values(
 			studentId=s.id,
 			studentName=s.name,
 			classId=c.id,
 			className=c.name,
-		))
+		), fetch=StudentOfClass)
 	
-	studentsOfClasses = con.run(Select(StudentOfClass).to(StudentOfClass))
+	studentsOfClasses = con.run(Select(StudentOfClass), fetch=StudentOfClass)
 	PrettyPrint(studentsOfClasses)
 	
 	for _ in studentsOfClasses:
@@ -328,11 +330,12 @@ if __name__ == '__main__':
 			).where(
 				IsEqualTo(StudentOfClass.studentId, _.studentId),
 				IsEqualTo(StudentOfClass.classId, _.classId),
-			)
+			),
+			fetch=StudentOfClass,
 		)
 		PrettyPrint(o)
 	
-	studentsOfClasses = con.run(Select(StudentOfClass).to(StudentOfClass))
+	studentsOfClasses = con.run(Select(StudentOfClass), fetch=StudentOfClass)
 	PrettyPrint(studentsOfClasses)
 	
 	for _ in studentsOfClasses:
@@ -341,7 +344,7 @@ if __name__ == '__main__':
 		_.atUpdated = int(round(datetime.now().timestamp()*1000))
 		PrettyPrint(_)
 	
-	studentsOfClasses = con.run(Select(StudentOfClass).to(StudentOfClass))
+	studentsOfClasses = con.run(Select(StudentOfClass), fetch=StudentOfClass)
 	PrettyPrint(studentsOfClasses)
 	
 	exec = Select(Student).join(
@@ -389,7 +392,7 @@ if __name__ == '__main__':
 	PrettyPrint(statOfStudent)
 	
 	statOfClass = con.run(Select(StatOfClass))
-	PrettyPrint(StatOfClass)
+	PrettyPrint(statOfClass)
 	
 	statOfClass = con.run(
 		Select(StatOfClass).where(
@@ -399,3 +402,4 @@ if __name__ == '__main__':
 	PrettyPrint(statOfClass)
 
 	con.commit()
+
