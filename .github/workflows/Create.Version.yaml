@@ -82,15 +82,12 @@ jobs:
           git push origin $RELEASE_BRANCH
       - name: Create Pull Request
         if: ${{env.UPDATED == 'true'}}
-        env:
-          GITHUB_TOKEN: ${{secrets.GITHUB_TOKEN}}
-        run: |
-          RELEASE_BRANCH="release/${{env.NEW_VERSION}}"
-          TITLE="Release - ${{env.NEW_VERSION}}"
-          BODY=$(cat docs/VERSION/${{env.NEW_VERSION}}.md | jq -Rs .)
-          URL="https://api.github.com/repos/${{github.repository}}/pulls"
-          curl -X POST -H "Authorization: Bearer $GITHUB_TOKEN" \
-            -H "Accept: application/vnd.github+json" \
-            -d "{\"title\":\"$TITLE\",\"head\":\"$RELEASE_BRANCH\",\"base\":\"${{github.event.pull_request.base.ref}}\",\"body\":\"$BODY\"}" \
-            $URL
+        uses: peter-evans/create-pull-request@v5
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          branch: "release/${{env.NEW_VERSION}}"
+          base: ${{ github.event.pull_request.base.ref }}
+          title: "Release - ${{env.NEW_VERSION}}"
+          body: |
+            $(cat docs/VERSION/${{ env.NEW_VERSION }}.md)
 
