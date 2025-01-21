@@ -84,9 +84,9 @@ jobs:
         if: ${{env.UPDATED == 'true'}}
         uses: peter-evans/create-pull-request@v5
         with:
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{secrets.GITHUB_TOKEN}}
           branch: "release/${{env.NEW_VERSION}}"
-          base: ${{ github.event.pull_request.base.ref }}
+          base: ${{github.event.pull_request.base.ref}}
           title: "Release - ${{env.NEW_VERSION}}"
           body: |
             $(cat docs/VERSION/${{env.NEW_VERSION}}.md)
