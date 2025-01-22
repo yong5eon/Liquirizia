@@ -7,7 +7,6 @@ from Liquirizia.DataAccessObject.Properties.Database import (
 	Executor,
 	Run,
 	Fetch,
-	Mapper,
 	Filter,
 )
 
@@ -81,7 +80,6 @@ class Connection(BaseConnection, Database, Run):
 	def run(
 		self,
 		executor: Union[Executor,Executors],
-		mapper: Mapper = None,
 		filter: Filter = None,
 		fetch: Type[Model] = None,
 	):
@@ -91,13 +89,13 @@ class Connection(BaseConnection, Database, Run):
 			for query, args in executor:
 				cursor.execute(query, args)
 				if not isinstance(executor, Fetch): continue
-				rows = executor.fetch(Cursor(cursor), mapper=mapper, filter=filter, fetch=fetch)
+				rows = executor.fetch(Cursor(cursor), filter=filter, fetch=fetch)
 				__.extend(rows)
 			return __
 		def exec(exec: Executor):
 			cursor.execute(executor.query, executor.args)
 			if not isinstance(exec, Fetch): return
-			return exec.fetch(Cursor(cursor), mapper=mapper, filter=filter, fetch=fetch)
+			return exec.fetch(Cursor(cursor), filter=filter, fetch=fetch)
 		if isinstance(executor, Executors): return execs(executor)
 		if isinstance(executor, Executor): return exec(executor)
 		raise RuntimeError('{} is not executor or executors'.format(executor.__class__.__name__))

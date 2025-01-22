@@ -3,7 +3,6 @@
 from Liquirizia.DataAccessObject.Properties.Database import (
 	Executor,
 	Fetch,
-	Mapper,
 	Filter,
 )
 from Liquirizia.DataModel import Model
@@ -92,17 +91,15 @@ class Select(Executor, Fetch):
 	def args(self):
 		return list(self.kwargs.values())
 
-	def fetch(self, cursor: Cursor, mapper: Mapper = None, filter: Filter = None, fetch: Type[Model] = None):
+	def fetch(self, cursor: Cursor, filter: Filter = None, fetch: Type[Model] = None):
 		_ = []
 		for i, row in enumerate(cursor.rows()):
-			if mapper: row = {mapper(k): v for k, v in row.items()}
 			if filter: row = filter(row)
 			if fetch:
 				obj = fetch(**row)
-				if issubclass(fetch, (Table, View)):
+				if isinstance(obj, (Table, View)):
 					obj.__cursor__ = cursor
 				_.append(obj)
 			else:
 				_.append(row)
 		return _ if len(_) else None
-

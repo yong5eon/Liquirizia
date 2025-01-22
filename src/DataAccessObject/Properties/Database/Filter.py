@@ -2,7 +2,7 @@
 
 from abc import ABCMeta, abstractmethod
 
-from typing import Any
+from typing import Dict
 
 __all__ = (
 	'Filter',
@@ -10,7 +10,7 @@ __all__ = (
 
 
 class Filter(metaclass=ABCMeta):
-	"""Value Filter"""
+	"""Row Filter Interface"""
 	@abstractmethod
-	def __call__(self, value: Any) -> Any:
+	def __call__(self, row: Dict) -> Dict:
 		raise NotImplementedError('{} must be implemented __call__'.format(self.__class__.__name__))
