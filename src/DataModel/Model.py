@@ -35,8 +35,8 @@ __all__ = (
 
 
 class ModelCreator(type):
-	def __init__(self, name, bases, namespace, *args, **kwargs):
-		super().__init__(name, bases, namespace, *args, **kwargs)
+	def __init__(self, typename, bases, namespace, *args, **kwargs):
+		super().__init__(typename, bases, namespace, *args, **kwargs)
 		try:
 			for k, t in self.__annotations__.items():
 				v = self.__dict__[k] if k in self.__dict__.keys() else None
