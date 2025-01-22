@@ -16,7 +16,6 @@ from Liquirizia.Validator.Patterns import (
 )
 
 from collections import OrderedDict
-from abc import ABC, ABCMeta
 
 from typing import (
 	get_origin,
@@ -53,25 +52,6 @@ class ModelCreator(type):
 			v.__set_name__(self, k)
 			self.__mapper__[k] = v
 		return
-
-# 	def __new__(metacls, clsname, bases, namespace, *args, **kwargs):
-# 		cls = super().__new__(metacls, clsname, bases, namespace, *args, **kwargs)
-# 		try:
-# 			for k, t in cls.__annotations__.items():
-# 				v = cls.__dict__[k] if k in cls.__dict__.keys() else None
-# 				if not isinstance(v, Value):
-# 					v = cls.__value__(k, t, v)
-# 					setattr(cls, k, v)
-# 		except Exception as e:
-# 			pass
-# 		cls.__mapper__ = OrderedDict()
-# 		cls.__description__ = None
-# 		cls.__schema__ = None
-# 		for k, v in cls.__dict__.items():
-# 			if not isinstance(v, Value): continue
-# 			v.__set_name__(cls, k)
-# 			cls.__mapper__[k] = v
-# 		return cls
 
 
 class Model(object, metaclass=ModelCreator):
