@@ -7,7 +7,7 @@ from Liquirizia.DataAccessObject import Helper
 from Liquirizia.DataAccessObject.Implements.Sqlite import Configuration, Connection
 	
 
-class TestSqlite(Case):
+class TestSqliteConnection(Case):
 	@classmethod
 	def setUpClass(cls):
 		Helper.Set(

@@ -30,7 +30,7 @@ class Updater(Handler):
 		return
 class TestModel(
 	Table,
-	table='TEST',
+	name='TEST',
 	constraints=(
 		PrimaryKey(cols='ID', autoincrement=True),
 	),
@@ -48,7 +48,7 @@ class TestModel(
 	colTimestamp = TIMESTAMP(name='COL_TIMESTAMP', null=True)
 
 
-class TestSqliteWithModel(Case):
+class TestSqliteTable(Case):
 	@classmethod
 	def setUpClass(cls):
 		Helper.Set(
