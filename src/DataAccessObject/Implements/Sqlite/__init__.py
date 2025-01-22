@@ -11,6 +11,7 @@ from .View import View
 
 from .Constraint import Constraint
 from .Index import Index
+from .Expr import Expr
 from .Function import Function
 
 from sqlite3 import register_adapter
@@ -26,6 +27,7 @@ __all__ = (
 	'View',
 	'Constraint',
 	'Index',
+	'Expr',
 	'Function',
 )
 

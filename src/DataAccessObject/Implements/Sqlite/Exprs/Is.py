@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from ..Expr import Expr
-from ...Type import Type
+from ..Type import Type
 
 __all__ = (
 	'IsNull',

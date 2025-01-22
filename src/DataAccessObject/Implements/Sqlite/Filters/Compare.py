@@ -2,8 +2,8 @@
 
 from ..Expr import Expr
 
-from ...Type import Type
-from ...Function import Function
+from ..Type import Type
+from ..Function import Function
 
 from typing import Union, Any
 

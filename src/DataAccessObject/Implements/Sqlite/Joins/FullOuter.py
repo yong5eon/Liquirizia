@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
-from ..Join import Join
+from .Join import Join
 
-from ...Table import Table
+from ..Table import Table
 
 from typing import Type
 

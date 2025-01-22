@@ -1,12 +1,11 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.DataModel import Model
 from Liquirizia.DataAccessObject.Properties.Database import Executors
+from Liquirizia.DataModel import Model
 
 from ..Table import Table
 from ..View import View
 from ..Type import Type
-from ..Function import Function
 from ..Index import Index
 
 from ..Constraints import (

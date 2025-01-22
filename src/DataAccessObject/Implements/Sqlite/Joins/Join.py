@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .Expr import Expr
+from ..Expr import Expr
 
 from ..Table import Table
 

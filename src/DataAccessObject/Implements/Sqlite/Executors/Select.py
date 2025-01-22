@@ -11,8 +11,6 @@ from ..Table import Table
 from ..View import View
 from ..Type import Type
 
-from .Expr import Expr
-
 from ..Cursor import Cursor
 
 from typing import Type, Union
