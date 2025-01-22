@@ -2,6 +2,8 @@
 
 from Liquirizia.DataAccessObject import Helper
 
+from Liquirizia.DataAccessObject.Properties.Database import *
+
 from Liquirizia.DataAccessObject.Implements.Sqlite import *
 from Liquirizia.DataAccessObject.Implements.Sqlite.Types import *
 from Liquirizia.DataAccessObject.Implements.Sqlite.Constraints import *
@@ -18,6 +20,7 @@ from Liquirizia.Util import *
 from random import randrange
 from datetime import datetime
 
+from typing import Dict
 
 # Tables
 class StudentUpdated(Handler):
@@ -373,7 +376,18 @@ if __name__ == '__main__':
 			Ascend('SUM'),
 		).limit(0, 10)
 
-	PrettyPrint(con.run(exec))
+	class RowFilter(Filter):
+		def __call__(self, row: Dict) -> Dict:
+			return {
+				'id': row['STUDENT_ID'],
+				'name': row['STUDENT_NAME'],
+				'className': row['CLASS_NAME'],
+				'count': row['COUNT'],
+				'sum': row['SUM'],
+				'avg': row['AVG'],
+				'updated': max(row['STUDENT_AT_CREATED'], row['STUDENT_OF_CLASS_AT_CREATED']),
+			}
+	PrettyPrint(con.run(exec, filter=RowFilter()))
 
 	con.run(Delete(StudentOfClass).where(
 		IsEqualTo(StudentOfClass.studentName, 'Song Hahee')
