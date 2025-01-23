@@ -46,7 +46,7 @@ class ModelCreator(type):
 			pass
 		self.__mapper__ = OrderedDict()
 		self.__description__ = None
-		self.__schema__ = None
+		self.__fmt__ = None
 		for k, v in self.__dict__.items():
 			if not isinstance(v, Value): continue
 			v.__set_name__(self, k)
@@ -75,7 +75,7 @@ class Model(object, metaclass=ModelCreator):
 	def __init_subclass__(cls, name: str = None, description: str = None, format: Object = None, fn: Handler = None):
 		cls.__model__ = name if name else cls.__name__
 		cls.__description__ = description
-		cls.__schema__ = format
+		cls.__fmt__ = format
 		cls.__callback__ = fn
 		return super().__init_subclass__()
 
