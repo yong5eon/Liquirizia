@@ -130,7 +130,7 @@ class TestSqliteTable(Case):
 		return
 
 	@Order(5)
-	def testUpdateWithAutoUpdater(self):
+	def testUpdateWithHandler(self):
 		con = Helper.Get('Sample')
 		con.run(Create(TestModel))
 		inserted = con.run(Insert(TestModel).values(
