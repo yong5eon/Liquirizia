@@ -27,10 +27,13 @@ class SampleObject(Model, fn=Changed()):
 		self.y += weight
 		return
 
+print(SampleObject)
+print(str(SampleObject))
 
 # WITH DESCRIPTOR
 class SampleModel(
 	Model,
+	name='Sample',
 	description='Sample Model',
 	fn=Changed()
 ):
@@ -109,6 +112,9 @@ class SampleModel(
 	oValWithOutDescriptorWithDefault: SampleObject = SampleObject(x=2,y=3)
 	oValWithDefault: SampleObject = Value(va=Validator(IsTypeOf(SampleObject)), default=SampleObject(x=3,y=4), fn=Changed())
 
+
+print(SampleModel)
+print(str(SampleModel))
 
 _ = SampleModel(
 	bVal=False,

@@ -38,6 +38,5 @@ class View(Model):
 		schema: Object = None,
 		fn: Handler = None,
 	):
-		cls.__model__ = name if name else cls.__name__
 		cls.__executor__ = executor
-		return super().__init_subclass__(description, schema, fn)
+		return super().__init_subclass__(name, description, schema, fn)
