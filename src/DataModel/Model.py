@@ -52,6 +52,8 @@ class ModelCreator(type):
 			v.__set_name__(self, k)
 			self.__mapper__[k] = v
 		return
+	def __repr__(cls):
+		return cls.__model__
 
 
 class Model(object, metaclass=ModelCreator):
@@ -70,7 +72,8 @@ class Model(object, metaclass=ModelCreator):
 				v.__set__(self, v.default, init=True)
 		return
 	
-	def __init_subclass__(cls, description: str = None, format: Object = None, fn: Handler = None):
+	def __init_subclass__(cls, name: str = None, description: str = None, format: Object = None, fn: Handler = None):
+		cls.__model__ = name if name else cls.__name__
 		cls.__description__ = description
 		cls.__schema__ = format
 		cls.__callback__ = fn
@@ -150,3 +153,6 @@ class Model(object, metaclass=ModelCreator):
 		for t in ts:
 			vaps.append(cls.__vaps__(t, v, hv))
 		return IsAny(*vaps)
+
+	@classmethod
+	def ToString(cls): return cls.__model__
