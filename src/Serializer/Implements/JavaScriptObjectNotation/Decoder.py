@@ -1,18 +1,22 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.Serializer import Serializer
+from ...Serializer import Serializer
+from ...Errors import DecodeError
 
 from json import loads, JSONDecoder
-from datetime import datetime, date, time
-
-from collections.abc import Sequence, Mapping
-
-from typing import Any
+from datetime import date, datetime
+from re import compile
 
 __all__ = (
 	'Decoder'
 )
 
+REGEX_DATETIME_ISO_FORMAT = compile(
+	r'^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(?:\.\d+)?(?:Z|[+-]\d{2}:\d{2})?$'
+)
+REGEX_DATE_ISO_FORMAT = compile(
+	r'^\d{4}-\d{2}-\d{2}$'
+)
 
 class TypeDecoder(JSONDecoder):
 	"""Type Decoder for JSON"""
@@ -21,63 +25,47 @@ class TypeDecoder(JSONDecoder):
 		super(TypeDecoder, self).__init__(object_hook=self.any, *args, **kwargs)
 		return
 	
-	def string(self, obj: str):
-		try:
-			return time.fromisoformat(obj)
-		except:
-			pass
-		try:
-			return date.fromisoformat(obj)
-		except:
-			pass
-		try:
-			return datetime.fromisoformat(obj)
-		except:
-			pass
+	def any(self, obj):
+		if isinstance(obj, dict):
+			for key, value in obj.items():
+				if isinstance(value, str):
+					try:
+						if REGEX_DATE_ISO_FORMAT.match(value):
+							obj[key] = date.fromisoformat(value)
+						continue
+					except:
+						pass
+					try:
+						if REGEX_DATETIME_ISO_FORMAT.match(value):
+							obj[key] = datetime.fromisoformat(value)
+						continue
+					except:
+						pass
+				elif isinstance(value, (list, tuple)):
+					for i, v in enumerate(value):
+						if isinstance(v, str):
+							try:
+								if REGEX_DATETIME_ISO_FORMAT.match(v):
+									value[i] = date.fromisoformat(v)
+								continue
+							except:
+								pass
+							try:
+								if REGEX_DATETIME_ISO_FORMAT.match(v):
+									value[i] = datetime.fromisoformat(v)
+								continue
+							except:
+								pass
 		return obj
-	
-	def object(self, obj: Mapping):
-		for key, value in obj.items():
-			if isinstance(value, str):
-				value = self.string(value)
-				continue
-			if isinstance(value, Sequence):
-				value = self.array(value)
-				continue
-			if isinstance(value, Mapping):
-				value = self.object(value)
-				continue
-		return obj
-	
-	def array(self, obj: Sequence):
-		for value in obj:
-			if isinstance(value, str):
-				value = self.string(value)
-				continue
-			if isinstance(value, Sequence):
-				value = self.array(value)
-				continue
-			if isinstance(value, Mapping):
-				value = self.array(value)
-				continue
-		return obj
-	
-	def any(self, obj: Any):
-		if isinstance(obj, str): return self.string(obj)
-		if isinstance(obj, Mapping): return self.object(obj)
-		if isinstance(obj, Sequence): return self.array(obj)
-		return obj
-	
+
 
 class Decoder(Serializer):
 	"""Decoder Class for JSON"""
 	
 	def __call__(self, obj):
 		if not isinstance(obj, str):
-			raise RuntimeError('{} is not string'.format(obj))
-		return loads(
-			obj,
-			cls=TypeDecoder,
-		)
-	
-	
+			raise DecodeError('{} is not string'.format(obj))
+		try:
+			return loads(obj, cls=TypeDecoder)
+		except Exception as e:
+			raise DecodeError(str(e), error=e)
