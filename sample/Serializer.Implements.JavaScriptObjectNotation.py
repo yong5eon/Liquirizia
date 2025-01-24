@@ -143,43 +143,53 @@ if __name__ == '__main__':
 
 	encoded = SerializerHelper.Encode(True, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(0, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(0.0, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(Decimal('0.0'), format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode('String', format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(datetime.now(), format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(datetime.now().date(), format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode(datetime.now().time(), format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode([1,2,3], format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	encoded = SerializerHelper.Encode((4,5,6), format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	_ = {
 		'a': True,
@@ -200,17 +210,20 @@ if __name__ == '__main__':
 	}
 	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	_ = List(1,2,3,3)
 	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	_ = Set(1,2,3,3)
 	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
 	_ = Dictionary(
 		a=True,
@@ -232,5 +245,38 @@ if __name__ == '__main__':
 	)
 	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
 	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
-	print(encoded, decoded)
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
 
+	_ = '01000000000'
+	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
+	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
+
+	_ = ['01011111111']
+	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
+	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
+
+	_ = {
+		'a': '01011111111'
+	}
+	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
+	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))
+
+	_ = [
+		{
+			'a': '01011111111'
+		},
+		{
+			'a': '01011111111'
+		},
+	]
+	encoded = SerializerHelper.Encode(_, format='application/json', charset='utf-8')
+	decoded = SerializerHelper.Decode(encoded, format='application/json', charset='utf-8')
+	print('ENCODED : {}'.format(encoded))
+	print('DECODED : {}'.format(decoded))

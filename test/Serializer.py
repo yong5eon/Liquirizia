@@ -342,6 +342,11 @@ class TestSerializer(Case):
 		{'v': cdt, 'exp': '"{}"'.format(cdt.isoformat()).encode()},
 		{'v': cd, 'exp': '"{}"'.format(cd.isoformat()).encode()},
 		{'v': ct, 'exp': '"{}"'.format(ct.isoformat()).encode()},
+		{'v': '01000000000', 'exp': b'"01000000000"'},
+		{'v': '01011111111', 'exp': b'"01011111111"'},
+		{'v': ['01011111111'], 'exp': b'["01011111111"]'},
+		{'v': {'a':'01011111111'}, 'exp': b'{"a": "01011111111"}'},
+		{'v': [{'a':'01011111111'}], 'exp': b'[{"a": "01011111111"}]'},
 	)
 	@Order(11)
 	def testJSON(self, v, exp):
