@@ -20,7 +20,7 @@ def ToDict(o: Model) -> Dict:
 
 
 def ToSchema(o: Type[Model]) -> Dict:
-	if o.__schema__: return o.__schema__
+	if o.__fmt__: return o.__fmt__
 	ops = ObjectProperties()
 	requires = []
 	for k, v in o.__mapper__.items():
