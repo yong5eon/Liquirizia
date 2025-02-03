@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from .StreamLHandler import StreamHandler
-from .ColoredStreamHandler import ColoredStreamHandler
+from .StreamHandler import StreamHandler
 
 from .FileHandler import FileHandler
 from .RotateFileHandler import RotateFileHandler
 
 __all__ = (
 	'StreamHandler',
-	'ColoredStreamHandler',
 	'FileHandler',
 	'RotateFileHandler',
 )
