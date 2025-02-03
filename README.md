@@ -29,7 +29,7 @@
 - 데이터 직렬화, 비직렬화 도구
 - [병렬 처리기](docs/Parallelizer.md)
 - [이벤트 브로커](docs/EventBroker.md)
-- 로거
+- [로거](docs/Logger.md)
 - 테스트
 - 시스템 도구
   - 파일락

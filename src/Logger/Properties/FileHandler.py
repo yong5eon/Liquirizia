@@ -1,8 +1,9 @@
 # -*- coding: utf-8 -*-
 
-from logging import (
-    FileHandler as BaseFileHandler,
-)
+from logging import FileHandler as BaseFileHandler
+
+from ..Formatter import Formatter as BaseFormatter
+from ..Formatters import Formatter
 
 __all__ = (
     'FileHandledr',
@@ -15,8 +16,11 @@ LOG_FILE_APPEND = 'a'
 
 
 class FileHandler(BaseFileHandler):
-    def __init__(self, filename, mode = LOG_FILE_CREATE):
+    def __init__(self, filename, mode = LOG_FILE_CREATE, formatter: BaseFormatter = Formatter()):
         super().__init__(filename, mode)
+        self.formatter = formatter
+        return
+
     def format(self, record):
         try:
             if getattr(record, 'file'):
@@ -25,5 +29,4 @@ class FileHandler(BaseFileHandler):
                 record.lineno = record.line
         except AttributeError:
             pass
-        return self.formatter.format(record)
-
+        return self.formatter(record)
