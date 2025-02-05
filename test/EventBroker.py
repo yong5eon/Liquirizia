@@ -16,7 +16,7 @@ from Liquirizia.EventBroker import (
 	EventHandler,
 )
 
-from Liquirizia.System.Util import SetTimer
+from Liquirizia.System.Utils import SetTimer
 
 from queue import SimpleQueue, Empty
 
@@ -162,7 +162,7 @@ class TestEventBroker(Case):
 		consumer = con.consumer(TestEventHandler(_))
 		consumer.subs('queue')
 
-		def stop():
+		def stop(timer):
 			consumer.stop()
 
 		SetTimer(0.1, stop)
@@ -208,7 +208,7 @@ class TestEventBroker(Case):
 		consumer = con.consumer(TestEventHandler(_))
 		consumer.subs('queue')
 
-		def stop():
+		def stop(timer):
 			consumer.stop()
 		SetTimer(0.1, stop)
 

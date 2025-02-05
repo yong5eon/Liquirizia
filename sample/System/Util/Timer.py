@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.System.Utils.Timer import SetTimer, Timeout, Timer, TimerCallback
+from Liquirizia.System.Utils import SetTimer, Timeout, Timer, TimerCallback
 
 from time import sleep
 

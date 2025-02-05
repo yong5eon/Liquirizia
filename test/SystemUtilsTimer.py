@@ -2,7 +2,7 @@
 
 from Liquirizia.Test import *
 
-from Liquirizia.System.Utils.Timer import SetTimer, Timeout, TimerCallback, Timer
+from Liquirizia.System.Utils import SetTimer, Timeout, TimerCallback, Timer
 from time import sleep
 
 class Callback(TimerCallback):
