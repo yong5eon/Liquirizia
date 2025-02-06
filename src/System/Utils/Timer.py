@@ -25,14 +25,15 @@ class Timer(object):
 	def __init__(self, ms: int, cb: TimerCallback):
 		self.cb = cb
 		self.ms = ms
+		self.timer = None
 		return
 	def start(self):
 		if system().upper() == 'WINDOWS':
-			from threading import Timer as ThreadTimer
-			def cb():
+			from asyncio import ensure_future, sleep
+			async def cb():
+				await sleep(self.ms / 1000)
 				return self.cb(self)
-			self.timer = ThreadTimer(self.ms / 1000, cb)
-			self.timer.start()
+			self.timer = ensure_future(cb)
 		else:
 			from signal import signal, SIGALRM, setitimer, ITIMER_REAL
 			def cb(sig, frame):
@@ -46,6 +47,7 @@ class Timer(object):
 		else:
 			from signal import signal, SIGALRM, SIG_DFL
 			signal(SIGALRM, SIG_DFL)
+		self.timer = None
 		return
 	
 
@@ -73,9 +75,9 @@ class Timeout(object):
 		def wrapper(*args, **kwargs):
 			def cb(timer: Timer):
 				raise TimeoutError
-			SetTimer(self.timeout, cb)
 			try:
-					return fn(*args, **kwargs)
+				SetTimer(self.timeout, cb)
+				return fn(*args, **kwargs)
 			except TimeoutError:
 				return self.cb()
 		return wrapper
