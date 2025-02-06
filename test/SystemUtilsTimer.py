@@ -5,25 +5,24 @@ from Liquirizia.Test import *
 from Liquirizia.System.Utils import SetTimer, Timeout, TimerCallback, Timer
 from time import sleep
 
-class Callback(TimerCallback):
-	def __init__(self, data: list, count: int = 1):
-		self.data = data
-		self.count = count
-		return
-	def __call__(self, timer: Timer):
-		self.data.append(self.count)
-		if self.count != None:
-			self.count -= 1
-			if self.count != 0:
-				timer.start()
-		else:
-			timer.start()
-		return
-
 
 class TestSystemUtilsTimer(Case):
 	@Order(0)
 	def testSetTimer(self):
+		class Callback(TimerCallback):
+			def __init__(self, data: list, count: int = 1):
+				self.data = data
+				self.count = count
+				return
+			def __call__(self, timer: Timer):
+				self.data.append(self.count)
+				if self.count != None:
+					self.count -= 1
+					if self.count != 0:
+						timer.start()
+				else:
+					timer.start()
+				return
 		_ = []
 		SetTimer(10, Callback(_))
 		sleep(1)
@@ -32,6 +31,13 @@ class TestSystemUtilsTimer(Case):
 		SetTimer(10, Callback(_, 3))
 		sleep(1)
 		ASSERT_IS_EQUAL(len(_), 3)
+		class Callback(TimerCallback):
+			def __call__(self, timer):
+				raise TimeoutError()
+		with ASSERT_EXCEPT(TimeoutError) as ctx:
+			SetTimer(10, Callback())
+			sleep(1)
+		ASSERT_IS_EQUAL(isinstance(ctx.exception, TimeoutError), True)
 		return
 
 	@Order(1)
