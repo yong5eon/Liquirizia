@@ -21,7 +21,7 @@ class Callback(TimerCallback):
 		return
 
 
-class TestSystemUtilTimer(Case):
+class TestSystemUtilsTimer(Case):
 	@Order(0)
 	def testSetTimer(self):
 		_ = []
