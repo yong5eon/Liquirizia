@@ -29,11 +29,11 @@ class Timer(object):
 		return
 	def start(self):
 		if system().upper() == 'WINDOWS':
-			from asyncio import ensure_future, sleep
-			async def cb():
-				await sleep(self.ms / 1000)
+			from threading import Timer as ThreadTimer
+			def cb():
 				return self.cb(self)
-			self.timer = ensure_future(cb)
+			self.timer = ThreadTimer(self.ms, cb)
+			self.timer.start()
 		else:
 			from signal import signal, SIGALRM, setitimer, ITIMER_REAL
 			def cb(sig, frame):
@@ -59,7 +59,6 @@ def SetTimer(ms: int, cb: TimerCallback, start: bool = True):
 	return timer
 
 
-class TimeoutError(BaseException): pass
 class Timeout(object):
 	"""Timeout Decorator"""
 	def __init__(
@@ -74,7 +73,7 @@ class Timeout(object):
 		@wraps(fn)
 		def wrapper(*args, **kwargs):
 			def cb(timer: Timer):
-				raise TimeoutError
+				raise TimeoutError()
 			try:
 				SetTimer(self.timeout, cb)
 				return fn(*args, **kwargs)
