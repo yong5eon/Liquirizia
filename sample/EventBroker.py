@@ -13,7 +13,7 @@ from Liquirizia.EventBroker import (
 	Consumer as BaseConsumer,
 	EventHandler,
 )
-from Liquirizia.System.Util import SetTimer
+from Liquirizia.System.Utils import SetTimer
 
 from queue import SimpleQueue, Empty
 
@@ -154,7 +154,7 @@ if __name__ == '__main__':
 	c = con.consumer(SampleEventHandler())
 	c.subs('q3')
 
-	def stop():
+	def stop(timer):
 		c.stop()
 		return
 	

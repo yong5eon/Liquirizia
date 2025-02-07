@@ -5,15 +5,23 @@ from os import getpid
 from threading import get_ident
 from uuid import uuid4
 
-from .Timer import SetTimer, Timeout
+from .Timer import(
+	Timer,
+	TimerCallback,
+	SetTimer,
+	Timeout,
+)
 
 __all__ = (
 	'GetHostName',
 	'GetProcessId',
 	'GetThreadId',
 	'GenerateUUID',
+	# TIMER
+	'Timer',
+	'TimerCallback',
 	'SetTimer',
-	'Timeout'
+	'Timeout',
 )
 
 
