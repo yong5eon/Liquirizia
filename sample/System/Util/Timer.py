@@ -34,16 +34,6 @@ if __name__ == '__main__':
 	sleep(1)
 	t.stop()
 
-	class Callback(TimerCallback):
-		def __call__(self, timer):
-			raise TimeoutError()
-	print('except raise timeout exception')
-	try:
-		SetTimer(100, Callback())
-		sleep(1)
-	except TimeoutError:
-		print('timeout')
-
 	def timeout_with_raise_exception():
 		raise RuntimeError('timeout')
 	

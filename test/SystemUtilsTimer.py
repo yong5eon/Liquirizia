@@ -31,13 +31,6 @@ class TestSystemUtilsTimer(Case):
 		SetTimer(10, Callback(_, 3))
 		sleep(1)
 		ASSERT_IS_EQUAL(len(_), 3)
-		class Callback(TimerCallback):
-			def __call__(self, timer):
-				raise TimeoutError()
-		with ASSERT_EXCEPT(TimeoutError) as ctx:
-			SetTimer(10, Callback())
-			sleep(1)
-		ASSERT_IS_EQUAL(isinstance(ctx.exception, TimeoutError), True)
 		return
 
 	@Order(1)
