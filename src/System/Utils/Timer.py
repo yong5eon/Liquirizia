@@ -29,11 +29,24 @@ class Timer(object):
 		return
 	def start(self):
 		if system().upper() == 'WINDOWS':
-			from threading import Timer as ThreadTimer
-			def cb():
+			from ctypes import windll, WINFUNCTYPE
+			from ctypes.wintypes import UINT, DWORD, ULONG
+			timeSetEvent = windll.winmm.timeSetEvent
+			timeKillEvent = windll.winmm.timeKillEvent
+			TIME_PERIODIC = 1
+			TIME_CALLBACK_FUNCTION = 0x0000
+			TIME_PROC = WINFUNCTYPE(None, UINT, UINT, DWORD, DWORD, DWORD)
+			def cb(id, msg, user, dw1, dw2):
+				timeKillEvent(id)
 				return self.cb(self)
-			self.timer = ThreadTimer(self.ms, cb)
-			self.timer.start()
+			self.rcb = TIME_PROC(cb)
+			self.timer = timeSetEvent(
+				UINT(self.ms),
+				UINT(0),
+				self.rcb,
+				ULONG(0),
+				UINT(TIME_CALLBACK_FUNCTION),
+			)
 		else:
 			from signal import signal, SIGALRM, setitimer, ITIMER_REAL
 			def cb(sig, frame):
@@ -43,7 +56,9 @@ class Timer(object):
 		return
 	def stop(self):
 		if system().upper() == 'WINDOWS':
-			self.timer.cancel()
+			from ctypes import windll
+			timeKillEvent = windll.winmm.timeKillEvent
+			timeKillEvent(self.timer)
 		else:
 			from signal import signal, SIGALRM, SIG_DFL
 			signal(SIGALRM, SIG_DFL)
