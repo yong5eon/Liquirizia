@@ -1,8 +1,17 @@
 # -*- coding: utf-8 -*-
 
+from .DataClass import (
+	CreateDataClass,
+	ToDataClass,
+)
+
+from typing import Sequence
+
 __all__ = (
 	'DeepMerge',
 	'Replace',
+	'CreateDataClass',
+	'ToDataClass',
 )
 
 
@@ -41,7 +50,7 @@ def ListDeepMerge(tar, src):
 
 
 def Replace(dic: dict, fn: callable):
-	def ReplaceList(li: (list, tuple), fn):
+	def ReplaceList(li: Sequence, fn):
 		for i, l in enumerate(li):
 			if isinstance(l, (list, tuple)):
 				li[i] = ReplaceList(l, fn)
