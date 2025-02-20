@@ -1,10 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .Validator import Validator
-from .Patterns import (
-	IsDictionary,
-	IsMappingOf,
-)
+from .Patterns import IsDictionary
+from .Patterns.Dictionary import IsMappingOf
 
 from functools import wraps
 from inspect import getfullargspec
