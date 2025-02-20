@@ -28,7 +28,7 @@ __all__ = (
 	'IsSet',
 	'IsFixedSet',
 	'IsDictionary',
-	'IsMapping',
+	'IsFixedDictionary',
 	'IsByteArray',
 	'IsByteStream',
 	'IsDecimal',
@@ -143,7 +143,7 @@ class IsDictionary(IsTypeOf):
 		return
 
 
-class IsMapping(IsTypeOf):
+class IsFixedDictionary(IsTypeOf):
 	def __init__(self, *args, error: BaseException = None):
 		super().__init__(Mapping, patterns=args, error=error)
 		return
