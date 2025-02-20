@@ -9,10 +9,14 @@ from Liquirizia.Validator.Patterns import (
 	IsToNone,
 	IsNotToNone,
 	IsTypeOf,
+	Any as IsAny,
+)
+from Liquirizia.Validator.Patterns.Array import (
 	IsElementOf,
+)
+from Liquirizia.Validator.Patterns.Dictionary import (
 	IsKeyOf,
 	IsValueOf,
-	Any as IsAny,
 )
 
 from collections import OrderedDict
