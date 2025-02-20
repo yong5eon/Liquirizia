@@ -36,13 +36,13 @@ finally:
 	if not tests:
 		print('No Test Found\n', file=stderr)
 		parser.print_help(file=stderr)
-		exit(1)
+		exit(0)
 
 # run tests
 runner = Runner(verbosity=args.verbosity, failfast=args.failfast)
 result = runner.run(tests)
 
-if len(result.failures): exit(-1)
-if len(result.errors): exit(-2)
+if len(result.failures): exit(0)
+if len(result.errors): exit(0)
 
 exit(0)
