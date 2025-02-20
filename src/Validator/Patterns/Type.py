@@ -81,6 +81,11 @@ class IsTypeOf(Pattern):
 		return parameter
 
 	def __repr__(self):
+		if issubclass(self.__class__, IsTypeOf):	
+			return '{}({})'.format(
+				self.__class__.__name__,
+				', '.join([p.__repr__() for p in self.patterns]) if self.patterns and len(self.patterns) else ''
+			)
 		return '{}({}{})'.format(
 			self.__class__.__name__,
 			self.type.__name__,
@@ -182,7 +187,9 @@ class ToTypeOf(Pattern):
 			raise e
 
 	def __repr__(self):
-		return '{}()'.format(self.type.__name__)
+		if issubclass(self.__class__, ToTypeOf):	
+			return '{}()'.format(self.__class__.__name__)
+		return '{}({})'.format(self.__class__.__name__, self.type.__name__)
 	
 
 class ToBool(ToTypeOf):
