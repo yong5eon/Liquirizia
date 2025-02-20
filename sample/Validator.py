@@ -2,7 +2,17 @@
 
 from Liquirizia.Validator import Validate, Validator, Pattern
 from Liquirizia.Validator.Patterns import *
+from Liquirizia.Validator.Patterns.Array import *
+from Liquirizia.Validator.Patterns.Dictionary import (
+	IsRequiredIn as IsRequiredInDictionary,
+	IsMappingOf as IsMappingOfDictionary,
+)
+from Liquirizia.Validator.Patterns.DataObject import (
+	IsRequiredIn as IsRequiredInDataObject,
+	IsMappingOf as IsMappingOfDataObject,
+)
 
+from dataclasses import dataclass
 from sys import stderr
 
 if __name__ == '__main__':
@@ -143,11 +153,9 @@ if __name__ == '__main__':
 		},
 	}
 	validator = Validator(
-		IsNotToNone(),
 		IsDictionary(
-			IsNotEmpty(),
-			IsRequiredIn('a', 'b', 'c', 'd'),
-			IsMappingOf({
+			IsRequiredInDictionary('a', 'b', 'c', 'd'),
+			IsMappingOfDictionary({
 				'a': Validator(IsNotToNone()),
 				'b': Validator(IsNotToNone(), IsEqualTo(2)),
 				'c': Validator(IsNotToNone(), IsIn(3, 4, 5, 6, 7, 8)),
@@ -155,8 +163,8 @@ if __name__ == '__main__':
 				'e': Validator(IsNotToNone(IsArray(IsElementOf(IsOver(3))))),
 				'f': Validator(IsDictionary(
 					IsNotEmpty(),
-					IsRequiredIn('a', 'b'),
-					IsMappingOf({
+					IsRequiredInDictionary('a', 'b'),
+					IsMappingOfDictionary({
 						'a': (IsNotToNone()),
 						'b': (IsNotToNone(), IsOver(9)),
 					})
@@ -171,6 +179,45 @@ if __name__ == '__main__':
 	else:
 		print('{} is objectable, not empty and all validates of elements are ok'.format(parameter))
 
+	# validate DataObject
+	@dataclass
+	class DataObject:
+		a: bool
+		b: int
+		c: float
+		d: str
+		e: list
+		f: dict
+	_ = DataObject(
+		a=True,
+		b=1,
+		c=1.0,
+		d='1',
+		e=[1],
+		f={'a': 1, 'b': 1.0, 'c': 'str'},
+	)
+	va = Validator(
+		IsDataObject(
+			IsRequiredInDataObject('a', 'b', 'c', 'd', 'e', 'f'),
+			IsMappingOfDataObject({
+				'a': Validator(IsBool()),
+				'b': Validator(IsInteger(IsIn(1, 2, 3))),
+				'c': Validator(IsFloat(IsGreaterEqualTo(2))),
+				'd': Validator(IsString()),
+				'e': Validator(IsArray()),
+				'f': Validator(IsDictionary(
+					IsRequiredInDictionary('a', 'b'),
+					IsMappingOfDictionary({
+						'a': IsInteger(),
+						'b': IsFloat(),
+					})
+				)),
+			})
+		)
+	)
+	_ = va(_)
+	print(_)
+
 	# Test Decorator with Function
 	@Validate({
 		'a': IsNotToNone(),
@@ -178,11 +225,10 @@ if __name__ == '__main__':
 		'c': IsNotToNone(),
 		'd': (IsNotToNone(), IsLessEqualTo(10)),
 		'e': (IsArray(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
-		'f': 
-		IsDictionary(
+		'f': IsDictionary(
 			IsNotEmpty(),
-			IsRequiredIn('a', 'b'),
-			IsMappingOf({
+			IsRequiredInDictionary('a', 'b'),
+			IsMappingOfDictionary({
 				'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
 			})
 		),
@@ -206,14 +252,12 @@ if __name__ == '__main__':
 			'c': IsNotToNone(),
 			'd': (IsNotToNone(), IsLessEqualTo(10)),
 			'e': (IsArray(IsNotEmpty(), IsElementOf(IsLessThan(5)))),
-			'f': 
-			IsDictionary(
+			'f': IsDictionary(
 				IsNotEmpty(),
-				IsMappingOf({
+				IsMappingOfDictionary({
 					'a': (IsNotToNone(), IsGreaterThan(0), IsLessThan(5)),
 				})
-			)
-			,
+			),
 			'const': SetDefault(3),
 		})
 		def foo(self, a, b, c, d, e, f, const=None):
