@@ -33,6 +33,7 @@ from .Type import (
 	IsInteger,
 	IsFloat,
 	IsString,
+	IsArray,
 	IsList,
 	IsTuple,
 	IsSet,
@@ -42,6 +43,7 @@ from .Type import (
 	IsByteArray,
 	IsByteStream,
 	IsDecimal,
+	IsDataObject,
 	ToTypeOf,
 	ToBool,
 	ToInteger,
@@ -61,35 +63,6 @@ from .DateTime import (
 	IsTime,
 )
 
-# NUMERIC
-from .Numeric import (
-	IsRange,
-)
-
-# STRING
-from .String import (
-	IsNumeric,
-	IsAlphabet,
-	IsAlphaNumeric,
-	ToUpper,
-	ToLower,
-	IsSubString,
-)
-
-# ARRAY
-from .Array import (
-	IsArray,
-	IsElementOf,
-)
-
-# dictionary
-from .Dictionary import (
-	IsRequiredIn,
-	IsMappingOf,
-	IsKeyOf,
-	IsValueOf,
-)
-
 # CONDITION
 from .Condition import (
 	If,
@@ -103,24 +76,13 @@ __all__ = (
 	'IsToNone',
 	'IsNotToNone',
 	'IsNotEmpty',
-	# SIZE
-	'IsSizeOf',
-	'IsSizeIn',
-	'IsMinSizeOf',
-	'IsMaxSizeOf',
-	# COMPARE
-	'IsEqualTo',
-	'IsGreaterThan',
-	'IsGreaterEqualTo',
-	'IsLessEqualTo',
-	'IsLessThan',
-	'IsIn',
 	# TYPE
 	'IsTypeOf',
 	'IsBool',
 	'IsInteger',
 	'IsFloat',
 	'IsString',
+	'IsArray',
 	'IsList',
 	'IsTuple',
 	'IsSet',
@@ -133,6 +95,7 @@ __all__ = (
 	'IsDate',
 	'IsTime',
 	'IsDecimal',
+	'IsDataObject',
 	'ToTypeOf',
 	'ToBool',
 	'ToInteger',
@@ -145,23 +108,18 @@ __all__ = (
 	'ToByteArray',
 	'ToByteStream',
 	'ToDecimal',
-	# NUMERIC
-	'IsRange',
-	# STRING
-	'IsAlphaNumeric',
-	'IsNumeric',
-	'IsAlphabet',
-	'ToUpper',
-	'ToLower',
-	'IsSubString',
-	# ARRAY
-	'IsArray',
-	'IsElementOf',
-	# DICTIONARY
-	'IsRequiredIn',
-	'IsMappingOf',
-	'IsKeyOf',
-	'IsValueOf',
+	# SIZE
+	'IsSizeOf',
+	'IsSizeIn',
+	'IsMinSizeOf',
+	'IsMaxSizeOf',
+	# COMPARE
+	'IsEqualTo',
+	'IsGreaterThan',
+	'IsGreaterEqualTo',
+	'IsLessEqualTo',
+	'IsLessThan',
+	'IsIn',
 	# CONDITION
 	'If',
 	'And',

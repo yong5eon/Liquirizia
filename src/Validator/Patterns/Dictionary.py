@@ -5,6 +5,8 @@ from ..Validator import Validator
 
 from collections.abc import Mapping
 
+from typing import Dict, Union, Sequence
+
 __all__ = (
 	'IsRequiredIn',
 	'IsMappingOf',
@@ -19,7 +21,7 @@ class IsRequiredIn(Pattern):
 		self.error = error
 		return
 
-	def __call__(self, parameter):
+	def __call__(self, parameter: Dict) -> Dict:
 		if not isinstance(parameter, Mapping):
 			if self.error:
 				raise self.error
@@ -44,14 +46,14 @@ class IsRequiredIn(Pattern):
 class IsMappingOf(Pattern):
 	def __init__(
 		self, 
-		mappings : dict = {}, 
-		error		   = None
+		mappings: Dict[str, Union[Validator, Pattern, Sequence[Pattern]]] = {}, 
+		error: BaseException = None
 	):
 		self.mappings = self.__mapper__(mappings)
 		self.error = error
 		return
 
-	def __call__(self, parameter):
+	def __call__(self, parameter: Dict) -> Dict:
 		if not isinstance(parameter, Mapping):
 			if self.error:
 				raise self.error
@@ -61,14 +63,11 @@ class IsMappingOf(Pattern):
 				parameter[key] = validator(parameter[key] if key in parameter.keys() else None)
 		return parameter
 
-	def __mapper__(self, mappings: dict):
+	def __mapper__(self, mappings: Dict[str, Validator]) -> Dict[str, Validator]:
 		if not isinstance(mappings, dict):
 			raise TypeError('{} must be dict'.format(mappings))
 		for key, value in mappings.items():
-			if isinstance(value, (dict,)):
-				mappings[key] = Validator(**value)
-				continue
-			if isinstance(value, (list, tuple)):
+			if isinstance(value, Sequence):
 				mappings[key] = Validator(*value)
 				continue
 			if isinstance(value, Pattern):
@@ -80,7 +79,7 @@ class IsMappingOf(Pattern):
 			raise ValueError('Invalid mapping table, {} must be dictionary or listable of Patterns, or callable based Pattern'.format(value))
 		return mappings
 
-	def __repr__(self):
+	def __repr__(self) -> str:
 		return '{}({})'.format(
 			self.__class__.__name__,
 			', '.join(
@@ -95,7 +94,7 @@ class IsKeyOf(Pattern):
 		self.error = error
 		return
 
-	def __call__(self, parameter):
+	def __call__(self, parameter: Dict) -> Dict:
 		if not isinstance(parameter, Mapping):
 			if self.error:
 				raise self.error
@@ -111,7 +110,7 @@ class IsKeyOf(Pattern):
 				raise self.error
 			raise e
 
-	def __repr__(self):
+	def __repr__(self) -> str:
 		return '{}({})'.format(
 			self.__class__.__name__,
 			', '.join(
@@ -126,7 +125,7 @@ class IsValueOf(Pattern):
 		self.error = error
 		return
 
-	def __call__(self, parameter):
+	def __call__(self, parameter: Dict) -> Dict:
 		if not isinstance(parameter, Mapping):
 			if self.error:
 				raise self.error
@@ -142,7 +141,7 @@ class IsValueOf(Pattern):
 				raise self.error
 			raise e
 
-	def __repr__(self):
+	def __repr__(self) -> str:
 		return '{}({})'.format(
 			self.__class__.__name__,
 			', '.join(
