@@ -57,11 +57,7 @@ class IsMappingOf(Pattern):
 			raise TypeError('{} must be dataclass'.format(parameter))
 		if self.mappings:
 			for key, validator in self.mappings.items():
-				if not hasattr(parameter, key):
-					if self.error:
-						raise self.error
-					raise ValueError('{} is required in {}'.format(key, parameter))
-				setattr(parameter, key, validator(getattr(parameter, key)))
+				setattr(parameter, key, validator(getattr(parameter, key) if hasattr(parameter, key) else None))
 		return parameter
 
 	def __mapper__(self, mappings: Dict[str, Validator]) -> Dict[str, Validator]:
