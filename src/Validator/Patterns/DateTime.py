@@ -8,6 +8,9 @@ __all__ = (
 	'IsDateTime',
 	'IsDate',
 	'IsTime',
+	'ToDateTime',
+	'ToDate',
+	'ToTime',
 )
 
 
@@ -57,3 +60,52 @@ class IsTime(Pattern):
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
+
+
+class ToDateTime(Pattern):
+	def __init__(self, isoformat=True, error=None):
+		self.isoformat = isoformat
+		self.error = error
+		return
+	def __call__(self, parameter):
+		try:
+			if self.isoformat:
+				return datetime.fromisoformat(parameter)
+			return datetime.strptime(parameter, '%Y-%m-%d %H:%M:%S')
+		except:
+			if self.error:
+				raise self.error
+			raise RuntimeError('{} is not datetime'.format(parameter))
+
+
+class ToDate(Pattern):
+	def __init__(self, isoformat=True, error=None):
+		self.isoformat = isoformat
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		try:
+			if self.isoformat:
+				return date.fromisoformat(parameter)
+			return datetime.strptime(parameter, '%Y-%m-%d').date()
+		except:
+			if self.error:
+				raise self.error
+			raise RuntimeError('{} is not date'.format(parameter))
+
+
+class ToTime(Pattern):
+	def __init__(self, isoformat=True, error=None):
+		self.isoformat = isoformat
+		self.error = error
+		return
+	def __call__(self, parameter):
+		try:
+			if self.isoformat:
+				return time.fromisoformat(parameter)
+			return datetime.strptime(parameter, '%H:%M:%S').time()
+		except:
+			if self.error:
+				raise self.error
+			raise RuntimeError('{} is not time'.format(parameter))
