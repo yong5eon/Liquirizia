@@ -61,6 +61,9 @@ from .DateTime import (
 	IsDateTime,
 	IsDate,
 	IsTime,
+	ToDateTime,
+	ToDate,
+	ToTime,
 )
 
 # CONDITION
@@ -108,6 +111,9 @@ __all__ = (
 	'ToByteArray',
 	'ToByteStream',
 	'ToDecimal',
+	'ToDateTime',
+	'ToDate',
+	'ToTime',
 	# SIZE
 	'IsSizeOf',
 	'IsSizeIn',
