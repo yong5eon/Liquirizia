@@ -80,5 +80,6 @@ src/DataAccessObject/Implements/RedisCluster
 src/DataAccessObject/Implements/AWS
 src/EventBroker/Implements/RabbitMQ
 src/EventBroker/Implements/Redis
+src/EventWorker
 src/WSGI
 src/WSGI.Workers
