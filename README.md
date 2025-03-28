@@ -17,7 +17,7 @@
 - 크로스 플랫폼 지원
   - 온프레미스(On-Premise) 구축 환경 지원
   - FaaS(Function as a Service) 구축 환경 지원
-  
+
 ## 구성
 
 - [OOP(Object Oriented Programming) 지원](docs/OOP.md)
@@ -28,7 +28,6 @@
 - [데이터 검증기](docs/Validation.md)
 - 데이터 직렬화, 비직렬화 도구
 - [병렬 처리기](docs/Parallelizer.md)
-- [이벤트 브로커](docs/EventBroker.md)
 - [로거](docs/Logger.md)
 - 테스트
 - 시스템
@@ -47,6 +46,8 @@
 ## 확장 컴포넌트
 
 - [WSGI(WebServer Gateway Interface)](https://github.com/yong5eon/Liquirizia.WSGI)
+- [이벤트 브로커](https://github.com/yong5eon/Liquirizia.EventBroker)
+- [이벤트 워커](https://github.com/yong5eon/Liquirizia.EventWorker)
 
 ## 구현체
 
