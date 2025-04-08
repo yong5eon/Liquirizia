@@ -277,7 +277,7 @@ class ToFixedSet(ToTypeOf):
 
 class ToDictionary(ToTypeOf):
 	def __init__(self, *args, error: BaseException = None):
-		super().__init__(dict, patterns=args, error=args)
+		super().__init__(dict, patterns=args, error=error)
 		return
 
 
