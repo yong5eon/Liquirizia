@@ -85,7 +85,7 @@ class Value(Descriptor):
 		if max: self['maximum'] = max
 		if default: self['default'] = default
 		if enum: self['enum'] = enum
-		if required: self['required'] = required
+		self.required = required
 		return
 
 

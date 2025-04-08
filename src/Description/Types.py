@@ -190,7 +190,11 @@ class Object(Descriptor):
 			properties=properties,
 		)
 		if description: self['description'] = description
-		if required: self['required'] = required
+		self['required'] = []
+		for k, v in properties.items():
+			if v.required:
+				self['required'].append(k)
+		self.required = required
 		return
 
 
@@ -206,5 +210,5 @@ class Array(Descriptor):
 		)
 		if description: self['description'] = description
 		if format: self['items'] = format.format if isinstance(format, Schema) else format
-		if required: self['required'] = required
+		self.required = required
 		return
