@@ -6,12 +6,16 @@ from enum import  Enum
 
 from typing import Any, Iterator, KeysView, ItemsView, ValuesView
 from typing import Optional, Sequence, Dict, Union
+from abc import ABC
+
 
 __all__ = (
 	'Model',
 	'Type',
 	'Value',
 	'Schema',
+	'OneOf',
+	'AllOf',
 )
 
 
@@ -100,7 +104,10 @@ class Schema(object):
 		return
 
 
-class OneOf(Descriptor):
+class Condition(ABC):
 	def __init__(self, *args):
-		super().__init__(oneOf=args)
+		self.args = args
 		return
+
+class OneOf(Condition): pass
+class AnyOf(Condition): pass

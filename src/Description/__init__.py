@@ -3,6 +3,8 @@
 from .Value import (
 	Value,
 	Schema,
+	OneOf,
+	AllOf,
 )
 
 from .Types import (
@@ -23,6 +25,8 @@ from .Types import (
 __all__ = (
 	'Value',
 	'Schema',
+	'OneOf',
+	'AllOf',
 	'Boolean',
 	'IntegerFormat',
 	'Integer',
