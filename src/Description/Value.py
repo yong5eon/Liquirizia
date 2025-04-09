@@ -110,4 +110,4 @@ class Condition(ABC):
 		return
 
 class OneOf(Condition): pass
-class AnyOf(Condition): pass
+class AllOf(Condition): pass
