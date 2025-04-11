@@ -5,9 +5,8 @@ from collections.abc import Mapping
 from enum import  Enum
 
 from typing import Any, Iterator, KeysView, ItemsView, ValuesView
-from typing import Optional, Sequence, Dict, Union
-from abc import ABC
-
+from typing import Optional, Sequence, Dict, Union, Iterable, Tuple
+from abc import ABCMeta, ABC
 
 __all__ = (
 	'Model',
@@ -16,6 +15,8 @@ __all__ = (
 	'Schema',
 	'OneOf',
 	'AllOf',
+	'TypeMapper',
+	'TypeEncoder',
 )
 
 
@@ -79,7 +80,7 @@ class Value(Descriptor):
 		min: Any = None,
 		max: Any = None,
 		default: Any = None,
-		enum: Optional[Sequence[str]] = None,
+		enum: Optional[Iterable[Any]] = None,
 		required: bool = True,
 	):
 		super().__init__(type=type)
@@ -87,20 +88,9 @@ class Value(Descriptor):
 		if format: self['format'] = format
 		if min: self['minimum'] = min
 		if max: self['maximum'] = max
-		if default: self['default'] = default
+		if not required: self['default'] = default
 		if enum: self['enum'] = enum
 		self.required = required
-		return
-
-
-class Schema(object):
-	def __init__(
-		self,
-		name: str,
-		format: Value,
-	):
-		self.name = name
-		self.format = format
 		return
 
 
@@ -109,5 +99,34 @@ class Condition(ABC):
 		self.args = args
 		return
 
-class OneOf(Condition): pass
+
+class Schema(object):
+	def __init__(
+		self,
+		name: str,
+		format: Union[Value, Condition] = None,
+	):
+		self.name = name
+		self.format = format
+		return
+
+
+class OneOf(Condition):
+	def __init__(self, *args: Iterable[Union[Value, Schema]], discriminator: str = None, required: bool = True):
+		self.args = args
+		self.discriminator = discriminator
+		self.required = required
+		return
+
+
 class AllOf(Condition): pass
+
+
+class TypeMapper(metaclass=ABCMeta):
+	def __call__(self, o: type) -> Tuple[Value, Dict[str, Any]]:
+		raise NotImplementedError('{} must be implemented __call__'.format(self.__class__.__name__))
+
+
+class TypeEncoder(metaclass=ABCMeta):
+	def __call__(self, o: Any) -> Any:
+		raise NotImplementedError('{} must be implemented __call__'.format(self.__class__.__name__))
