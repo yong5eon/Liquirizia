@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from .Value import Descriptor, Type, Value, Schema
+from .Value import Descriptor, Type, Value, Condition, Schema
 from typing import Optional, Union, Sequence, Any, Dict
 from enum import Enum
 
@@ -148,11 +148,13 @@ class BinaryBase64Encoded(String):
 	def __init__(
 		self, 
 		description: str = None,
+		default: str = None,
 		required: bool = True,
 	):
 		super().__init__(
 			description=description,
 			format=StringFormat.byte,
+			default=default,
 			required=required,
 		)
 		return
@@ -162,18 +164,20 @@ class Binary(String):
 	def __init__(
 		self, 
 		description: str = None,
+		default: bytes = None,
 		required: bool = True,
 	):
 		super().__init__(
 			description=description,
 			format=StringFormat.binary,
+			default=default,
 			required=required,
 		)
 		return
 
 
 class Properties(Descriptor):
-	def __init__(self, **kwargs: Dict[str, Union[Value, Schema]]):
+	def __init__(self, **kwargs: Dict[str, Union[Value, Condition, Schema]]):
 		for k, v in kwargs.items():
 			kwargs[k] = v.format if isinstance(v, Schema) else v
 		super().__init__(**kwargs)
@@ -192,7 +196,7 @@ class Object(Descriptor):
 		if description: self['description'] = description
 		self['required'] = []
 		for k, v in properties.items():
-			if v.required:
+			if hasattr(v, 'required') and getattr(v, 'required'):
 				self['required'].append(k)
 		self.required = required
 		return
@@ -202,7 +206,7 @@ class Array(Descriptor):
 	def __init__(
 		self,
 		description: str = None,
-		format: Optional[Union[Value, Schema]] = None,
+		format: Optional[Union[Value, Condition, Schema]] = None,
 		required: bool = True,
 	):
 		super().__init__(
