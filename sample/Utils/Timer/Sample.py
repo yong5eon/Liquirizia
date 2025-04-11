@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.Util.Timer import Duration, DurationTimer, Timer
+from Liquirizia.Utils.Timer import Duration, DurationTimer, Timer
 
 from time import sleep
 from random import randrange
