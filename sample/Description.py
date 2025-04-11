@@ -5,12 +5,7 @@ from Liquirizia.Utils import PrettyPrint
 
 from dataclasses import dataclass, field
 
-from typing import Optional, List, Dict
-
-__all__ = (
-	'FORMAT_ARGS',
-	'FORMAT_DATA',
-)
+from typing import Optional, List, Dict, Union, Annotated
 
 
 @dataclass
@@ -38,13 +33,14 @@ class Arguments:
 	qs: Query
 	content: Content = None
 
+from datetime import datetime
 
 @dataclass
 class Data:
 	message: str
 	args: Arguments
 	ret: float
-
+	timestamp: datetime
 
 @dataclass
 class Sample:
@@ -85,7 +81,41 @@ class Sample:
 	oValAnnotatedDefault: Dict[str, int] = field(default_factory=dict)
 
 
+@dataclass
+class TestUnion:
+	a: Annotated[Optional[int], '가', {'format': 'int64', 'min': 1000, 'max': 10000}]
+	b: Annotated[Union[int, float], '나']
+	c: Annotated[Union[int, float, bool], '다']
+	d: Annotated[List[Union[int, float]], '라']
+	e: Annotated[Dict[str, Union[int, float]], '마']
+	f: Annotated[Optional[int], {'format': 'int32', 'min': 1000, 'max': 10000}, '아']
+	g: Annotated[str, '바', {'enum': ('Y', 'N')}] = None
+	h: Annotated[str, {'enum': ('Y', 'N')}, '??', '???'] = None 
+
 if __name__ == '__main__':
 
-	_ = ToSchema(Data)
-	PrettyPrint(DumpSchema(_))
+	def typemapper(o):
+		if o is datetime:
+			return String, {'format': 'date-time'}
+		return
+	
+	def typeencoder(o):
+		if isinstance(o, datetime):
+			return o.isoformat()
+		raise TypeError('{} is not a supported type'.format(o.__class__.__name__))
+
+	print('Schema')
+	print('-' * 80)
+	PrettyPrint(DumpSchema(ToSchema(Data, typedef=typemapper)))
+	print('Object')
+	print('-' * 80)
+	PrettyPrint(ToObject(Data(
+		message='Hello World',
+		args=Arguments(
+			parameters=Parameters(1, 2),
+			qs=Query(1, 2.0),
+			content=Content(1, 2.0)
+		),
+		ret=3.0,
+		timestamp=datetime.now()
+	), typeenc=typeencoder))
