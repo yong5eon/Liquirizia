@@ -21,7 +21,17 @@ from .Types import (
 
 from dataclasses import is_dataclass, MISSING, asdict
 from json import dumps, loads
-from typing import Type, Any, Union, Sequence, Iterable, Annotated, get_origin, get_args
+from typing import (
+	Type,
+	Any,
+	Union,
+	Sequence,
+	Iterable,
+	Annotated,
+	get_origin,
+	get_args,
+	ForwardRef,
+)
 
 __all__ = (
 	'SchemaToDataObject',
@@ -240,8 +250,6 @@ class DataObjectToSchema(object):
 				'description': description,
 				'required': required,
 			}
-			if default is not MISSING:
-				kwargs['default'] = default
 			if metadata and isinstance(metadata, dict):
 				if 'description' in metadata.keys(): kwargs['description'] = metadata['description']
 				if 'required' in metadata.keys(): kwargs['required'] = metadata['required']
@@ -306,6 +314,13 @@ class DataObjectToSchema(object):
 			return OneOf(*[self.__value__(f) for f in format], **kwargs)
 		if is_dataclass(o):
 			return self.__call__(o, required=required)
+		if isinstance(o, ForwardRef):
+			if o.__forward_arg__ in globals():
+				return self.__value__(globals()[o.__forward_arg__], description=description, required=required, default=default, metadata=metadata)
+			if o.__forward_arg__ in locals():
+				return self.__value__(locals()[o.__forward_arg__], description=description, required=required, default=default, metadata=metadata)
+			# TODO : ForwardRef 일때 실제의 타입을 찾는 방법을 구현해야함
+			return Object()
 		if self.mapper:
 			V, kws = self.mapper(o)
 			if V:
