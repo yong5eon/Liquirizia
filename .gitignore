@@ -79,3 +79,4 @@ src/DataAccessObject/Implements/Redis
 src/EventBroker
 src/EventWorker
 src/WSGI
+src/Mailer
