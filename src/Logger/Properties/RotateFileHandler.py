@@ -6,7 +6,7 @@ from ..Formatter import Formatter
 from ..Formatters import CommonFormatter
 
 __all__ = (
-	'RotateFileHandledr',
+	'RotateFileHandler',
 	'LOG_FILE_CREATE',
 	'LOG_FILE_APPEND',
 )
