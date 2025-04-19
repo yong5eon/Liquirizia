@@ -3,7 +3,7 @@
 from ..Formatter import Formatter as BaseFormatter
 
 from logging import (
-	Formatter as PyLogFormatter,
+	Formatter as PyFormatter,
 	LogRecord,
 	DEBUG,
 	INFO,
@@ -13,7 +13,7 @@ from logging import (
 )
 
 __all__ = (
-	'Formatter',
+	'CommonFormatter',
 	'ColoredFormatter'
 )
 
@@ -29,24 +29,25 @@ WHITE   = '\033[97m'
 RESET   = '\033[0m'
 
 
-class Formatter(BaseFormatter):
+class CommonFormatter(BaseFormatter):
 	def __init__(self, format: str = None):
-		self.formatter = PyLogFormatter(fmt=format)
+		self.formatter = PyFormatter(fmt=format)
 		return
 	def __call__(self, record: LogRecord):
 		try:
 			return self.formatter.format(record)
-		except:
-			return PyLogFormatter().format(record)
+		except Exception as e:
+			print(e)
+			return PyFormatter().format(record)
 
 
 class ColoredFormatter(BaseFormatter):
 	def __init__(self, format: str = None):
-		self.formatter = PyLogFormatter(fmt=format)
+		self.formatter = PyFormatter(fmt=format)
 		return
 	def __call__(self, record: LogRecord):
 		try:
-			formatter = PyLogFormatter({
+			formatter = PyFormatter({
 				DEBUG: BLACK  + self.formatter._fmt + RESET,
 				INFO : WHITE  + self.formatter._fmt + RESET,
 				WARN : YELLOW   + self.formatter._fmt + RESET,
@@ -54,5 +55,6 @@ class ColoredFormatter(BaseFormatter):
 				CRITICAL: RED	+ self.formatter._fmt + RESET,
 			}.get(record.levelno, self.formatter._fmt))
 			return formatter.format(record)
-		except:
-			return PyLogFormatter().format(record)
+		except Exception as e:
+			print(e)
+			return PyFormatter().format(record)

@@ -1,11 +1,11 @@
 from Liquirizia.Logger import (
 	Logger,
+	Token,
+	LOG_FORMAT,
 	LOG_LEVEL_DEBUG,
 	LOG_LEVEL_INFO,
 	LOG_LEVEL_ERROR,
 	LOG_FILE_CREATE,
-	LOG_FORMAT,
-	LOG_FORMAT_WITH_NAME,
 	LOG_INIT,
 	LOG_ADD,
 	LOG_SET_FILE,
@@ -18,8 +18,17 @@ from Liquirizia.Logger.Properties import *
 from Liquirizia.Logger.Formatters import *
 
 if __name__ == '__main__':
-	
-	_ = Logger(name='Sample Logger')
+
+	CUSTOM_LOG_FORMAT = '{} - {} - {} - {}'.format(
+		Token.FormatStr(Token.Time),
+		Token.FormatStr(Token.Level, 8, align='-'),
+		Token.FormatStr(Token.Name, 20, align='-'),
+		Token.FormatStr(Token.Message),
+	)
+
+	print(CUSTOM_LOG_FORMAT)	
+
+	_ = Logger('Sample Logger')
 	
 	_.debug('DEBUG')
 	_.info('INFO')
@@ -28,10 +37,10 @@ if __name__ == '__main__':
 
 	_.setLevel(LOG_LEVEL_DEBUG)
 
-	_.addHandler(StreamHandler(formatter=Formatter(LOG_FORMAT_WITH_NAME)))
-	_.addHandler(StreamHandler(formatter=ColoredFormatter(LOG_FORMAT_WITH_NAME)))
-	_.addHandler(FileHandler('.log', formatter=Formatter(LOG_FORMAT_WITH_NAME)))
-	_.addHandler(RotateFileHandler('.r.log', formatter=Formatter(LOG_FORMAT_WITH_NAME)))
+	_.addHandler(StreamHandler(formatter=CommonFormatter(CUSTOM_LOG_FORMAT)))
+	_.addHandler(StreamHandler(formatter=ColoredFormatter(CUSTOM_LOG_FORMAT)))
+	_.addHandler(FileHandler('.log', formatter=CommonFormatter(CUSTOM_LOG_FORMAT)))
+	_.addHandler(RotateFileHandler('.r.log', formatter=CommonFormatter(CUSTOM_LOG_FORMAT)))
 
 	_.debug('DEBUG')
 	_.info('INFO')
@@ -46,23 +55,17 @@ if __name__ == '__main__':
 		_.warn('WARNING', e=e)
 		_.error('ERROR', e=e)
 
-	_ = Logger('Addtional Logger')
+	LOG_INIT(LOG_LEVEL_DEBUG, handler=StreamHandler(formatter=ColoredFormatter(LOG_FORMAT)))
 
-	LOG_INIT(LOG_LEVEL_DEBUG)
-
-	LOG_ADD('Additional Logger')
+	LOG_ADD('Sample Logger')
 
 	LOG_SET_FILE('.app.log') # set log file
 	LOG_SET_FILE('.app.r.log', max = 1048576) # set rotate log file
 
 	LOG_DEBUG('DEBUG')
-	_.debug('ADDITIONAL LOGGER DEBUG')
 	LOG_INFO('INFO')
-	_.info('ADDITIONAL LOGGER INFO')
 	LOG_WARN('WARNING')
-	_.warn('ADDITIONAL LOGGER WARN')
 	LOG_ERROR('ERROR')
-	_.warn('ADDITIONAL LOGGER ERROR')
 
 	try:
 		raise ValueError('APPLICATION LOGGER')
@@ -72,10 +75,8 @@ if __name__ == '__main__':
 		LOG_WARN(str(e), e=e)
 		LOG_ERROR(str(e), e=e)
 
-	try:
-		raise NotImplementedError('ADDITIONAL LOGGER')
-	except BaseException as e:
-		_.debug(str(e), e=e)
-		_.info(str(e), e=e)
-		_.warn(str(e), e=e)
-		_.error(str(e), e=e)
+	_.debug('DEBUG')
+	_.info('INFO')
+	_.warn('WARNING')
+	_.error('ERROR')
+

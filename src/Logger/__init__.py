@@ -4,8 +4,8 @@ from .Logger import Logger
 from .ApplicationLogger import ApplicationLogger
 
 from .Properties import StreamHandler
-from .Formatter import Formatter
-from .Formatters import Formatter as CommonFormatter, ColoredFormatter
+from .Formatter import Formatter, Token
+from .Formatters import CommonFormatter, ColoredFormatter
 
 from logging import (
 	disable, 
@@ -19,14 +19,13 @@ from typing import Dict, Any
 __all__ = (
 	'Logger',
 	'Formatter',
+	'Token',
 	'LOG_LEVEL_DEBUG',
 	'LOG_LEVEL_INFO',
 	'LOG_LEVEL_WARN',
 	'LOG_LEVEL_ERROR',
 	'LOG_FILE_CREATE',
 	'LOG_FILE_APPEND',
-	'LOG_FORMAT',
-	'LOG_FORMAT_WITH_NAME',
 	'LOG_INIT',
 	'LOG_SET_FILE',
 	'LOG_ADD',
@@ -34,6 +33,7 @@ __all__ = (
 	'LOG_INFO',
 	'LOG_WARN',
 	'LOG_ERROR',
+	'LOG_FORMAT',
 )
 
 LOG_LEVEL_DEBUG = 'DEBUG'
@@ -44,14 +44,14 @@ LOG_LEVEL_ERROR = 'ERROR'
 LOG_FILE_CREATE = 'w'
 LOG_FILE_APPEND  = 'a'
 
-LOG_FORMAT = '%(asctime)s - %(levelname)-8s - %(process)6d - %(thread)12d - %(fileinfo)-s - %(message)-s'
-LOG_FORMAT_WITH_NAME = '%(asctime)s - %(levelname)-8s - %(process)6d - %(thread)12d - %(name)-s - %(fileinfo)-s - %(message)-s'
+LOG_FORMAT = '%(asctime)s - %(levelname)-8s - %(message)-s'
 
 def LOG_INIT(
 	level: str,
-	handler: Handler = StreamHandler(formatter=ColoredFormatter(LOG_FORMAT_WITH_NAME)),
+	name: str = None,
+	handler: Handler = StreamHandler(formatter=ColoredFormatter(LOG_FORMAT)),
 ):
-	_ = ApplicationLogger(level, handler=handler)
+	_ = ApplicationLogger(level, handler=handler, name=name)
 	return
 
 def LOG_SET_FILE(
@@ -59,7 +59,7 @@ def LOG_SET_FILE(
 	mode: str = LOG_FILE_CREATE,
 	max: int = None,
 	count: int = 5,
-	formatter: Formatter = CommonFormatter(LOG_FORMAT_WITH_NAME)
+	formatter: Formatter = CommonFormatter(LOG_FORMAT)
 ):
 	_ = ApplicationLogger()
 	return _.setFile(path, mode, max, count, formatter=formatter)
