@@ -2,8 +2,8 @@
 
 from logging import FileHandler as BaseFileHandler
 
-from ..Formatter import Formatter as BaseFormatter
-from ..Formatters import Formatter
+from ..Formatter import Formatter
+from ..Formatters import CommonFormatter
 
 __all__ = (
     'FileHandledr',
@@ -16,7 +16,7 @@ LOG_FILE_APPEND = 'a'
 
 
 class FileHandler(BaseFileHandler):
-    def __init__(self, filename, mode = LOG_FILE_CREATE, formatter: BaseFormatter = Formatter()):
+    def __init__(self, filename, mode = LOG_FILE_CREATE, formatter: Formatter = CommonFormatter()):
         super().__init__(filename, mode)
         self.formatter = formatter
         return

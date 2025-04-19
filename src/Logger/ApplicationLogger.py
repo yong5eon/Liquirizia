@@ -7,14 +7,14 @@ from .Properties import (
 	RotateFileHandler,
 )
 from .Formatters import (
-	Formatter,
+	CommonFormatter,
 	ColoredFormatter,
 )
 
 from logging import Handler
+from uuid import uuid4
 from inspect import currentframe
 from abc import ABCMeta
-
 from typing import Dict, Any
 
 __all__ = (
@@ -37,9 +37,9 @@ class ApplicationLoggerCreator(ABCMeta):
 		
 
 class ApplicationLogger(metaclass=ApplicationLoggerCreator):
-	def __init__(self, level: str, handler: Handler = StreamHandler(formatter=ColoredFormatter())):
+	def __init__(self, level: str, handler: Handler = StreamHandler(formatter=ColoredFormatter()), name: str = None):
 		self.level = level
-		self.logger = Logger()
+		self.logger = Logger(name if name else uuid4().hex)
 		self.logger.setLevel(level=level)
 		self.logger.addHandler(handler)
 		self.loggers = []
@@ -61,7 +61,7 @@ class ApplicationLogger(metaclass=ApplicationLoggerCreator):
 		self.handlers.append(handler)
 		return
 	
-	def setFile(self, path, mode = LOG_FILE_CREATE, max: int = None, count = 5, formatter=Formatter()):
+	def setFile(self, path, mode = LOG_FILE_CREATE, max: int = None, count = 5, formatter=CommonFormatter()):
 		h = None
 		if max and count:
 			h = RotateFileHandler(path, mode, max, count, formatter=formatter)
