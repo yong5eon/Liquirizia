@@ -37,7 +37,6 @@ class CommonFormatter(BaseFormatter):
 		try:
 			return self.formatter.format(record)
 		except Exception as e:
-			print(e)
 			return PyFormatter().format(record)
 
 
@@ -56,5 +55,4 @@ class ColoredFormatter(BaseFormatter):
 			}.get(record.levelno, self.formatter._fmt))
 			return formatter.format(record)
 		except Exception as e:
-			print(e)
 			return PyFormatter().format(record)
