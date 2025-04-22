@@ -16,12 +16,14 @@ class Formatter(metaclass=ABCMeta):
 		raise NotImplemented('{} must be implemented __call__'.format(self.__class__.__name__))
 
 
-class Token(str, Enum):
+class Format(str, Enum):
 	Time = 'asctime'
 	Level = 'levelname'
 	Name = 'name'
-	File = 'filename'
-	Line = 'lineno'
+	File = 'file'
+	FileName = 'filename'
+	Line = 'line'
+	LineNo = 'lineno'
 	FileInfo = 'fileinfo'
 	Function = 'funcName'
 	Module = 'module'
@@ -31,11 +33,9 @@ class Token(str, Enum):
 	ThreadName = 'threadName'
 	Message = 'message'
 	def __str__(self): return self.value
-
-	@classmethod
-	def FormatStr(cls, token: Union[str, 'Token'], size: int = None, align: str = None) -> str:
+	def formatstr(self, size: int = None, align: str = None) -> str:
 		"""Format string for log record"""
 		if size and size > 0:
-			return '%({}){}{}s'.format(str(token), align if align else '', size)
+			return '%({}){}{}s'.format(str(self.value), align if align else '', size)
 		else:
-			return '%({})s'.format(str(token))
+			return '%({})s'.format(str(self.value))
