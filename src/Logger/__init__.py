@@ -1,10 +1,9 @@
 # -*- coding: utf-8 -*-
 
 from .Logger import Logger
-from .ApplicationLogger import ApplicationLogger
 
-from .Properties import StreamHandler
-from .Formatter import Formatter, Token
+from .Properties import StreamHandler, FileHandler, RotateFileHandler
+from .Formatter import Formatter, Format
 from .Formatters import CommonFormatter, ColoredFormatter
 
 from logging import (
@@ -19,7 +18,7 @@ from typing import Dict, Any
 __all__ = (
 	'Logger',
 	'Formatter',
-	'Token',
+	'Format',
 	'LOG_LEVEL_DEBUG',
 	'LOG_LEVEL_INFO',
 	'LOG_LEVEL_WARN',
@@ -51,7 +50,8 @@ def LOG_INIT(
 	name: str = None,
 	handler: Handler = StreamHandler(formatter=ColoredFormatter(LOG_FORMAT)),
 ):
-	_ = ApplicationLogger(level, handler=handler, name=name)
+	_ = Logger(level, name=name)
+	_.add(handler)
 	return
 
 def LOG_SET_FILE(
@@ -61,27 +61,38 @@ def LOG_SET_FILE(
 	count: int = 5,
 	formatter: Formatter = CommonFormatter(LOG_FORMAT)
 ):
-	_ = ApplicationLogger()
-	return _.setFile(path, mode, max, count, formatter=formatter)
+	_ = Logger()
+	h = None
+	if max and count:
+		h = RotateFileHandler(path, mode, max, count, formatter=formatter)
+	else:
+		h = FileHandler(path, mode, formatter=formatter)
+	if not h:
+		return
+	return _.add(h)	
 
-def LOG_ADD(name: str):
-	_ = ApplicationLogger()
-	return _.addLogger(name=name)
+def LOG_SET_HANDLER(handler: Handler):
+	_ = Logger()
+	return _.add(handler)
+
+def LOG_GET(name: str):
+	_ = Logger()
+	return _.get(name=name)
 
 def LOG_DEBUG(msg: str, e: BaseException = None, extra: Dict[str, Any] = None):
-	_ = ApplicationLogger()
+	_ = Logger()
 	return _.debug(msg, e, frame=currentframe().f_back, extra=extra)
 
 def LOG_INFO(msg: str, e: BaseException = None, extra: Dict[str, Any] = None):
-	_ = ApplicationLogger()
+	_ = Logger()
 	return _.info(msg, e, frame=currentframe().f_back, extra=extra)
 
 def LOG_WARN(msg: str, e: BaseException = None, extra: Dict[str, Any] = None):
-	_ = ApplicationLogger()
+	_ = Logger()
 	return _.warn(msg, e, frame=currentframe().f_back, extra=extra)
 
 def LOG_ERROR(msg: str, e: BaseException = None, extra: Dict[str, Any] = None):
-	_ = ApplicationLogger()
+	_ = Logger()
 	return _.error(msg, e, frame=currentframe().f_back, extra=extra)
 
 disable(NOTSET)
