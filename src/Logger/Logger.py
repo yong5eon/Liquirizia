@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 
+from Liquirizia.Template import Singleton
+
 from logging import (
 	Logger as PyLogger, 
 	getLogger,
@@ -8,33 +10,48 @@ from logging import (
 from traceback import format_tb
 from inspect import currentframe, getframeinfo
 from os.path import basename
-
+from abc import ABCMeta, abstractmethod
 from typing import Dict, Any
+from uuid import uuid4
 
 __all__ = (
 	'Logger',
 )
 
-class Logger(object):
+
+class Logger(Singleton):
 	def __init__(
 		self,
+		level: str,
 		name: str = None,
 	):
+		self.name = name
 		self.logger: PyLogger = getLogger(name)
 		for h in self.logger.handlers:
 			self.logger.removeHandler(h)
-		return
-	
-	def setLevel(self, level: str):
 		self.logger.setLevel(level)
+		self.loggers = []
+		self.handlers = []
 		return
 	
-	def addHandler(self, h: Handler):
+	def get(self, name: str):
+		logger: PyLogger = getLogger(name)
+		for h in logger.handlers:
+			logger.removeHandler(h)
+		logger.setLevel(self.logger.level)
+		if self.name:
+			for h in self.handlers:
+				logger.addHandler(h)
+		self.loggers.append(logger)
+		return self
+
+	def add(self, h: Handler):
 		self.logger.addHandler(h)
-		return
-	
-	def traceback(self, e: BaseException):
-		return ''.join(format_tb(e.__traceback__)).strip().replace(' ' * 4, ' ' * 2)
+		if self.name:
+			for logger in self.loggers:
+				logger.addHandler(h)
+		self.handlers.append(h)
+		return self
 	
 	def debug(
 		self,
@@ -48,11 +65,11 @@ class Logger(object):
 		_ = {
 			'file': basename(info.filename),
 			'line': info.lineno,
-			'fileinfo': '{}:{}'.format(basename(info.filename), info.lineno),
 		}
 		_.update(extra if extra else {})
 		return self.logger.debug(
-			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''), 
+			msg,
+			exc_info=e,
 			extra=_,
 		)
 
@@ -68,11 +85,11 @@ class Logger(object):
 		_ = {
 			'file': basename(info.filename),
 			'line': info.lineno,
-			'fileinfo': '{}:{}'.format(basename(info.filename), info.lineno),
 		}
 		_.update(extra if extra else {})
 		return self.logger.info(
-			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''), 
+			msg,
+			exc_info=e,
 			extra=_,
 		)
 
@@ -88,11 +105,11 @@ class Logger(object):
 		_ = {
 			'file': basename(info.filename),
 			'line': info.lineno,
-			'fileinfo': '{}:{}'.format(basename(info.filename), info.lineno),
 		}
 		_.update(extra if extra else {})
 		return self.logger.warning(
-			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''),
+			msg,
+			exc_info=e,
 			extra=_,
 		)
 
@@ -108,10 +125,10 @@ class Logger(object):
 		_ = {
 			'file': basename(info.filename),
 			'line': info.lineno,
-			'fileinfo': '{}:{}'.format(basename(info.filename), info.lineno),
 		}
 		_.update(extra if extra else {})
 		return self.logger.error(
-			'{}{}'.format(msg, '\n{}'.format(self.traceback(e)) if e else ''),
+			msg,	
+			exc_info=e,
 			extra=_,
 		)
