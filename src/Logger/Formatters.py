@@ -38,6 +38,8 @@ class CommonFormatter(Formatter):
 				record.filename = record.file
 			if hasattr(record, 'line'):
 				record.lineno = record.line
+			if record.exc_info:
+				record.exc_text = self.formatter.formatException(record.exc_info)
 			return self.formatter.format(record)
 		except Exception as e:
 			return PyFormatter().format(record)
@@ -45,7 +47,7 @@ class CommonFormatter(Formatter):
 
 class ColoredFormatter(Formatter):
 	def __init__(self, format: str = None):
-		self.formatter = PyFormatter(fmt=format)
+		self.format = format
 		return
 	def __call__(self, record: LogRecord):
 		try:
@@ -54,13 +56,13 @@ class ColoredFormatter(Formatter):
 			if hasattr(record, 'line'):
 				record.lineno = record.line
 			formatter = PyFormatter({
-				DEBUG: BLACK  + self.formatter._fmt + RESET,
-				INFO : WHITE  + self.formatter._fmt + RESET,
-				WARN : YELLOW + self.formatter._fmt + RESET,
-				ERROR: RED	+ self.formatter._fmt + RESET,
-			}.get(record.levelno, self.formatter._fmt))
+				DEBUG: BLACK  + self.format + RESET,
+				INFO : WHITE  + self.format + RESET,
+				WARN : YELLOW + self.format + RESET,
+				ERROR: RED	+ self.format + RESET,
+			}.get(record.levelno, self.format))
 			if record.exc_info:
-				record.exc_text = self.formatter.formatException(record.exc_info)
+				record.exc_text = formatter.formatException(record.exc_info)
 			if record.exc_text:
 				record.exc_text = {
 					DEBUG: BLACK  + record.exc_text + RESET,
