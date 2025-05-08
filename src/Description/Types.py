@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .Value import Descriptor, Type, Value, Condition, Schema
-from typing import Optional, Union, Sequence, Any, Dict
+from typing import Optional, Union, Sequence, Any, Dict, Iterable 
 from enum import Enum
 
 __all__ = (
@@ -187,6 +187,7 @@ class Object(Descriptor):
 		self,
 		description: Optional[str] = None,
 		properties: Properties = Properties(),
+		default: Dict = None,
 		required: bool = True,
 	):
 		super().__init__(
@@ -198,6 +199,7 @@ class Object(Descriptor):
 		for k, v in properties.items():
 			if hasattr(v, 'required') and getattr(v, 'required'):
 				self['required'].append(k)
+		if default: self['default'] = default
 		self.required = required
 		return
 
@@ -207,6 +209,7 @@ class Array(Descriptor):
 		self,
 		description: str = None,
 		format: Optional[Union[Value, Condition, Schema]] = None,
+		default: Iterable = None,
 		required: bool = True,
 	):
 		super().__init__(
@@ -214,5 +217,6 @@ class Array(Descriptor):
 		)
 		if description: self['description'] = description
 		if format: self['items'] = format.format if isinstance(format, Schema) else format
+		if default: self['default'] = default
 		self.required = required
 		return
