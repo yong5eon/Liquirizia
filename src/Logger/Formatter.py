@@ -6,7 +6,7 @@ from typing import Union
 
 __all__ = (
 	'Formatter'
-	'Token',
+	'Format',
 )
 
 class Formatter(metaclass=ABCMeta):
