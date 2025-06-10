@@ -344,12 +344,13 @@ class DataObjectToSchema(object):
 				return V(**kwargs)
 		raise TypeError('{} is not a supported type'.format(o))
 
-	def __call__(self, o: Type[object], name: str = None, required: bool = True) -> Schema:
+	def __call__(self, o: Type[object], description: str = None, required: bool = True) -> Schema:
 		if not is_dataclass(o):
 			raise TypeError(f"'{o.__name__}' is not a DataObject(dataclass).")
 		return Schema(
-			name=name or o.__name__,
+			name=description or o.__name__,
 			format=Object(
+				description=description or o.__name__,
 				properties=Properties(
 					**{
 						f.name: self.__value__(

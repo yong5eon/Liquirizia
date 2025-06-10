@@ -97,15 +97,15 @@ def DumpSchema(o: Schema):
 	return loads(encode(o))
 
 
-def SchemaToDataObject(o: Schema, name: str = None) -> object:
+def SchemaToDataObject(o: Schema, description: str = None) -> object:
 	# TODO : make dataclass according to schema dynamically
 	raise NotImplementedError('SchemaToDataObject is not implemented yet')
 
 
-def ToSchema(o: Type[object], name: str = None, typedef: TypeMapper = None) -> Schema:
+def ToSchema(o: Type[object], description: str = None, typedef: TypeMapper = None) -> Schema:
 	dataObjectToSchema = DataObjectToSchema(mapper=typedef)
 	if is_dataclass(o):
-		return dataObjectToSchema(o, name)
+		return dataObjectToSchema(o, description)
 	raise ValueError('{} cannot be converted to Schema'.format(o.__name__))
 
 
