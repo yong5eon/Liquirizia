@@ -37,6 +37,7 @@ if __name__ == '__main__':
 
 	LOG_SET_FILE('Sample.log') # set log file
 	LOG_SET_FILE('Sample.r.log', max = 1048576) # set rotate log file
+
 	LOG_SET_HANDLER(SampleHandler()) # set custom handler
 
 	LOG_DEBUG('DEBUG')
