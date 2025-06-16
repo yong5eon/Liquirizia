@@ -1,9 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from ...Connection import Connection as IConnection
-
-from .File import File
+from Liquirizia.FileSystemObject import (
+	Connection as BaseConnection,
+)
 from .Configuration import Configuration
+from .File import File
 
 from os import stat
 from os.path import isfile
@@ -19,7 +20,7 @@ __all__ = (
 )
 
 
-class Connection(IConnection):
+class Connection(BaseConnection):
 	"""File Object Class for Common File System"""
 
 	def __init__(self, conf: Configuration):

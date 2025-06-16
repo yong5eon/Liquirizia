@@ -1,18 +1,20 @@
 # -*- coding: utf-8 -*-
 
-from ...File import File as IFile
-from ...Errors import *
+from Liquirizia.FileSystemObject import (
+	File as BaseFile,
+	Connection,
+)
 
 __all__ = (
 	'File'
 )
 
 
-class File(IFile):
+class File(BaseFile):
 	"""File Object Class for Common File System"""
 
-	def __init__(self, fso):
-		self.fso = fso
+	def __init__(self, fso: Connection):
+		self.fso: Connection = fso
 		self.fo = None
 		return
 
@@ -28,18 +30,11 @@ class File(IFile):
 		return
 
 	def open(self, path, mode='r', encoding=None):
-		if len(path) == 0:
-			raise InvalidParametersError('path is not exits')
 		if path[0] == '/':
 			path = path[1:]
 		path = self.fso.conf.base + '/' + path
-		try:
-			self.fo = open(path, mode, encoding=encoding)
-		except FileNotFoundError as e:
-			raise NotFoundError('File or Directory is not exist : {}'.format(path), error=e)
-		except Exception as e:
-			raise e
-		return
+		self.fo = open(path, mode, encoding=encoding)
+		return self
 
 	def read(self, size=None):
 		return self.fo.read(size if size else -1)

@@ -13,7 +13,7 @@ if __name__ == '__main__':
         Configuration('.')
     )
 
-    fo = Helper.Get('Sample')
+    fo: Connection = Helper.Get('Sample')
 
     PATTERN = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz'
 

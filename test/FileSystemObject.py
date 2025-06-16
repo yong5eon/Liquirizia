@@ -13,9 +13,6 @@ from Liquirizia.FileSystemObject.Implements.FileSystem import (
 	Connection as FileSystemConnection,
 )
 
-from Liquirizia.FileSystemObject.Errors import *
-from Liquirizia.FileSystemObject.Errors import FileNotFoundError as FileNotExistError
-
 from os import stat
 from os.path import isfile
 
@@ -110,17 +107,10 @@ class SampleFileObject(File):
 		return
 
 	def open(self, path, mode='r', encoding=None):
-		if len(path) == 0:
-			raise InvalidParametersError('path is not exits')
 		if path[0] == '/':
 			path = path[1:]
 		path = self.fso.conf.base + '/' + path
-		try:
-			self.fo = open(path, mode, encoding=encoding)
-		except FileNotFoundError as e:
-			raise FileNotExistError('File or Directory is not exist : {}'.format(path), error=e)
-		except Exception as e:
-			raise e
+		self.fo = open(path, mode, encoding=encoding)
 		return
 
 	def read(self, size=None):
@@ -176,7 +166,7 @@ class TestFileSystemObject(Case):
 			{'v': str(sample(PATTERN, 16))},
 	)
 	def testFileSystem(self, v):
-		fo = Helper.Get('FileSystem')
+		fo: Connection = Helper.Get('FileSystem')
 		with fo.open('Sample.txt', 'w') as f:
 			f.write(v)
 			f.close()
