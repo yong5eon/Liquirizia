@@ -3,36 +3,12 @@
 from ..Pattern import Pattern
 
 __all__ = (
-	'If',
-	'And',
+	'All',
 	'Any',
 )
 
 
-class If(Pattern):
-	def __init__(self, *args, error=None) -> None:
-		self.patterns = args
-		self.error = error
-		return
-	
-	def __call__(self, parameter):
-		try:
-			for pattern in self.patterns:
-				parameter = pattern(parameter)
-			return parameter
-		except Exception:
-			return parameter
-		
-	def __repr__(self):
-		return '{}({})'.format(
-			self.__class__.__name__,
-			', '.join(
-				[p.__repr__() for p in self.patterns]
-			)
-		)
-
-
-class And(Pattern):
+class All(Pattern):
 	def __init__(self, *args, error=None) -> None:
 		self.patterns = args
 		self.error = error

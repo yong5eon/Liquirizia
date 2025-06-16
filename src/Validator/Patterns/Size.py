@@ -5,7 +5,7 @@ from ..Pattern import Pattern
 from operator import ne, le, ge, gt, lt
 
 __all__ = (
-	'IsSizeOf'
+	'IsSizeOf',
 	'IsSizeIn',
 	'IsMaxSizeOf',
 	'IsMinSizeOf',

@@ -14,7 +14,7 @@ from Liquirizia.Validator.Patterns import (
 from Liquirizia.Validator.Patterns.Array import (
 	IsElementOf,
 )
-from Liquirizia.Validator.Patterns.Dictionary import (
+from Liquirizia.Validator.Patterns.Object import (
 	IsKeyOf,
 	IsValueOf,
 )

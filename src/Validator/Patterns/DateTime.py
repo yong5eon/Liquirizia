@@ -24,7 +24,7 @@ class IsDateTime(Pattern):
 		if parameter is not None and not isinstance(parameter, datetime):
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} must be datetime'.format(parameter))
+			raise ValueError('{} must be datetime'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
@@ -40,7 +40,7 @@ class IsDate(Pattern):
 		if parameter is not None and not isinstance(parameter, date):
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} must be date'.format(parameter))
+			raise ValueError('{} must be date'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
@@ -56,7 +56,7 @@ class IsTime(Pattern):
 		if parameter is not None and not isinstance(parameter, time):
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} must be time'.format(parameter))
+			raise ValueError('{} must be time'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
@@ -75,7 +75,7 @@ class ToDateTime(Pattern):
 		except:
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} is not datetime'.format(parameter))
+			raise ValueError('{} is not datetime'.format(parameter))
 
 
 class ToDate(Pattern):
@@ -92,7 +92,7 @@ class ToDate(Pattern):
 		except:
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} is not date'.format(parameter))
+			raise ValueError('{} is not date'.format(parameter))
 
 
 class ToTime(Pattern):
@@ -108,4 +108,4 @@ class ToTime(Pattern):
 		except:
 			if self.error:
 				raise self.error
-			raise RuntimeError('{} is not time'.format(parameter))
+			raise ValueError('{} is not time'.format(parameter))

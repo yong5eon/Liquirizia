@@ -70,16 +70,16 @@ class ToLower(Pattern):
 
 
 class IsSubString(Pattern):
-	def __init__(self, match: str, end: int, start: int = 0, error=None):
+	def __init__(self, match: str, end: int = None, start: int = 0, error=None):
 		self.error = error
 		self.match = match
 		self.start = start
-		self.end = end
+		self.end = end if end else len(match)
 		return
 	
 	def __call__(self, parameter):
 		if not eq(parameter[self.start:self.end], self.match):
 			if self.error:
 				raise self.error
-			raise ValueError('{} is not equal to {}'.format(parameter[self.start:self.end], self.match))
+			raise ValueError('{} is not substring to {}'.format(parameter[self.start:self.end], self.match))
 		return parameter

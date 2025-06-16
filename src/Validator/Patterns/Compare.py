@@ -2,11 +2,13 @@
 
 from ..Pattern import Pattern
 
-from operator import eq, gt, ge, lt, le
+from operator import eq, ne, gt, ge, lt, le
 
 __all__ = (
 	'IsIn',
+	'IsNotIn',
 	'IsEqualTo',
+	'IsNotEqualTo',
 	'IsGreaterThan',
 	'IsGreaterEqualTo',
 	'IsLessThan',
@@ -34,7 +36,28 @@ class IsIn(Pattern):
 				[repr(c) for c in self.compares]
 			)
 		)
-	
+
+
+class IsNotIn(Pattern):
+	def __init__(self, *args, error=None):
+		self.compares = args
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		if parameter in self.compares:
+			if self.error:
+				raise self.error
+			raise ValueError('{} must be not in {}'.format(parameter, self.compares))
+		return parameter
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			', '.join(
+				[repr(c) for c in self.compares]
+			)
+		)
 
 
 class IsEqualTo(Pattern):
@@ -45,6 +68,26 @@ class IsEqualTo(Pattern):
 
 	def __call__(self, parameter):
 		if not eq(parameter, self.equal):
+			if self.error:
+				raise self.error
+			raise ValueError('{} must equal to {}'.format(parameter, self.equal))
+		return parameter
+
+	def __repr__(self):
+		return '{}({})'.format(
+			self.__class__.__name__,
+			self.equal
+		)
+
+
+class IsNotEqualTo(Pattern):
+	def __init__(self, equal, error=None):
+		self.equal = equal
+		self.error = error
+		return
+
+	def __call__(self, parameter):
+		if not ne(parameter, self.equal):
 			if self.error:
 				raise self.error
 			raise ValueError('{} must equal to {}'.format(parameter, self.equal))
