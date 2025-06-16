@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.Configuration import (
-	Configuration,
+from Liquirizia.Settings import (
+	Settings as BaseSettings,
 	Handler,
 	Value
 )
@@ -11,11 +11,11 @@ from Liquirizia.Validator.Patterns import *
 from typing import List
 
 class SettingHandler(Handler):
-	def __call__(self, conf: Configuration):
+	def __call__(self, conf: 'Settings'):
 		print(conf)
 		return
 
-class Settings(Configuration, onLoad=SettingHandler(), onLoaded=SettingHandler()):
+class Settings(BaseSettings, onLoad=SettingHandler(), onLoaded=SettingHandler()):
 	# MODE
 	MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 	# SETTINGS

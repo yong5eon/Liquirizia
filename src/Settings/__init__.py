@@ -1,10 +1,10 @@
 # -*- coding: utf-8 -*-
 
-from .Configuration import Configuration, Handler
+from .Settings import Settings, Handler
 from .Value import Value
 
 __all__ = (
-	'Configuration',
+	'Settings',
 	'Handler',
 	'Value',
 )
