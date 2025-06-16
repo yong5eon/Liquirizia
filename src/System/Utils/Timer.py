@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from platform import system
+from threading import Timer as ThreadTimer
 from functools import wraps
 from abc import ABCMeta, abstractmethod
 from typing import Callable
@@ -28,25 +28,13 @@ class Timer(object):
 		self.timer = None
 		return
 	def start(self):
-		if system().upper() == 'WINDOWS':
-			from threading import Timer as ThreadTimer
-			def cb():
-				return self.cb(self)
-			self.timer = ThreadTimer(self.ms / 1000, cb)
-			self.timer.start()
-		else:
-			from signal import signal, SIGALRM, setitimer, ITIMER_REAL
-			def cb(sig, frame):
-				return self.cb(self)
-			self.timer = signal(SIGALRM, cb)
-			setitimer(ITIMER_REAL, self.ms / 1000, 0.0)	
+		def cb():
+			return self.cb(self)
+		self.timer = ThreadTimer(self.ms / 1000, cb)
+		self.timer.start()
 		return
 	def stop(self):
-		if system().upper() == 'WINDOWS':
-			self.timer.cancel()
-		else:
-			from signal import signal, SIGALRM, SIG_DFL
-			signal(SIGALRM, SIG_DFL)
+		self.timer.cancel()
 		self.timer = None
 		return
 	
