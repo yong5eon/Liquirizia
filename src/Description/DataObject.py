@@ -346,7 +346,7 @@ class DataObjectToSchema(object):
 
 	def __call__(self, o: Type[object], description: str = None, required: bool = True) -> Schema:
 		if not is_dataclass(o):
-			raise TypeError(f"'{o.__name__}' is not a DataObject(dataclass).")
+			raise TypeError('{} is not a DataObject(dataclass).'.format(o.__name__))
 		return Schema(
 			name=description or o.__name__,
 			format=Object(

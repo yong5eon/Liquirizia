@@ -93,7 +93,7 @@ def DumpSchema(o: Schema):
 			ensure_ascii=False,
 		)
 	if not isinstance(o, Schema):
-		raise TypeError('{} is not a Schema'.format(o.__name__))
+		raise TypeError('{} is not a Schema'.format(o.__class__.__name__))
 	return loads(encode(o))
 
 
