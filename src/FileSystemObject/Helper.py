@@ -1,11 +1,10 @@
 # -*- coding: utf-8 -*-
 
+from Liquirizia.DataAccessObject.Properties.Database import Run
 from ..Template import Singleton
 
 from .Connection import Connection
 from .Configuration import Configuration
-
-from .Errors import *
 
 from typing import Type
 
@@ -34,8 +33,8 @@ class Helper(Singleton):
         return helper.set(key, o, conf)
 
     def set(self, key, o: Type[Connection], conf: Configuration):
-        if not isinstance(o, type):
-            raise InvalidParametersError('o is not Connection')
+        if not issubclass(o, Connection):
+            raise RuntimeError('o is not subclass of Connection')
         self.objects[key] = (o, conf)
         return
 

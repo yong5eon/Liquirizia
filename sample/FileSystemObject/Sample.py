@@ -6,7 +6,6 @@ from Liquirizia.FileSystemObject import (
     Connection,
     File,
 )
-from Liquirizia.FileSystemObject.Errors import *
 
 from os import stat
 from os.path import isfile, split
@@ -97,8 +96,6 @@ class SampleFileObject(File):
         return
 
     def open(self, path, mode='r', encoding=None):
-        if len(path) == 0:
-            raise InvalidParametersError('path is not exits')
         if path[0] == '/':
             path = path[1:]
         path = self.fso.conf.base + '/' + path
