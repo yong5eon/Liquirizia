@@ -15,7 +15,7 @@ from typing import Type, ItemsView, KeysView, ValuesView, get_origin, get_args, 
 
 
 __all__ = (
-	'Configuration',
+	'Settings',
 	'Handler',
 )
 
@@ -101,7 +101,7 @@ class Handler(metaclass=ABCMeta):
 	def __call__(self, conf: Configuration): pass
 
 		
-class Configuration(Mapping, metaclass=Creator):
+class Settings(Mapping, metaclass=Creator):
 	"""Abstract Configuration Class"""
 
 	def __init__(self):

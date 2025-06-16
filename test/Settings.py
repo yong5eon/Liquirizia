@@ -2,7 +2,7 @@
 
 from Liquirizia.Test import *
 
-from Liquirizia.Configuration import Configuration, Value, Handler
+from Liquirizia.Settings import Settings as BaseSettings, Value, Handler
 
 from Liquirizia.Validator import Validator
 from Liquirizia.Validator.Patterns import IsString
@@ -10,11 +10,10 @@ from Liquirizia.Validator.Patterns import IsString
 from typing import List
 import os
 
-class TestSampleConfiguration(Case):
-
+class TestSettings(Case):
 	@Order(0)
 	def testDefaultValues(self):
-		class Settings(Configuration):
+		class Settings(BaseSettings):
 			MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 			LOG_LEVEL: str = 'DEBUG'
 			LOG_NAME: str = 'WORKER'
@@ -29,7 +28,7 @@ class TestSampleConfiguration(Case):
 
 	@Order(1)
 	def testModifyValues(self):
-		class Settings(Configuration):
+		class Settings(BaseSettings):
 			MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 			LOG_LEVEL: str = 'DEBUG'
 			LOG_NAME: str = 'WORKER'
@@ -42,7 +41,7 @@ class TestSampleConfiguration(Case):
 
 	@Order(2)
 	def testMultipleInstances(self):
-		class Settings(Configuration):
+		class Settings(BaseSettings):
 			MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 			LOG_LEVEL: str = 'DEBUG'
 			LOG_NAME: str = 'WORKER'
@@ -66,7 +65,7 @@ class TestSampleConfiguration(Case):
 		os.environ['LOG_NAME'] = 'TEST_WORKER'
 		os.environ['TIMEZONE'] = 'UTC'
 
-		class Settings(Configuration):
+		class Settings(BaseSettings):
 			MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 			LOG_LEVEL: str = 'DEBUG'
 			LOG_NAME: str = 'WORKER'
@@ -88,16 +87,16 @@ class TestSampleConfiguration(Case):
 	@Order(4)
 	def testHandlers(self):
 		class PreLoadHandler(Handler):
-			def __call__(self, conf: Configuration):
+			def __call__(self, conf: 'Settings'):
 				conf.LOG_NAME = 'PRELOAD'
 				return
 	
 		class PostLoadHandler(Handler):
-			def __call__(self, conf: Configuration):
+			def __call__(self, conf: 'Settings'):
 				conf.LOG_NAME = 'POSTLOAD'
 				return
 
-		class Settings(Configuration, onLoad=PreLoadHandler(), onLoaded=PostLoadHandler()):
+		class Settings(BaseSettings, onLoad=PreLoadHandler(), onLoaded=PostLoadHandler()):
 			MODE: str = Value('MODE', default='DEBUG', va=Validator(IsString()))
 			LOG_LEVEL: str = 'DEBUG'
 			LOG_NAME: str = 'WORKER'
