@@ -74,7 +74,7 @@ class IsSubString(Pattern):
 		self.error = error
 		self.match = match
 		self.start = start
-		self.end = end if end else len(match)
+		self.end = end if end is not None else len(match)
 		return
 	
 	def __call__(self, parameter):
