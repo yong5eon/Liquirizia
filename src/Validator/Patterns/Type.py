@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from numpy.lib._arraysetops_impl import isin
 from ..Pattern import Pattern
 from decimal import Decimal
 from dataclasses import is_dataclass, make_dataclass
