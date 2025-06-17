@@ -90,7 +90,7 @@ class IsNotEqualTo(Pattern):
 		if not ne(parameter, self.equal):
 			if self.error:
 				raise self.error
-			raise ValueError('{} must equal to {}'.format(parameter, self.equal))
+			raise ValueError('{} must not equal to {}'.format(parameter, self.equal))
 		return parameter
 
 	def __repr__(self):
