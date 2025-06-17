@@ -135,10 +135,10 @@ class IsArray(Pattern):
 		return
 
 	def __call__(self, parameter: Iterable) -> Iterable:
-		if not isinstance(parameter, Iterable):
+		if not isinstance(parameter, Iterable) or isinstance(parameter, (str, bytes)):
 			if self.error:
 				raise self.error
-			raise TypeError('{} must be iterable'.format(parameter))
+			raise TypeError('{} must be a non-string, non-bytes iterable'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
