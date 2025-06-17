@@ -20,17 +20,15 @@ from Liquirizia.Validator.Patterns.Object import (
 )
 
 from collections import OrderedDict
-
+from types import UnionType
 from typing import (
 	get_origin,
 	get_args,
 	Any,
 	Type,
 	Union,
+	Annotated,
 )
-
-# TODO : support UnionType in 3.8
-# from types import UnionType
 
 __all__ = (
 	'Model'
@@ -101,11 +99,25 @@ class Model(object, metaclass=ModelCreator):
 	@classmethod
 	def __value__(cls, k: str, t: Type, v: Any):
 		hv = k in cls.__dict__.keys()
-		vaps = cls.__vaps__(t, v, hv)
-		v = Value(
-			va=Validator(vaps) if vaps else Validator(),
-			default=v,
-		)
+		if get_origin(t) == Annotated:
+			targs = get_args(t)
+			if isinstance(targs[1], Value):
+				v = targs[1]
+			elif isinstance(targs[1], str):
+				vaps = cls.__vaps__(targs[0], v, hv)
+				v = Value(
+					va=Validator(vaps) if vaps else Validator(),
+					description=targs[1],
+					default=v,
+				)
+			else:
+				raise TypeError('{} must be Value or string'.format(targs[1]))
+		else:
+			vaps = cls.__vaps__(t, v, hv)
+			v = Value(
+				va=Validator(vaps) if vaps else Validator(),
+				default=v,
+			)
 		return v
 
 	@classmethod
@@ -133,9 +145,8 @@ class Model(object, metaclass=ModelCreator):
 			return IsToNone(IsTypeOf(t, vaps)) if hv and v is None else IsNotToNone(IsTypeOf(t, vaps))
 		# TODO : if want to do special for Model
 
-		# TODO : support UnionType in 3.8
-		# if t in (Union, UnionType):
-		if t in (Union,):
+		# TODO : check support UnionType in 3.8
+		if t in (Union, UnionType):
 			return cls.__vaps_union__(targs, v, hv)
 		# raise TypeError('{} is not support type in Model'.format(t))
 		return IsToNone(IsTypeOf(t)) if hv and v is None else IsNotToNone(IsTypeOf(t))
