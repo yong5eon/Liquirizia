@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 
 from .Validator import Validator
-from .Patterns import IsDictionary
-from .Patterns.Dictionary import IsMappingOf
+from .Patterns import IsObject
+from .Patterns.Object import IsMappingOf
 
 from functools import wraps
 from inspect import getfullargspec
@@ -21,7 +21,7 @@ class Validate(object):
 	def __call__(self, fn: callable):
 		@wraps(fn)
 		def wrapper(*args, **kwargs):
-			validator = Validator(IsDictionary(IsMappingOf(self.mappings)))
+			validator = Validator(IsObject(IsMappingOf(self.mappings)))
 			kwargs = validator(self.__parameters__(fn, args, kwargs))
 			return fn(**kwargs)
 		return wrapper

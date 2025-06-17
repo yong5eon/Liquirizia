@@ -27,7 +27,6 @@ __all__ = (
 	'LOG_FILE_APPEND',
 	'LOG_INIT',
 	'LOG_SET_FILE',
-	'LOG_ADD',
 	'LOG_DEBUG',
 	'LOG_INFO',
 	'LOG_WARN',

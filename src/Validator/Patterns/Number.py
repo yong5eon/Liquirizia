@@ -3,7 +3,7 @@
 from ..Pattern import Pattern
 
 __all__ = (
-	'IsRange'
+	'IsRange',
 )
 
 
