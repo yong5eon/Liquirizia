@@ -10,8 +10,6 @@ from Liquirizia.Validator.Patterns import (
 	IsToNone,
 	IsNotToNone,
 	IsDateTime,
-	If,
-	IsString,
 	IsInteger,
 )
 
@@ -37,12 +35,14 @@ class DateTime(Type, typestr='DATETIME'):
 		):
 		class StrToDateTime(Pattern):
 			def __call__(self, parameter):
-				return datetime.fromisoformat(parameter)
+				if isinstance(parameter, str):
+					return datetime.fromisoformat(parameter)
+				return parameter
 		if not va:
 			if null:
-				va = Validator(IsToNone(If(IsString(StrToDateTime())), IsDateTime()))
+				va = Validator(IsToNone(StrToDateTime(), IsDateTime()))
 			else:
-				va = Validator(IsNotToNone(If(IsString(StrToDateTime())), IsDateTime()))
+				va = Validator(IsNotToNone(StrToDateTime(), IsDateTime()))
 		super().__init__(
 			key=name, 
 			type=self.typestr,
