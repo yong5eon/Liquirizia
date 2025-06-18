@@ -11,13 +11,12 @@ __all__ = (
 
 class Handler(metaclass=ABCMeta):
 	"""Handler Interface for Data Model"""
-
 	@abstractmethod
 	def __call__(
 		self,
 		m, # model
 		o, # value descriptor
 		v: Any, # changed value
-		pv: Any,  # previous value
+		p: Any,  # previous value
 	):
 		pass

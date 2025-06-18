@@ -86,8 +86,8 @@ class Value(Descriptor):
 		super().__init__(type=type)
 		if description: self['description'] = description
 		if format: self['format'] = format
-		if min: self['minimum'] = min
-		if max: self['maximum'] = max
+		if min is not None: self['minimum'] = min
+		if max is not None: self['maximum'] = max
 		if not required: self['default'] = default
 		if enum: self['enum'] = enum
 		self.required = required

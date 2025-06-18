@@ -24,7 +24,7 @@ class Type(ABC):
 		return
 	
 	def __repr__(self):
-		return self.__value__.__repr__()
+		return repr(self.__value__)
 
 	@classmethod
 	def Create(cls, v: Any, obj, descriptor):
@@ -37,10 +37,12 @@ class Type(ABC):
 		if isinstance(v, list):
 			from .Types import List
 			return List(v, obj, descriptor)
-		# TODO : support bytearray
 		if isinstance(v, dict):
-			from .Types import Dictionary
-			return Dictionary(v, obj, descriptor)
+			from .Types import Object
+			return Object(v, obj, descriptor)
+		if isinstance(v, bytearray):
+			from .Types import ByteArray
+			return ByteArray(v, obj, descriptor)
 		from decimal import Decimal
 		from datetime import datetime, date, time
 		PATTERNS = [
@@ -50,7 +52,6 @@ class Type(ABC):
 			float,
 			str,
 			bytes,
-			frozenset,
 			Decimal,
 			datetime,
 			date,
@@ -58,6 +59,9 @@ class Type(ABC):
 		]
 		if type(v) in PATTERNS:
 			return v
-		# TODO : support Model
-		from .Types import Object
-		return Object(v, obj, descriptor)
+		raise TypeError(
+			'Not supported type {} for value {}'.format(
+				type(v),
+				v
+			)
+		)
