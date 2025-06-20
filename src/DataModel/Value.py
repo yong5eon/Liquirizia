@@ -6,6 +6,8 @@ from numpy.ma.extras import isin
 from .Handler import Handler
 from .Type import Type
 
+from decimal import Decimal
+from datetime import datetime, date, time
 from typing import Sequence, Type as T, Any, Union
 
 __all__ = (
@@ -54,12 +56,30 @@ class Value(object):
 	):
 		self.model = None
 		self.name = None 
+		PATTERNS = [
+			bool,
+			int,
+			float,
+			str,
+			list,
+			tuple,
+			set,
+			dict,
+			bytes,
+			bytearray,
+			Decimal,
+			datetime,
+			date,
+			time,
+		]
+		if type not in PATTERNS:
+			raise TypeError('Not supported type {}'.format(type))
 		self.type = type
 		self.validator = va
 		# TODO: if validator is None, use generic validator according to type
 		self.callback = fn
 		self.default = default
-		self.required = False if default is None or default is not MISSING else True
+		self.required = False if default is None else True
 		self.min = min
 		self.max = max
 		self.enum = enum
