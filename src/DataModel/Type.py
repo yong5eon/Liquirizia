@@ -24,7 +24,7 @@ class Type(ABC):
 		return
 	
 	def __repr__(self):
-		return repr(self.__value__)
+		return self.__value__.__repr__()
 
 	@classmethod
 	def Create(cls, v: Any, obj, descriptor):
