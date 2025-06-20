@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.Test import *
-
-
 from Liquirizia.DataModel import (
 	Model,
 	Value, 
@@ -17,7 +15,6 @@ from datetime import datetime, date, time
 from random import randint, random
 
 from typing import Optional
-
 
 
 class TestDataModel(Case):
