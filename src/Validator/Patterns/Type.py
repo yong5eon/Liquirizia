@@ -54,7 +54,7 @@ class IsTypeOf(Pattern):
 		return
 
 	def __call__(self, parameter):
-		if not isinstance(parameter, self.type):
+		if type(parameter) is not self.type:
 			if self.error:
 				raise self.error
 			raise TypeError('{} must be {}'.format(
