@@ -25,9 +25,6 @@ __all__ = (
 class ModelCreator(type):
 	def __init__(self, typename, bases, namespace, *args, **kwargs):
 		super().__init__(typename, bases, namespace, *args, **kwargs)
-		self.__model__ = self.__name__
-		self.__callback__ = None
-		self.__description__ = None
 		for k, t in self.__annotations__.items():
 			v = self.__dict__[k] if k in self.__dict__.keys() else MISSING
 			if not isinstance(v, Value):
@@ -41,7 +38,6 @@ class ModelCreator(type):
 		return
 	def __repr__(cls):
 		return cls.__model__
-
 	def attr(self, t: Type, default: Any, desc: Parameters = None):
 		origin = get_origin(t)
 		if origin == Annotated:
@@ -121,7 +117,7 @@ class Model(object, metaclass=ModelCreator):
 			if k in kwargs.keys():
 				v.__set__(self, kwargs[k], init=True)
 			else:
-				if v.required:
+				if v.default is MISSING and v.required:	
 					raise ValueError('{} is required in {}'.format(k, self.__class__.__name__))
 				v.__set__(self, v.default, init=True)
 		return
