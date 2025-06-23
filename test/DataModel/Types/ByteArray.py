@@ -12,8 +12,6 @@ from Liquirizia.Validator.Patterns.Array import *
 
 from typing import Optional, Annotated
 
-from numpy import byte
-
 
 class TestDataModelWithByteArray(Case):
 
