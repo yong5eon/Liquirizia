@@ -12,11 +12,11 @@ __all__ = (
 )
 
 
-class TypeCreateor(ABCMeta):
+class TypeCreator(ABCMeta):
     def __repr__(cls): return cls.typestr
 
 
-class Type(Value, metaclass=TypeCreateor):
+class Type(Value, metaclass=TypeCreator):
 	def __init__(
 		self, 
 		key : str,
