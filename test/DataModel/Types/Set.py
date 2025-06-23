@@ -1,6 +1,5 @@
 # -*- coding: utf-8 -*-
 
-from ast import Or
 from Liquirizia.Test import *
 from Liquirizia.DataModel import (
 	Model,
@@ -17,20 +16,20 @@ from typing import Optional, Annotated
 class TestDataModelWithSet(Case):
 
 	@Order(1)
-	def testSetValue(self):
+	def testValue(self):
 		class TestModel(
 			Model,
 		):
 			val = Value(
-				type=set
+				type=set,
+				va=Validator(IsSet()),
 			)
-		_ = TestModel(val={1,2,3})
-		ASSERT_IS_EQUAL(_.val, {1,2,3})
-		with ASSERT_EXCEPT(ValueError): _.val = None
-		_.val = {1, 2, 3}
+		_ = TestModel(val={1, 2, 3})
 		ASSERT_IS_EQUAL(_.val, {1, 2, 3})
 		_.val = {1, 2, 3, 3}
 		ASSERT_IS_EQUAL(_.val, {1, 2, 3})
+		_.val = set()
+		ASSERT_IS_EQUAL(_.val, set())
 		with ASSERT_EXCEPT(ValueError):
 			_ = TestModel()
 		with ASSERT_EXCEPT(ValueError):
@@ -38,83 +37,63 @@ class TestDataModelWithSet(Case):
 		return
 	
 	@Order(2)
-	def testSetValueWithDefault(self):
+	def testValueWithDefault(self):
 		class TestModel(
 			Model,
 		):
 			val = Value(
 				type=set,
-				default=set()
-			)
-		_ = TestModel()
-		ASSERT_IS_EQUAL(_.val, set())
-		class TestModel(
-			Model,
-		):
-			val = Value(
-				type=set,
+				va=Validator(IsSet()),
 				default=None
-			)
-		_ = TestModel()
-		ASSERT_IS_EQUAL(_.val, None)
-		return
-	
-	@Order(3)
-	def testSetValueWithValidator(self):
-		class TestModel(
-			Model,
-		):
-			val = Value(
-				type=set,
-				va=Validator(IsSet(IsElementOf(IsInteger()))),
-				default=None,
 			)
 		_ = TestModel()
 		ASSERT_IS_EQUAL(_.val, None)
 		_.val = {1, 2, 3}
 		ASSERT_IS_EQUAL(_.val, {1, 2, 3})
+		_.val = set()
+		ASSERT_IS_EQUAL(_.val, set())
 		_.val = None
 		ASSERT_IS_EQUAL(_.val, None)
-		with ASSERT_EXCEPT(TypeError):
-			_ = TestModel(val=1)
-		with ASSERT_EXCEPT(TypeError):
-			_ = TestModel(val='True')
-		with ASSERT_EXCEPT(TypeError):
-			_ = TestModel(val={1, 2.0, '3'})
-		with ASSERT_EXCEPT(TypeError):
-			_.val[0] = '1'
+		class TestModel(
+			Model,
+		):
+			val = Value(
+				type=set,
+				va=Validator(IsSet()),
+				default=set(),
+			)
+		_ = TestModel()
+		ASSERT_IS_EQUAL(_.val, set())
+		_.val = {1, 2, 3}
+		ASSERT_IS_EQUAL(_.val, {1, 2, 3})
+		with ASSERT_EXCEPT(ValueError):
+			_.val = None
 		return
 	
-	@Order(4)
-	def testSetValueWithDetectChangedElement(self):
+	@Order(3)
+	def testValueWithDetectChangedElement(self):
 		class TestHandler(
 			Handler,
 		):
-			def __call__(self, o, p, v, pv):
-				o.changed = v
+			def __call__(self, o: 'TestModel', p: Value, v: set, pv: set):
+				o.pval = pv
 				return
 		class TestModel(
 			Model,
 		):
 			val = Value(
 				type=set,
-				va=Validator(IsSet(IsElementOf(IsInteger()))),
+				va=Validator(IsSet()),
 				fn=TestHandler(),
-				default=None,
+				default=set(),
 			)
-			changed = Value(
+			pval = Value(
 				type=set,
-				va=Validator(IsSet(IsElementOf(IsInteger()))),
-				default=None,
+				va=Validator(IsSet()),
+				default=set(),
 			)
 		_ = TestModel()
-		ASSERT_IS_EQUAL(_.val, None)
-		with ASSERT_EXCEPT(TypeError): _.val = [1,2,3]
-		with ASSERT_EXCEPT(TypeError): _.val = (1,2,3)
-		_.val = set()
-		ASSERT_IS_EQUAL(_.val, set())
-		ASSERT_IS_EQUAL(_.changed, set())
 		_.val.add(1)
 		ASSERT_IS_EQUAL(_.val, {1})
-		ASSERT_IS_EQUAL(_.changed, {1})
+		ASSERT_IS_EQUAL(_.pval, set())
 		return

@@ -160,8 +160,8 @@ class TestDataModel(Case):
 		ASSERT_IS_EQUAL(_.val, 1)
 		_ = TestModel(val=2)
 		ASSERT_IS_EQUAL(_.val, 2)
-		_ = TestModel(val=None)
-		ASSERT_IS_EQUAL(_.val, None)
+		with ASSERT_EXCEPT(ValueError):
+			_ = TestModel(val=None)
 		return
 
 	@Order(10)

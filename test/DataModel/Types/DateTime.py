@@ -9,10 +9,11 @@ from Liquirizia.DataModel import (
 from Liquirizia.Validator import Validator
 from Liquirizia.Validator.Patterns import *
 
+from datetime import datetime
 from typing import Optional, Annotated
 
 
-class TestDataModelWithString(Case):
+class TestDataModelWithDateTime(Case):
 
 	@Order(1)
 	def testValue(self):
@@ -20,13 +21,11 @@ class TestDataModelWithString(Case):
 			Model,
 		):
 			val = Value(
-				type=str,
-				va=Validator(IsString()),
+				type=datetime,
+				va=Validator(IsDateTime()),
 			)
-		_ = TestModel(val='String')
-		ASSERT_IS_EQUAL(_.val, 'String')
-		_.val = ''
-		ASSERT_IS_EQUAL(_.val, '')
+		_ = TestModel(val=datetime(2025, 1, 1, 0, 0, 0))
+		ASSERT_IS_EQUAL(_.val, datetime(2025, 1, 1, 0, 0, 0))
 		with ASSERT_EXCEPT(ValueError):
 			_ = TestModel()
 		with ASSERT_EXCEPT(ValueError):
@@ -39,16 +38,14 @@ class TestDataModelWithString(Case):
 			Model,
 		):
 			val = Value(
-				type=str,
-				va=Validator(IsString()),
+				type=datetime,
+				va=Validator(IsDateTime()),
 				default=None,
 			)
 		_ = TestModel()
 		ASSERT_IS_EQUAL(_.val, None)
-		_.val = 'String'
-		ASSERT_IS_EQUAL(_.val, 'String')
-		_.val = ''
-		ASSERT_IS_EQUAL(_.val, '')
+		_.val = datetime(2025, 1, 1, 0, 0, 0)
+		ASSERT_IS_EQUAL(_.val, datetime(2025, 1, 1, 0, 0, 0))
 		_.val = None
 		ASSERT_IS_EQUAL(_.val, None)
 		with ASSERT_EXCEPT(TypeError):
@@ -56,36 +53,12 @@ class TestDataModelWithString(Case):
 		with ASSERT_EXCEPT(TypeError):
 			_ = TestModel(val=1.0)
 		with ASSERT_EXCEPT(TypeError):
+			_ = TestModel(val='1.0')
+		with ASSERT_EXCEPT(TypeError):
+			_ = TestModel(val='None')
+		with ASSERT_EXCEPT(TypeError):
 			_ = TestModel(val=True)
 		with ASSERT_EXCEPT(TypeError):
 			_ = TestModel(val=False)
 		return
-	
-	@Order(3)
-	def testValueWithDetectChangedElement(self):
-		class TestHander(
-			Handler
-		):
-			def __call__(self, o: 'TestModel', p: Value, v: str, pv: str):
-				o.pval = pv
-				return
-		class TestModel(
-			Model,
-		):
-			val = Value(
-				type=str,
-				va=Validator(IsString()),
-				fn=TestHander(),
-				default='',
-			)
-			pval = Value(
-				type=str,
-				va=Validator(IsString()),
-				default=None,
-			)
-		_ = TestModel()
-		_.val += '1'
-		ASSERT_IS_EQUAL(_.val, '1')
-		ASSERT_IS_EQUAL(_.pval, '')
-		return	
 	

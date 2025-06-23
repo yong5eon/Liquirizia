@@ -74,7 +74,7 @@ class TestDataModelWithList(Case):
 			Handler,
 		):
 			def __call__(self, o: 'TestModel', p: Value, v: list, pv: list):
-				o.pval = v
+				o.pval = pv
 				return
 		class TestModel(
 			Model,
@@ -92,5 +92,6 @@ class TestDataModelWithList(Case):
 			)
 		_ = TestModel()
 		_.val.append(1)
-		ASSERT_IS_EQUAL(_.pval, [1])
+		ASSERT_IS_EQUAL(_.val, [1])
+		ASSERT_IS_EQUAL(_.pval, [])
 		return

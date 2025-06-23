@@ -12,8 +12,10 @@ from Liquirizia.Validator.Patterns.Array import *
 
 from typing import Optional, Annotated
 
+from six import b
 
-class TestDataModelWithTuple(Case):
+
+class TestDataModelWithByteString(Case):
 
 	@Order(1)
 	def testValue(self):
@@ -21,13 +23,13 @@ class TestDataModelWithTuple(Case):
 			Model,
 		):
 			val = Value(
-				type=tuple,
-				va=Validator(IsTuple()),
+				type=bytes,
+				va=Validator(IsByteString()),
 			)
-		_ = TestModel(val=(1,2,3))
-		ASSERT_IS_EQUAL(_.val, (1,2,3))
-		_.val = ()
-		ASSERT_IS_EQUAL(_.val, ())
+		_ = TestModel(val=b'123')
+		ASSERT_IS_EQUAL(_.val, b'123')
+		_.val = b''
+		ASSERT_IS_EQUAL(_.val, b'')
 		with ASSERT_EXCEPT(ValueError):
 			_ = TestModel()
 		with ASSERT_EXCEPT(ValueError):
@@ -40,58 +42,58 @@ class TestDataModelWithTuple(Case):
 			Model,
 		):
 			val = Value(
-				type=tuple,
-				va=Validator(IsTuple()),
+				type=bytes,
+				va=Validator(IsByteString()),
 				default=None,
 			)
 		_ = TestModel()
 		ASSERT_IS_EQUAL(_.val, None)
-		_.val = (1, 2, 3)
-		ASSERT_IS_EQUAL(_.val, (1, 2, 3))
-		_.val = ()
-		ASSERT_IS_EQUAL(_.val, ())
+		_.val = b'123'
+		ASSERT_IS_EQUAL(_.val, b'123')
+		_.val = b''
+		ASSERT_IS_EQUAL(_.val, b'')
 		_.val = None
 		ASSERT_IS_EQUAL(_.val, None)
 		class TestModel(
 			Model,
 		):
 			val = Value(
-				type=tuple,
-				va=Validator(IsTuple()),
-				default=(),
+				type=bytes,
+				va=Validator(IsByteString()),
+				default=b'',
 			)
 		_ = TestModel()
-		ASSERT_IS_EQUAL(_.val, ())
-		_.val = (1, 2, 3)
-		ASSERT_IS_EQUAL(_.val, (1, 2, 3))
+		ASSERT_IS_EQUAL(_.val, b'')
+		_.val = b'123'
+		ASSERT_IS_EQUAL(_.val, b'123')
 		with ASSERT_EXCEPT(ValueError):
 			_.val = None
 		return
-	
+
 	@Order(3)
 	def testValueWithDetectChangedElement(self):
 		class TestHandler(
 			Handler,
 		):
-			def __call__(self, o: 'TestModel', p: Value, v: tuple, pv: tuple):
+			def __call__(self, o: 'TestModel', p: Value, v: bytes, pv: bytes):
 				o.pval = pv
-				return 
+				return
 		class TestModel(
 			Model,
 		):
 			val = Value(
-				type=tuple,
-				va=Validator(IsTuple()),
+				type=bytes,
+				va=Validator(IsByteString()),
 				fn=TestHandler(),
-				default=(),
+				default=b'',
 			)
 			pval = Value(
-				type=tuple,
-				va=Validator(IsTuple()),
+				type=bytes,
+				va=Validator(IsByteString()),
 				default=None,
 			)
 		_ = TestModel()
-		_.val = (1, 2, 3)
-		ASSERT_IS_EQUAL(_.val, (1,2,3))
-		ASSERT_IS_EQUAL(_.pval, ())
+		_.val += b'1'
+		ASSERT_IS_EQUAL(_.val, b'1')
+		ASSERT_IS_EQUAL(_.pval, b'')
 		return
