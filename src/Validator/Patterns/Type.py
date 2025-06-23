@@ -21,8 +21,8 @@ __all__ = (
 	'IsSet',
 	'IsArray',
 	'IsObject',
+	'IsByteString',
 	'IsByteArray',
-	'IsByteStream',
 	'IsDecimal',
 	'IsDataObject',
 	'ToTypeOf',
@@ -34,8 +34,8 @@ __all__ = (
 	'ToTuple',
 	'ToSet',
 	'ToObject',
+	'ToByteString',
 	'ToByteArray',
-	'ToByteStream',
 	'ToDecimal',
 	'ToDataObject',
 )
@@ -156,13 +156,13 @@ class IsObject(IsTypeOf):
 		return
 
 
-class IsByteArray(IsTypeOf):
+class IsByteString(IsTypeOf):
 	def __init__(self, *args, error: BaseException = None):
 		super().__init__(bytes, patterns=args, error=error)
 		return
 
 
-class IsByteStream(IsTypeOf):
+class IsByteArray(IsTypeOf):
 	def __init__(self, *args, error: BaseException = None):
 		super().__init__(bytearray, patterns=args, error=error)
 		return
@@ -292,13 +292,13 @@ class ToObject(ToTypeOf):
 		return
 
 
-class ToByteArray(ToTypeOf):
+class ToByteString(ToTypeOf):
 	def __init__(self, *args, error: BaseException = None):
 		super().__init__(bytes, patterns=args, error=error)
 		return
 
 
-class ToByteStream(ToTypeOf):
+class ToByteArray(ToTypeOf):
 	def __init__(self, *args, error: BaseException = None):
 		super().__init__(bytearray, patterns=args, error=error)
 		return
