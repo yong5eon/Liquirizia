@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from abc import ABC
-from dataclasses import is_dataclass
 from typing import Any
 
 __all__ = (
@@ -28,6 +27,13 @@ class Type(ABC):
 
 	@classmethod
 	def Create(cls, v: Any, obj, descriptor):
+		from .Model import Model
+		from dataclasses import is_dataclass
+		from decimal import Decimal
+		from datetime import datetime, date, time
+		if isinstance(v, Model):
+			from .Types import DataModel
+			return DataModel(v, obj, descriptor)
 		if is_dataclass(v):
 			from .Types import DataObject
 			return DataObject(v, obj, descriptor)
@@ -46,8 +52,6 @@ class Type(ABC):
 		if isinstance(v, bytearray):
 			from .Types import ByteArray
 			return ByteArray(v, obj, descriptor)
-		from decimal import Decimal
-		from datetime import datetime, date, time
 		PATTERNS = [
 			type(None),
 			bool,

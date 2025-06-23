@@ -143,3 +143,13 @@ class Model(object, metaclass=ModelCreator):
 		if name not in self.__mapper__.keys():
 			raise ValueError('{} is not member of {}'.format(name, self.__class__.__name__))
 		return super().__setattr__(name, value)
+
+	def __eq__(self, value):
+		if not isinstance(value, Model):
+			return False
+		return self.__properties__.__eq__(value.__properties__)
+	
+	def __ne__(self, value):
+		if not isinstance(value, Model):
+			return True
+		return self.__properties__.__ne__(value.__properties__)

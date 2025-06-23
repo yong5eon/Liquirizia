@@ -7,7 +7,7 @@ from copy import deepcopy
 from typing import Any
 
 __all__ = (
-	'DataObject'
+	'DataModel'
 )
 
 
@@ -49,8 +49,8 @@ class Function(object):
 			raise e
 		
 
-class DataObject(Type):
-	"""DataObject(Data Class) Type Object Class of Data Model Object"""
+class DataModel(Type):
+	"""DataModel(Model) Type Object Class of Data Model Object"""
 
 	def __getattr__(self, key):
 		if key in ('__value__', '__model__', '__descriptor__'):
@@ -99,12 +99,12 @@ class DataObject(Type):
 			raise e
 
 	def __eq__(self, other):
-		if isinstance(other, DataObject):
+		if isinstance(other, DataModel):
 			return self.__value__.__eq__(other.__value__)
 		return self.__value__.__eq__(other)
 	
 	def __ne__(self, other):
-		if isinstance(other, DataObject):
+		if isinstance(other, DataModel):
 			return self.__value__.__ne__(other.__value__)
 		return self.__value__.__ne__(other)
 	

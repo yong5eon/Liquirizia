@@ -5,10 +5,7 @@ from Liquirizia.Validator import Validator
 from .Handler import Handler
 from .Type import Type
 
-from decimal import Decimal
-from datetime import datetime, date, time
 from typing import Sequence, Type as T, Any, Union
-from dataclasses import is_dataclass
 
 __all__ = (
 	'Value',
@@ -56,24 +53,6 @@ class Value(object):
 	):
 		self.model = None
 		self.name = None 
-		PATTERNS = [
-			bool,
-			int,
-			float,
-			str,
-			list,
-			tuple,
-			set,
-			dict,
-			bytes,
-			bytearray,
-			Decimal,
-			datetime,
-			date,
-			time,
-		]
-		if type not in PATTERNS and not is_dataclass(type):
-			raise TypeError('Not supported type {}'.format(type))
 		self.type = type
 		self.validator = va
 		# TODO: if validator is None, use generic validator according to type

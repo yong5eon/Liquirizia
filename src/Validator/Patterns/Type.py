@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from ..Pattern import Pattern
-from decimal import Decimal
-from dataclasses import is_dataclass, make_dataclass
 from collections.abc import (
 	Iterable,
 	Mapping,
@@ -25,6 +23,7 @@ __all__ = (
 	'IsByteArray',
 	'IsDecimal',
 	'IsDataObject',
+	'IsDataModel',
 	'ToTypeOf',
 	'ToBool',
 	'ToInteger',
@@ -174,6 +173,7 @@ class IsByteArray(IsTypeOf):
 
 class IsDecimal(IsTypeOf):
 	def __init__(self, *args, error: BaseException = None):
+		from decimal import Decimal
 		super().__init__(Decimal, patterns=args, error=error)
 		return
 
@@ -189,10 +189,34 @@ class IsDataObject(Pattern):
 		return
 
 	def __call__(self, parameter: object) -> object:
+		from dataclasses import is_dataclass
 		if not is_dataclass(parameter.__class__):
 			if self.error:
 				raise self.error
 			raise TypeError('{} must be dataclass'.format(
+				'\'{}\''.format(parameter) if isinstance(parameter, str) else parameter, 
+			))
+		for pattern in self.patterns:
+			parameter = pattern(parameter)
+		return parameter	
+
+
+class IsDataModel(Pattern):
+	def __init__(
+		self, 
+		*patterns: Pattern,
+		error: BaseException = None
+	):
+		self.patterns = patterns if isinstance(patterns, Iterable) else (patterns,)
+		self.error = error
+		return
+
+	def __call__(self, parameter: object) -> object:
+		from Liquirizia.DataModel import Model
+		if not isinstance(parameter, Model):
+			if self.error:
+				raise self.error
+			raise TypeError('{} must be Model'.format(
 				'\'{}\''.format(parameter) if isinstance(parameter, str) else parameter, 
 			))
 		for pattern in self.patterns:
@@ -310,6 +334,7 @@ class ToByteArray(ToTypeOf):
 
 class ToDecimal(ToTypeOf):
 	def __init__(self, *args, error: BaseException = None):
+		from decimal import Decimal
 		super().__init__(Decimal, patterns=args, error=error)
 		return
 
@@ -325,6 +350,7 @@ class ToDataObject(Pattern):
 		return
 
 	def __call__(self, parameter: Mapping) -> object:
+		from dataclasses import is_dataclass, make_dataclass
 		try:
 			parameter = make_dataclass(
 				'DynamicDataClass',
