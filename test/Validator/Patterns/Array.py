@@ -18,7 +18,7 @@ class TestValidatorPatternsArray(Case):
 			va(['apple', 'orange'])
 		with ASSERT_EXCEPT(ValueError):
 			va(['kiwi'])
-		with ASSERT_EXCEPT(ValueError):
+		with ASSERT_EXCEPT(TypeError):
 			va('apple')
 		with ASSERT_EXCEPT(TypeError):
 			va(123)

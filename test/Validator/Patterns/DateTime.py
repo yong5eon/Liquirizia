@@ -13,7 +13,7 @@ class TestValidatorPatternsDateTime(Case):
 	def testIsDateTime(self):
 		va = Validator(IsDateTime())
 		ASSERT_IS_EQUAL(va(datetime(2023, 10, 1, 12, 0)), datetime(2023, 10, 1, 12, 0))
-		with ASSERT_EXCEPT(ValueError):
+		with ASSERT_EXCEPT(TypeError):
 			va('2023-10-01 12:00')
 		return
 	
@@ -21,7 +21,7 @@ class TestValidatorPatternsDateTime(Case):
 	def testIsDate(self):
 		va = Validator(IsDate())
 		ASSERT_IS_EQUAL(va(date(2023, 10, 1)), date(2023, 10, 1))
-		with ASSERT_EXCEPT(ValueError):
+		with ASSERT_EXCEPT(TypeError):
 			va('2023-10-01')
 		return
 	
@@ -29,7 +29,7 @@ class TestValidatorPatternsDateTime(Case):
 	def testIsTime(self):
 		va = Validator(IsTime())
 		ASSERT_IS_EQUAL(va(time(12, 0)), time(12, 0))
-		with ASSERT_EXCEPT(ValueError):
+		with ASSERT_EXCEPT(TypeError):
 			va('12:00')
 		return
 	
