@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.DataModel import Model, Handler
-from Liquirizia.DataModel.Format import Object
-
 
 from .Index import Index
 from .Constraint import Constraint
@@ -41,7 +39,6 @@ class Table(Model):
 		constraints: Sequence[Constraint] = None,
 		indexes: Sequence[Index] = None,
 		description: str = None,
-		schema: Object = None,
 		fn: Handler = None,
 	):
 		if constraints:
@@ -50,4 +47,4 @@ class Table(Model):
 		if indexes:
 			if isinstance(indexes, Index): indexes = [indexes]
 		cls.__indexes__ = indexes
-		return super().__init_subclass__(name, description, schema, fn)
+		return super().__init_subclass__(name=name, fn=fn, description=description)
