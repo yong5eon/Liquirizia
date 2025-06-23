@@ -5,7 +5,7 @@ from .Numeric import (
 	Float,
 )
 from .String import Text
-from .Binary import ByteArray
+from .Binary import Binary
 from .DateTime import (
 	DateTime,
 	Timestamp,
@@ -15,7 +15,7 @@ __all__ = (
 	'Integer', 'INTEGER',
 	'Float', 'FLOAT', 'REAL',
 	'Text', 'TEXT', 'STRING',
-	'ByteArray', 'BLOB',
+	'Binary', 'BLOB',
 	'DateTime', 'DATETIME',
 	'Timestamp', 'TIMESTAMP',
 )
@@ -28,7 +28,7 @@ REAL = Float
 TEXT = Text
 STRING = Text
 # BINARY
-BLOB = ByteArray
+BLOB = Binary
 # DATETIME
 DATETIME = DateTime
 TIMESTAMP = Timestamp

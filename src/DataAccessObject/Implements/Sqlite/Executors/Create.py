@@ -25,9 +25,9 @@ class TypeToSQL(object):
 	def __call__(self, col: Type) -> str:
 		return '{} {}{}{}'.format(
 			col.key,
-			col.type,
+			col.typestr,
 			' NOT NULL' if not col.null else '',
-			' DEFAULT {}'.format(col.default) if col.default else '',
+			' DEFAULT {}'.format(col.coldef) if col.coldef else '',
 		)
 
 class PrimaryKeyToSQL(object):

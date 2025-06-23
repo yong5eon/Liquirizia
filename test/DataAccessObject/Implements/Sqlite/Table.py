@@ -84,7 +84,7 @@ class TestSqliteTable(Case):
 			colText='Hello Liquirizia',
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
-			colTimestamp=int(mktime(datetime.now().timetuple())),
+			colTimestamp=datetime.now().timestamp(),
 		), fetch=TestModel)
 		ASSERT_IS_NOT_NONE(row)
 		ASSERT_IS_EQUAL(row.id, 1)
@@ -93,7 +93,7 @@ class TestSqliteTable(Case):
 		ASSERT_IS_EQUAL(row.colText, 'Hello Liquirizia')
 		ASSERT_IS_EQUAL(row.colByteArray, open('README.md', mode='rb').read())
 		ASSERT_TRUE(isinstance(row.colDateTime, datetime))
-		ASSERT_TRUE(isinstance(row.colTimestamp, int))
+		ASSERT_TRUE(isinstance(row.colTimestamp, datetime))
 		return
 
 	@Order(4)
@@ -106,7 +106,7 @@ class TestSqliteTable(Case):
 			colText='Hello Liquirizia',
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
-			colTimestamp=int(mktime(datetime.now().timetuple())),
+			colTimestamp=datetime.now().timestamp(),
 		), fetch=TestModel)
 		updated = con.run(Update(TestModel).where(IsEqualTo(TestModel.id, inserted.id)).set(
 			colInteger=2,
@@ -114,7 +114,7 @@ class TestSqliteTable(Case):
 			colText='Hello World',
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
-			colTimestamp=int(mktime(datetime.now().timetuple())),
+			colTimestamp=datetime.now().timestamp(),
 		), fetch=TestModel)
 
 		ASSERT_IS_NOT_NONE(updated)
@@ -123,7 +123,7 @@ class TestSqliteTable(Case):
 		ASSERT_IS_EQUAL(updated.colFloat, 2.8)
 		ASSERT_IS_EQUAL(updated.colText, 'Hello World')
 		ASSERT_TRUE(isinstance(updated.colDateTime, datetime))
-		ASSERT_TRUE(isinstance(updated.colTimestamp, int))
+		ASSERT_TRUE(isinstance(updated.colTimestamp, datetime))
 		ASSERT_IS_NOT_EQUAL(inserted.colInteger, updated.colInteger)
 		ASSERT_IS_NOT_EQUAL(inserted.colFloat, updated.colFloat)
 		ASSERT_IS_NOT_EQUAL(inserted.colText, updated.colText)
@@ -139,7 +139,7 @@ class TestSqliteTable(Case):
 			colText='Hello Liquirizia',
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
-			colTimestamp=int(mktime(datetime.now().timetuple())),
+			colTimestamp=datetime.now().timestamp(),
 		), fetch=TestModel)
 		inserted.colInteger = 2
 		inserted.colFloat = 2.8
@@ -153,7 +153,7 @@ class TestSqliteTable(Case):
 		ASSERT_IS_EQUAL(updated.colFloat, 2.8)
 		ASSERT_IS_EQUAL(updated.colText, 'Hello World')
 		ASSERT_TRUE(isinstance(updated.colDateTime, datetime))
-		ASSERT_TRUE(isinstance(updated.colTimestamp, int))
+		ASSERT_TRUE(isinstance(updated.colTimestamp, datetime))
 		return
 
 	@Order(6)
@@ -166,7 +166,7 @@ class TestSqliteTable(Case):
 			colText='Hello Liquirizia',
 			colByteArray=open('README.md', mode='rb').read(),
 			colDateTime=datetime.now(),
-			colTimestamp=int(mktime(datetime.now().timetuple())),
+			colTimestamp=datetime.now().timestamp(),
 		), fetch=TestModel)
 		con.run(Delete(TestModel).where(IsEqualTo(TestModel.id, inserted.id)))
 		updated = con.run(Get(TestModel).where(IsEqualTo(TestModel.id, inserted.id)), fetch=TestModel)
