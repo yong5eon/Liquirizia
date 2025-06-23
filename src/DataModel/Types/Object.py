@@ -96,12 +96,12 @@ class Object(Type, MutableMapping):
 			raise e
 	
 	def __eq__(self, other: object) -> bool:
-		if not isinstance(other, Object):
+		if isinstance(other, Object):
 			return self.__value__.__eq__(other.__value__)
 		return self.__value__.__eq__(other)
 	
 	def __ne__(self, other: object) -> bool:
-		if not isinstance(other, Object):
+		if isinstance(other, Object):
 			return self.__value__.__ne__(other.__value__)
 		return self.__value__.__ne__(other)
 	
