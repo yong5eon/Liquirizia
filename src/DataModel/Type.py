@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, abstractmethod
-
+from abc import ABC
+from dataclasses import is_dataclass
 from typing import Any
 
 __all__ = (
@@ -28,6 +28,9 @@ class Type(ABC):
 
 	@classmethod
 	def Create(cls, v: Any, obj, descriptor):
+		if is_dataclass(v):
+			from .Types import DataObject
+			return DataObject(v, obj, descriptor)
 		if isinstance(v, tuple):
 			from .Types import Tuple
 			return Tuple(v, obj, descriptor)

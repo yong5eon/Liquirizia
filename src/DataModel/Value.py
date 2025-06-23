@@ -8,6 +8,7 @@ from .Type import Type
 from decimal import Decimal
 from datetime import datetime, date, time
 from typing import Sequence, Type as T, Any, Union
+from dataclasses import is_dataclass
 
 __all__ = (
 	'Value',
@@ -71,7 +72,7 @@ class Value(object):
 			date,
 			time,
 		]
-		if type not in PATTERNS:
+		if type not in PATTERNS and not is_dataclass(type):
 			raise TypeError('Not supported type {}'.format(type))
 		self.type = type
 		self.validator = va
