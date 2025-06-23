@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.Validator import Validator
-from numpy.ma.extras import isin
 
 from .Handler import Handler
 from .Type import Type

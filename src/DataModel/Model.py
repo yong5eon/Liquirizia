@@ -1,12 +1,12 @@
 # -*- coding: utf-8 -*-
 
-from types import NoneType
 from .Value import Value, Parameters, MISSING
 from .Handler import Handler
 
 from collections import OrderedDict
 from decimal import Decimal
 from datetime import datetime, date, time
+from types import NoneType
 from typing import (
 	get_origin,
 	get_args,
