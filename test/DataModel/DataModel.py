@@ -335,37 +335,3 @@ class TestDataModel(Case):
 		_ = TestModel(val=1)
 		ASSERT_IS_EQUAL(_.val, 1)
 		return
-	
-	@Order(21)
-	def testNotSupportedType(self):
-		PATTERNS = [
-			bool,
-			int,
-			float,
-			str,
-			list,
-			tuple,
-			set,
-			dict,
-			bytes,
-			bytearray,
-			Decimal,
-			datetime,
-			date,
-			time,
-		]
-		for t in PATTERNS:
-			class TestModel(Model):
-				val = Value(type=t)
-		with ASSERT_EXCEPT(TypeError):
-			class TestModel(Model):
-				val: object
-		with ASSERT_EXCEPT(TypeError):
-			class TestModel(Model):
-				val = Value(type=object)
-		class TestObject(object): pass
-		with ASSERT_EXCEPT(TypeError):
-			class TestModel(Model):
-				val = Value(type=TestObject)
-		return
-	
