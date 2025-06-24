@@ -68,6 +68,7 @@ class Value(object):
 	
 	def __repr__(self):
 		args = []
+		args.append('type={}'.format(self.type.__name__))
 		if self.default:
 			args.append('default={}'.format('\'{}\''.format(self.default) if isinstance(self.default, str) else repr(self.default)))
 		if self.min:
