@@ -8,7 +8,7 @@ from Liquirizia.DataModel import (
 from Liquirizia.Validator import Validator
 from Liquirizia.Validator.Patterns import *
 
-from Liquirizia.Util import PrettyPrint
+from Liquirizia.Utils import PrettyPrint
 
 from typing import Optional
 
@@ -37,48 +37,48 @@ class SampleModel(
 	description='Sample Model',
 	fn=Changed()
 ):
-	bOptionVal: bool = Value(va=Validator(IsToNone(IsTypeOf(bool))), fn=Changed())
-	bOptionValWithNone: bool = Value(va=Validator(IsToNone(IsTypeOf(bool))), default=None, fn=Changed())
+	bOptionVal = Value(type=bool, va=Validator(IsToNone(IsTypeOf(bool))), fn=Changed())
+	bOptionValWithNone = Value(type=bool, va=Validator(IsToNone(IsTypeOf(bool))), default=None, fn=Changed())
 	bOptionValWithOutDescriptor: Optional[bool]
 	bOptionValWithOutDescriptorWithDefault: Optional[bool] = True
-	bVal: bool = Value(va=Validator(IsNotToNone(IsTypeOf(bool))), fn=Changed())
-	bValWithNone: bool = Value(va=Validator(IsToNone(IsTypeOf(bool))), default=None, fn=Changed())
-	bValWithDefault: bool = Value(va=Validator(IsTypeOf(bool)), default=True, fn=Changed())
+	bVal = Value(type=bool, va=Validator(IsNotToNone(IsTypeOf(bool))), fn=Changed())
+	bValWithNone = Value(type=bool, va=Validator(IsToNone(IsTypeOf(bool))), default=None, fn=Changed())
+	bValWithDefault = Value(type=bool, va=Validator(IsTypeOf(bool)), default=True, fn=Changed())
 	bValWithOutDescriptor: bool
 	bValWithOutDescriptorWithNone: bool = None
 	bValWithOutDescriptorWithDefault: bool = True
 
-	iOptionVal: int = Value(va=Validator(IsToNone(IsTypeOf(int))), fn=Changed())
+	iOptionVal = Value(type=int, va=Validator(IsToNone(IsTypeOf(int))), fn=Changed())
 	iOptionValWithOutDescriptor: Optional[int]
 	iOptionValWithOutDescriptorWithDefault: Optional[int] = 0
-	iVal: int = Value(va=Validator(IsTypeOf(int)), fn=Changed())
+	iVal = Value(type=int, va=Validator(IsTypeOf(int)), fn=Changed())
 	iValWithOutDescriptor: int
 	iValWithOutDescriptorWithDefault: int = 0
-	iValWithDefault: int = Value(va=Validator(IsTypeOf(int)), default=9, fn=Changed())
+	iValWithDefault = Value(type=int, va=Validator(IsTypeOf(int)), default=9, fn=Changed())
 
-	fOptionVal: float = Value(va=Validator(IsToNone(IsTypeOf(float))), fn=Changed())
+	fOptionVal = Value(type=float, va=Validator(IsToNone(IsTypeOf(float))), fn=Changed())
 	fOptionValWithOutDescriptor: Optional[float]
 	fOptionValWithOutDescriptorWithDefault: Optional[float] = 0.0
-	fVal: float = Value(va=Validator(IsTypeOf(float)), fn=Changed())
+	fVal = Value(type=float, va=Validator(IsTypeOf(float)), fn=Changed())
 	fValWithOutDescriptor: float
 	fValWithOutDescriptorWithDefault: float = 0.0
-	fValWithDefault: float = Value(va=Validator(IsTypeOf(float)), default=9.9, fn=Changed())
+	fValWithDefault = Value(type=float, va=Validator(IsTypeOf(float)), default=9.9, fn=Changed())
 
-	sOptionVal: str = Value(va=Validator(IsToNone(IsTypeOf(str))), fn=Changed())
+	sOptionVal = Value(type=str, va=Validator(IsToNone(IsTypeOf(str))), fn=Changed())
 	sOptionValWithOutDescriptor: Optional[str]
 	sOptionValWithOutDescriptorWithDefault: Optional[str] = 'ABC' 
-	sVal: str = Value(va=Validator(IsTypeOf(str)), fn=Changed())
+	sVal = Value(type=str, va=Validator(IsTypeOf(str)), fn=Changed())
 	sValWithOutDescriptor: str
 	sValWithOutDescriptorWithDefault: str = 'DEF'
-	sValWithDefault: str = Value(va=Validator(IsTypeOf(str)), default='STR', fn=Changed())
+	sValWithDefault = Value(type=str, va=Validator(IsTypeOf(str)), default='STR', fn=Changed())
 
-	liOptionVal: list = Value(va=Validator(IsToNone(IsTypeOf(list))), fn=Changed())
+	liOptionVal = Value(type=list, va=Validator(IsToNone(IsTypeOf(list))), fn=Changed())
 	liOptionValWithOutDescriptor: Optional[list]
 	liOptionValWithOutDescriptorWithDefault: Optional[list] = [1,2,3]
-	liVal: list = Value(va=Validator(IsTypeOf(list)), fn=Changed())
+	liVal = Value(type=list, va=Validator(IsTypeOf(list)), fn=Changed())
 	liValWithOutDescriptor: list
 	liValWithOutDescriptorWithDefault: list = [4,5,6]
-	liValWithDefault: list = Value(va=Validator(IsTypeOf(list)), default=[9,8,7], fn=Changed())
+	liValWithDefault = Value(type=list, va=Validator(IsTypeOf(list)), default=[9,8,7], fn=Changed())
 
 	tuOptionVal: tuple = Value(va=Validator(IsToNone(IsTypeOf(tuple))), fn=Changed())
 	tuOptionValWithOutDescriptor: Optional[tuple]

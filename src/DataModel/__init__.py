@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 
 from .Model import Model
-from .Value import Value
+from .Value import Value, Parameters, MISSING
 from .Handler import Handler
 
 from ..Validator import Validator, Pattern
@@ -11,7 +11,9 @@ from typing import Iterable, Dict, Union, Sequence
 __all__ = (
 	'Model',
 	'Value',
+	'Parameters',
 	'Handler',
+	'MISSING',
 	'IsDataModel',
 	'IsRequiredIn',
 	'IsMappingOf',

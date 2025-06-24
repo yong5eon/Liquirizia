@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
-from abc import ABC, abstractmethod
-
+from abc import ABC
 from typing import Any
 
 __all__ = (
@@ -28,6 +27,16 @@ class Type(ABC):
 
 	@classmethod
 	def Create(cls, v: Any, obj, descriptor):
+		from .Model import Model
+		from dataclasses import is_dataclass
+		from decimal import Decimal
+		from datetime import datetime, date, time
+		if isinstance(v, Model):
+			from .Types import DataModel
+			return DataModel(v, obj, descriptor)
+		if is_dataclass(v):
+			from .Types import DataObject
+			return DataObject(v, obj, descriptor)
 		if isinstance(v, tuple):
 			from .Types import Tuple
 			return Tuple(v, obj, descriptor)
@@ -37,12 +46,12 @@ class Type(ABC):
 		if isinstance(v, list):
 			from .Types import List
 			return List(v, obj, descriptor)
-		# TODO : support bytearray
 		if isinstance(v, dict):
-			from .Types import Dictionary
-			return Dictionary(v, obj, descriptor)
-		from decimal import Decimal
-		from datetime import datetime, date, time
+			from .Types import Object
+			return Object(v, obj, descriptor)
+		if isinstance(v, bytearray):
+			from .Types import ByteArray
+			return ByteArray(v, obj, descriptor)
 		PATTERNS = [
 			type(None),
 			bool,
@@ -50,7 +59,6 @@ class Type(ABC):
 			float,
 			str,
 			bytes,
-			frozenset,
 			Decimal,
 			datetime,
 			date,
@@ -58,6 +66,9 @@ class Type(ABC):
 		]
 		if type(v) in PATTERNS:
 			return v
-		# TODO : support Model
-		from .Types import Object
-		return Object(v, obj, descriptor)
+		raise TypeError(
+			'Not supported type {} for value {}'.format(
+				type(v),
+				v
+			)
+		)

@@ -3,6 +3,7 @@
 from ..Type import Type
 
 from collections.abc import Sequence
+from operator import eq, ne
 
 __all__ = (
 	'Tuple'
@@ -36,3 +37,13 @@ class Tuple(Type, Sequence):
 
 	def count(self, value: any) -> int:
 		return self.__value__.count(value)
+
+	def __eq__(self, other):
+		if isinstance(other, Tuple):
+			return eq(self.__value__, other.__value__)
+		return eq(self.__value__, other)
+
+	def __ne__(self, other):
+		if isinstance(other, Tuple):
+			return ne(self.__value__, other.__value__)
+		return ne(self.__value__, other)

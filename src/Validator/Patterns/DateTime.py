@@ -21,10 +21,10 @@ class IsDateTime(Pattern):
 		return
 
 	def __call__(self, parameter):
-		if parameter is not None and not isinstance(parameter, datetime):
+		if not isinstance(parameter, datetime):
 			if self.error:
 				raise self.error
-			raise ValueError('{} must be datetime'.format(parameter))
+			raise TypeError('{} must be datetime'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
@@ -37,10 +37,10 @@ class IsDate(Pattern):
 		return
 
 	def __call__(self, parameter):
-		if parameter is not None and not isinstance(parameter, date):
+		if not isinstance(parameter, date):
 			if self.error:
 				raise self.error
-			raise ValueError('{} must be date'.format(parameter))
+			raise TypeError('{} must be date'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter
@@ -53,10 +53,10 @@ class IsTime(Pattern):
 		return
 
 	def __call__(self, parameter):
-		if parameter is not None and not isinstance(parameter, time):
+		if not isinstance(parameter, time):
 			if self.error:
 				raise self.error
-			raise ValueError('{} must be time'.format(parameter))
+			raise TypeError('{} must be time'.format(parameter))
 		for pattern in self.patterns:
 			parameter = pattern(parameter)
 		return parameter

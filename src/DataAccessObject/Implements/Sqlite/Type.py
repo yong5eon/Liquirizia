@@ -1,42 +1,42 @@
 # -*- coding: utf-8 -*-
 
-from Liquirizia.DataModel import Value, Handler
+from Liquirizia.DataModel import Value, MISSING, Handler
 from Liquirizia.Validator.Validator import Validator
 
 from abc import ABCMeta
 
-from typing import Any
+from typing import Any, Sequence
 
 __all__ = (
 	'Type'
 )
 
 
-class TypeCreateor(ABCMeta):
+class TypeCreator(ABCMeta):
     def __repr__(cls): return cls.typestr
 
 
-class Type(Value, metaclass=TypeCreateor):
+class Type(Value, metaclass=TypeCreator):
 	def __init__(
-			self, 
-			key : str,
-			type: str,
-			null: bool = False,
-			default: Any = None,
-			description: str = None,
-			va: Validator = Validator(),
-			fn: Handler = None
-		):
+		self, 
+		key : str,
+		type: str,
+		va: Validator = None,
+		fn: Handler = None,
+		null: bool = False,
+		default: Any = None,
+		description: str = None,
+	):
 		super().__init__(
-			va,
-			default=None,
-			description=description,
+			type=type,
+			va=va,
 			fn=fn,
+			default=None if null else MISSING,
+			description=description,
 		)
 		self.key = key
-		self.type = type
 		self.null = null
-		self.default = default
+		self.coldef = default
 		return
 	
 	def __init_subclass__(cls, typestr: str = None):

@@ -3,7 +3,7 @@
 from ..Type import Type
 
 from collections.abc import MutableSet
-
+from operator import eq, ne
 from copy import deepcopy
 
 __all__ = (
@@ -352,3 +352,13 @@ class Set(Type, MutableSet):
 				po,
 			)
 			raise e
+
+	def __eq__(self, other):
+		if isinstance(other, Set):
+			return eq(self.__value__, other.__value__)
+		return eq(self.__value__, other)
+
+	def __ne__(self, other):
+		if isinstance(other, Set):
+			return ne(self.__value__, other.__value__)
+		return ne(self.__value__, other)

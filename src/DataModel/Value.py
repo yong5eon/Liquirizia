@@ -4,50 +4,88 @@ from Liquirizia.Validator import Validator
 
 from .Handler import Handler
 from .Type import Type
-from .Format import (
-	Boolean,
-	Integer,
-	Number,
-	String,
-	Array,
-	Object,
-	OneOf,
-)
 
-from typing import Any, Union
+from typing import Sequence, Type as T, Any, Union
 
 __all__ = (
-	'Value'
+	'Value',
+	'Parameters',
+	'MISSING',
 )
 
+class MISSING_TYPE(object): pass
+MISSING = MISSING_TYPE()
+
+class Parameters(object):
+	def __init__(
+		self,
+		va: Validator = None,
+		fn: Handler = None,
+		min: Any = None,
+		max: Any = None,
+		enum: Sequence[Any] = None,
+		format: str = None,
+		description: str = None,
+	):
+		self.va = va
+		self.fn = fn
+		self.min = min
+		self.max = max
+		self.enum = enum
+		self.format = format
+		self.description = description
+		return
 
 class Value(object):
 	"""Value Class of Model"""
 
 	def __init__(
 		self,
-		va : Validator = Validator(),
-		default: Any = None,
+		type: T,
+		va: Validator = None,
+		fn: Handler = None,
+		default: Any = MISSING,
+		min: Any = None,
+		max: Any = None,
+		enum: Sequence[Any] = None,
+		format: str = None,
 		description: str = None,
-		format: Union[Boolean, Integer, Number, String, Array, Object, OneOf] = None,
-		fn : Handler = None,
 	):
 		self.model = None
 		self.name = None 
+		self.type = type
 		self.validator = va
-		self.default = default
-		self.description = description
-		self.format = format
+		# TODO: if validator is None, use generic validator according to type
 		self.callback = fn
+		self.default = default
+		self.required = False if default is None else True
+		self.min = min
+		self.max = max
+		self.enum = enum
+		self.format = format
+		self.description = description
 		return
 	
 	def __repr__(self):
-		return '{}(default={}, description=\'{}\', valdator={}, callback={})'.format(
+		args = []
+		args.append('type={}'.format(self.type.__name__))
+		if self.default:
+			args.append('default={}'.format('\'{}\''.format(self.default) if isinstance(self.default, str) else repr(self.default)))
+		if self.min:
+			args.append('min={}'.format('\'{}\''.format(self.min) if isinstance(self.min, str) else repr(self.min)))
+		if self.max:
+			args.append('max={}'.format('\'{}\''.format(self.max) if isinstance(self.max, str) else repr(self.max)))
+		if self.enum:
+			args.append('enum={}'.format(self.enum))
+		if self.validator:
+			args.append('validator={}'.format(self.validator))
+		if self.callback:
+			args.append('callback={}'.format(self.callback))
+		if self.description:
+			args.append('description=\'{}\''.format(self.description))
+		return '{}({})'.format(
 			self.__class__.__name__,
-			'\'{}\''.format(self.default) if isinstance(self.default, str) else self.default,
-			self.description,
-			self.validator,
-			self.callback,
+			', '.join(args) if args else ''
 		)
 
 	def __set_name__(self, obj, name):
@@ -63,6 +101,11 @@ class Value(object):
 		ex = self.name in obj.__properties__.keys()
 		pv = obj.__properties__[self.name] if ex else None
 		try:
+			if value is None:
+				if self.required:
+					raise ValueError('{} is required in {}'.format(self.name, obj.__class__.__name__))
+				obj.__properties__[self.name] = value
+				return
 			if self.validator:
 				value = self.validator(value.__value__ if isinstance(value, Type) else value)
 			obj.__properties__[self.name] = value

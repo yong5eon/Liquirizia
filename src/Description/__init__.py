@@ -27,9 +27,14 @@ from .DataObject import (
 	DataObjectToSchema,
 	DataObjectToObject,
 )
+from .DataModel import (
+	DataModelToSchema,
+	DataModelToObject,
+)
 
 from dataclasses import is_dataclass
-from typing import Type, Dict
+from ..DataModel import Model, MISSING
+from typing import Type, Dict, Union
 from collections.abc import Sequence, Mapping
 from json import dumps, loads, JSONEncoder
 
@@ -102,16 +107,22 @@ def SchemaToDataObject(o: Schema, description: str = None) -> object:
 	raise NotImplementedError('SchemaToDataObject is not implemented yet')
 
 
-def ToSchema(o: Type[object], description: str = None, typedef: TypeMapper = None) -> Schema:
+def ToSchema(o: Union[Type[object], Type[Model]], description: str = None, typedef: TypeMapper = None) -> Schema:
 	dataObjectToSchema = DataObjectToSchema(mapper=typedef)
+	dataModelToSchema = DataModelToSchema()
 	if is_dataclass(o):
 		return dataObjectToSchema(o, description)
+	if issubclass(o, Model):
+		return dataModelToSchema(o, description)
 	raise ValueError('{} cannot be converted to Schema'.format(o.__name__))
 
 
-def ToObject(o: object, typeenc: TypeEncoder = None) -> Dict:
+def ToObject(o: Union[object, Model], typeenc: TypeEncoder = None) -> Dict:
 	# TODO : make dict object according to schema dynamically
 	dataObjectToObject = DataObjectToObject(encoder=typeenc)
+	dataModelToObject = DataModelToObject(encoder=typeenc)
 	if is_dataclass(o):
 		return dataObjectToObject(o)
+	if isinstance(o, Model):
+		return dataModelToObject(o)
 	raise ValueError('{} cannot be converted to Object'.format(o.__name__))

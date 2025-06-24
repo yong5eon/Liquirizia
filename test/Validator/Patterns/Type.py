@@ -105,8 +105,9 @@ class TestValidatorPatternsType(Case):
 		ASSERT_IS_EQUAL(va([1, 2, 3]), [1, 2, 3])
 		ASSERT_IS_EQUAL(va((1, 2, 3)), (1, 2, 3))
 		ASSERT_IS_EQUAL(va({1, 2, 3}), {1, 2, 3})
-		ASSERT_IS_EQUAL(va('string'), 'string')
 		ASSERT_IS_EQUAL(va([1, 'string', 3.0]), [1, 'string', 3.0])
+		with ASSERT_EXCEPT(TypeError):
+			va('string')
 		return
 	
 	@Order(11)
@@ -121,8 +122,8 @@ class TestValidatorPatternsType(Case):
 		return
 	
 	@Order(12)
-	def testIsByteArray(self):
-		va = Validator(IsByteArray())
+	def testIsByteString(self):
+		va = Validator(IsByteString())
 		ASSERT_IS_EQUAL(va(b'byte array'), b'byte array')
 		ASSERT_IS_EQUAL(va(bytes([1, 2, 3])), bytes([1, 2, 3]))
 		with ASSERT_EXCEPT(TypeError):
@@ -130,8 +131,8 @@ class TestValidatorPatternsType(Case):
 		return
 	
 	@Order(13)
-	def testIsByteStream(self):
-		va = Validator(IsByteStream())
+	def testIsByteArray(self):
+		va = Validator(IsByteArray())
 		ASSERT_IS_EQUAL(va(bytearray([1, 2, 3])), bytearray([1, 2, 3]))
 		with ASSERT_EXCEPT(TypeError):
 			va(b'bytes')
@@ -260,16 +261,16 @@ class TestValidatorPatternsType(Case):
 		return
 	
 	@Order(110)
-	def testToByteArray(self):
-		va = Validator(ToByteArray())
+	def testToByteString(self):
+		va = Validator(ToByteString())
 		ASSERT_IS_EQUAL(va(b'byte array'), b'byte array')
 		ASSERT_IS_EQUAL(va(bytes([1, 2, 3])), bytes([1, 2, 3]))
 		with ASSERT_EXCEPT(ValueError): va('string')
 		return
 	
 	@Order(111)
-	def testToByteStream(self):
-		va = Validator(ToByteStream())
+	def testToByteArray(self):
+		va = Validator(ToByteArray())
 		ASSERT_IS_EQUAL(va(bytearray([1, 2, 3])), bytearray([1, 2, 3]))
 		ASSERT_IS_EQUAL(va(b'bytes'), bytearray(b'bytes'))
 		with ASSERT_EXCEPT(ValueError): va('string')

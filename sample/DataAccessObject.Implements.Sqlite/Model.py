@@ -15,7 +15,7 @@ from Liquirizia.DataAccessObject.Implements.Sqlite.Joins import *
 from Liquirizia.DataAccessObject.Implements.Sqlite.Exprs import *
 
 from Liquirizia.DataModel import Handler
-from Liquirizia.Util import *
+from Liquirizia.Utils import *
 
 from random import randrange
 from datetime import datetime
@@ -288,7 +288,7 @@ if __name__ == '__main__':
 	
 	for _ in students:
 		PrettyPrint(_)
-		_.atUpdated = int(round(datetime.now().timestamp()*1000))
+		_.atUpdated = datetime.now().timestamp()
 		PrettyPrint(_)
 	
 	students = con.run(Select(Student), fetch=Student)
@@ -306,7 +306,7 @@ if __name__ == '__main__':
 	
 	for _ in classes:
 		PrettyPrint(_)
-		_.atUpdated = int(round(datetime.now().timestamp()*1000))
+		_.atUpdated = datetime.now().timestamp()
 		PrettyPrint(_)
 	
 	classes = con.run(Select(Class), fetch=Class)
@@ -329,7 +329,7 @@ if __name__ == '__main__':
 		o = con.run(
 			Update(StudentOfClass).set(
 				score=randrange(10, 45)/10,
-				atUpdated=int(round(datetime.now().timestamp()*1000)),
+				atUpdated=datetime.now().timestamp(),
 			).where(
 				IsEqualTo(StudentOfClass.studentId, _.studentId),
 				IsEqualTo(StudentOfClass.classId, _.classId),
@@ -344,7 +344,7 @@ if __name__ == '__main__':
 	for _ in studentsOfClasses:
 		PrettyPrint(_)
 		_.score = randrange(10, 45)/10
-		_.atUpdated = int(round(datetime.now().timestamp()*1000))
+		_.atUpdated = datetime.now().timestamp()
 		PrettyPrint(_)
 	
 	studentsOfClasses = con.run(Select(StudentOfClass), fetch=StudentOfClass)

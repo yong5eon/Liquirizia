@@ -1,17 +1,19 @@
 # -*- coding: utf-8 -*-
 
-from .Object import Object
+from .ByteArray import ByteArray
 from .List import List
 from .Set import Set
 from .Tuple import Tuple
-from .ByteArray import ByteArray
-from .Dictionary import Dictionary
+from .Object import Object
+from .DataObject import DataObject
+from .DataModel import DataModel
 
 __all__ = (
-	'Object',
+	'ByteArray',
 	'List',
 	'Set',
 	'Tuple',
-	'ByteArray',
-	'Dictionary',
+	'Object',
+	'DataObject',
+	'DataModel',
 )

@@ -1,7 +1,6 @@
 # -*- coding: utf-8 -*-
 
 from Liquirizia.DataModel import Model, Handler
-from Liquirizia.DataModel.Format import Object
 
 from Liquirizia.DataAccessObject.Properties.Database import Executor
 
@@ -35,8 +34,7 @@ class View(Model):
 		executor: Executor,
 		name: str = None,
 		description: str = None,
-		schema: Object = None,
 		fn: Handler = None,
 	):
 		cls.__executor__ = executor
-		return super().__init_subclass__(name, description, schema, fn)
+		return super().__init_subclass__(name=name, fn=fn, description=description)

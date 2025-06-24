@@ -2,74 +2,38 @@
 
 from ..Type import Type
 
+from collections.abc import MutableMapping
+
 from copy import deepcopy
 
-from typing import Any
-
 __all__ = (
-	'Object'
+	'Dictionary'
 )
 
+class Object(Type, MutableMapping):
+	"""Object(Dict) Data Type Object Class of Data Model Object"""
 
-class Function(object):
-	def __init__(self, fn, obj, descriptor):
-		self.fn = fn
-		self.model = obj
-		self.descriptor = descriptor
-		return
-	def __call__(self, *args, **kwargs):
-		po = deepcopy(self.model.__properties__.__getitem__(self.descriptor.name))
-		try:
-			v = self.fn(*args, **kwargs)
-			if self.descriptor.validator:
-				self.model.__properties__.__setitem__(
-					self.descriptor.name,
-					self.descriptor.validator(self.model.__properties__.__getitem__(self.descriptor.name))
-				)
-			if self.descriptor.callback:
-				self.descriptor.callback(
-					self.model,
-					self.descriptor,
-					self.model.__properties__.__getitem__(self.descriptor.name),
-					po
-				)
-			if self.model.__callback__:
-				self.model.__callback__(
-					self.model,
-					self.descriptor,
-					self.model.__properties__.__getitem__(self.descriptor.name),
-					po
-				)
-			return v
-		except Exception as e:
-			self.model.__properties__.__setitem__(
-				self.descriptor.name,
-				po,
-			)
-			raise e
-		
+	def __contains__(self, key):
+		return self.__value__.__contains__(key)
+	
+	def __len__(self):
+		return self.__value__.__len__()
 
-class Object(Type):
-	"""Object Type Object Class of Data Model Object"""
-
-	def __getattr__(self, key):
-		if key in ('__value__', '__model__', '__descriptor__'):
-			return super(Object, self).__getattr__(key)
-		_ = getattr(self.__value__, key)
-		if callable(_): return Function(_, self.__model__, self.__descriptor__)
+	def __iter__(self):
+		return self.__value__.__iter__()
+	
+	def __getitem__(self, key):
 		return Type.Create(
-			_,
+			self.__value__.__getitem__(key) if key in self.__value__.keys() else None,
 			self.__model__,
 			self.__descriptor__,
 		)
 
-	def __setattr__(self, key, value):
-		if key in ('__value__', '__model__', '__descriptor__'):
-			return super(Object, self).__setattr__(key, value)
-		pv = deepcopy(getattr(self.__value__, key))
+	def __setitem__(self, key, value):
+		pv = deepcopy(self.__value__.__getitem__(key)) if key in self.__value__.keys() else None
 		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
 		try:
-			v = setattr(self.__value__, key, value)
+			v = self.__value__.__setitem__(key, value)
 			if self.__descriptor__.validator:
 				self.__model__.__properties__.__setitem__(
 					self.__descriptor__.name,
@@ -91,9 +55,128 @@ class Object(Type):
 				)
 			return v
 		except Exception as e:
-			setattr(self.__value__, key, pv)
+			self.__value__.__setitem__(key, pv)
 			self.__model__.__properties__.__setitem__(
 				self.__descriptor__.name,
 				po,
 			)
 			raise e
+	
+	def __delitem__(self, key):
+		pv = deepcopy(self.__value__.__getitem__(key)) if key in self.__value__.keys() else None
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+		try:
+			v = self.__value__.__delitem__(key)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
+		except Exception as e:
+			self.__value__.__setitem__(key, pv)
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
+			)
+			raise e
+	
+	def __eq__(self, other: object) -> bool:
+		if isinstance(other, Object):
+			return self.__value__.__eq__(other.__value__)
+		return self.__value__.__eq__(other)
+	
+	def __ne__(self, other: object) -> bool:
+		if isinstance(other, Object):
+			return self.__value__.__ne__(other.__value__)
+		return self.__value__.__ne__(other)
+	
+	def keys(self):
+		return self.__value__.keys()
+	
+	def items(self):
+		return self.__value__.items()
+	
+	def values(self):
+		return self.__value__.values()
+
+	def clear(self) -> None:
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+		try:
+			v = self.__value__.clear()
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
+		except Exception as e:
+			self.__value__ = pv
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
+			)
+			raise e
+	
+	def update(self, other):
+		pv = deepcopy(self.__value__) 
+		po = deepcopy(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+		try:
+			v = self.__value__.update(other)
+			if self.__descriptor__.validator:
+				self.__model__.__properties__.__setitem__(
+					self.__descriptor__.name,
+					self.__descriptor__.validator(self.__model__.__properties__.__getitem__(self.__descriptor__.name))
+				)
+			if self.__descriptor__.callback:
+				self.__descriptor__.callback(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			if self.__model__.__callback__:
+				self.__model__.__callback__(
+					self.__model__,
+					self.__descriptor__,
+					self.__model__.__properties__.__getitem__(self.__descriptor__.name),
+					po
+				)
+			return v
+		except Exception as e:
+			self.__value__ = pv
+			self.__model__.__properties__.__setitem__(
+				self.__descriptor__.name,
+				po,
+			)
+			raise e
+	

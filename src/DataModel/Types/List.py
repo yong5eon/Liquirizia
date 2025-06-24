@@ -3,7 +3,7 @@
 from ..Type import Type
 
 from collections.abc import MutableSequence
-
+from operator import eq, ne
 from copy import deepcopy
 
 __all__ = (
@@ -368,3 +368,13 @@ class List(Type, MutableSequence):
 				po,
 			)
 			raise e
+	
+	def __eq__(self, other):
+		if isinstance(other, List):
+			return eq(self.__value__, other.__value__)
+		return eq(self.__value__, other)
+
+	def __ne__(self, other):
+		if isinstance(other, List):
+			return ne(self.__value__, other.__value__)
+		return ne(self.__value__, other)
