@@ -72,24 +72,6 @@ class ModelCreator(type):
 			return self.attr(t, default, desc)
 		else:
 			t = origin if origin else t
-			PATTERNS = [
-				bool,
-				int,
-				float,
-				str,
-				list,
-				tuple,
-				set,
-				dict,
-				bytes,
-				bytearray,
-				Decimal,
-				datetime,
-				date,
-				time,
-			]
-			if t not in PATTERNS:
-				raise TypeError('Not supported type {}'.format(t))
 			v = Value(
 				type=t,
 				va=desc.va if desc else None,
