@@ -6,8 +6,8 @@ from operator import eq
 
 __all__ = (
 	'SetDefault',
-	'IsToNone',
-	'IsNotToNone',
+	'Optional',
+	'IsNotNone',
 	'IsNotEmpty',
 )
 
@@ -29,7 +29,7 @@ class SetDefault(Pattern):
 		)
 	
 
-class IsToNone(Pattern):
+class Optional(Pattern):
 	def __init__(self, *args):
 		self.patterns = args
 		return
@@ -48,7 +48,7 @@ class IsToNone(Pattern):
 		)
 
 
-class IsNotToNone(Pattern):
+class IsNotNone(Pattern):
 	def __init__(self, *args, error=None):
 		self.patterns = args
 		self.error = error
