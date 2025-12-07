@@ -3,8 +3,8 @@
 # COMMON
 from .Common import (
 	SetDefault,
-	IsToNone,
-	IsNotToNone,
+	Optional,
+	IsNotNone,
 	IsNotEmpty,
 )
 
@@ -79,8 +79,8 @@ from .DateTime import (
 __all__ = (
 	# COMMON
 	'SetDefault',
-	'IsToNone',
-	'IsNotToNone',
+	'Optional',
+	'IsNotNone',
 	'IsNotEmpty',
 	# SIZE
 	'IsSizeOf',
